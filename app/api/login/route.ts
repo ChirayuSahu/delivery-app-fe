@@ -25,9 +25,11 @@ export async function POST(request: NextRequest) {
         }
 
         // Set cookie
-        cookieStore.set("token", data.token, {
+        cookieStore.set("token", data.data.token, {
             httpOnly: true,
-            secure: false,
+            secure: true,
+            sameSite: 'none',
+            path: '/',
             maxAge: 60 * 60 * 12, // 12 hours
         });
 
