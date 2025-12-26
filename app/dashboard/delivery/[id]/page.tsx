@@ -6,8 +6,10 @@ import { toast } from 'sonner';
 import AddInvoice from './add-invoice';
 import InvoiceCard from './invoice-card';
 import Link from 'next/link';
-import { ArrowLeft, CircleX, Info, Loader2, Package } from 'lucide-react';
+import { ArrowLeft, CircleX, Info, Loader2, Package, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import StartDeliveryButton from './start';
+import CompleteDeliveryButton from './complete';
 
 type Invoice = {
     invType: string;
@@ -124,6 +126,11 @@ export default function ParticularDeliveryPage() {
                     <aside className="w-full lg:w-87.5 space-y-6">
                         <div className="">
                             <AddInvoice deliveryId={id} onAdded={fetchDelivery} />
+                        </div>
+
+                        <div className='space-y-2'>
+                            <StartDeliveryButton disabled={invoices.length === 0} deliveryId={id} onStarted={fetchDelivery} />
+                            <CompleteDeliveryButton disabled={!delivery?.startedAt} deliveryId={id} onStarted={fetchDelivery} />
                         </div>
 
                         <div className="bg-amber-50 border border-amber-100 rounded-xl p-4 flex gap-3 text-amber-800">

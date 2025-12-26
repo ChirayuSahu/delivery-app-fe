@@ -11,31 +11,32 @@ import {
   DialogTrigger 
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { PackagePlus, AlertTriangle, Loader2 } from 'lucide-react';
+import { PackageCheck, AlertTriangle, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 
-interface StartDeliveryProps {
+interface CompleteDeliveryProps {
   deliveryId: string;
   onStarted: () => void;
   disabled?: boolean;
 }
 
-export default function StartDeliveryButton({ deliveryId, onStarted, disabled }: StartDeliveryProps) {
+export default function CompleteDeliveryButton({ deliveryId, onStarted, disabled }: CompleteDeliveryProps) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
   async function handleStart() {
     setLoading(true);
     try {
-      const res = await fetch(`/api/delivery/start?id=${deliveryId}`, {
+      const res = await fetch(`/api/delivery/complete?id=${deliveryId}`, {
         method: 'GET',
         credentials: 'include',
       });
 
       const json = await res.json();
-      if (!res.ok) throw new Error(json.message || 'Failed to start delivery');
 
-      toast.success('Delivery started successfully');
+      if (!res.ok) throw new Error(json.message || 'Failed to complete delivery');
+
+      toast.success(json.message || 'Delivery completed successfully');
       setOpen(false);
       onStarted(); // Refresh parent state to hide "Add Invoice" controls
     } catch (err: any) {
@@ -49,9 +50,9 @@ export default function StartDeliveryButton({ deliveryId, onStarted, disabled }:
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button disabled={disabled} className="bg-blue-600 hover:bg-blue-700 text-white gap-2 shadow-sm shadow-blue-100 w-full">
-          <PackagePlus className="w-4 h-4" />
-          Start Delivery
+        <Button disabled={disabled} className="text-white gap-2 shadow-sm shadow-blue-100 w-full">
+          <PackageCheck className="w-4 h-4" />
+          Complete Delivery
         </Button>
       </DialogTrigger>
 
@@ -60,10 +61,9 @@ export default function StartDeliveryButton({ deliveryId, onStarted, disabled }:
           <div className="mx-auto w-12 h-12 bg-amber-50 rounded-full flex items-center justify-center mb-4">
             <AlertTriangle className="w-6 h-6 text-amber-600" />
           </div>
-          <DialogTitle className="text-center text-xl">Start this delivery?</DialogTitle>
+          <DialogTitle className="text-center text-xl">Complete this delivery?</DialogTitle>
           <DialogDescription className="text-center pt-2">
-            You are about to start this delivery. <br/>
-            Once started, <span className="text-red-600 font-semibold">you cannot add or remove any more invoices</span> from this run.
+            You are about to end this delivery.
           </DialogDescription>
         </DialogHeader>
 
