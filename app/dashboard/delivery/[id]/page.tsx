@@ -6,10 +6,11 @@ import { toast } from 'sonner';
 import AddInvoice from './add-invoice';
 import InvoiceCard from './invoice-card';
 import Link from 'next/link';
-import { ArrowLeft, CircleX, Info, Loader2, Package, Star } from 'lucide-react';
+import { ArrowLeft, CircleX, Info, Loader, Loader2, Package, Star, Timer } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import StartDeliveryButton from './start';
 import CompleteDeliveryButton from './complete';
+import { cn } from '@/lib/utils';
 
 type Invoice = {
     invType: string;
@@ -39,7 +40,7 @@ export default function ParticularDeliveryPage() {
     const [isValidDelivery, setIsValidDelivery] = useState<boolean | null>(true);
     const [delivery, setDelivery] = useState<DeliveryResponse['data'] | null>(null);
     const [invoices, setInvoices] = useState<Invoice[]>([]);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     async function fetchDelivery() {
         setLoading(true);
@@ -83,6 +84,18 @@ export default function ParticularDeliveryPage() {
         fetchDelivery();
     }, [id]);
 
+    if (loading) {
+        return (
+            <div className="min-h-screen flex flex-col items-center justify-center py-20 bg-white rounded-2xl border border-dashed">
+                <div className="p-4 bg-blue-50 rounded-full mb-4">
+                    <Loader className="w-10 h-10 text-blue-500" />
+                </div>
+                <h3 className="text-slate-900 font-medium">Loading Delivery...</h3>
+                <p className="text-slate-500 text-sm">Please wait while the delivery details are being loaded.</p>
+            </div>
+        )
+    }
+
     if (!isValidDelivery) {
         return (
             <div className="min-h-screen flex flex-col items-center justify-center py-20 bg-white rounded-2xl border border-dashed">
@@ -124,21 +137,70 @@ export default function ParticularDeliveryPage() {
 
                     {/* 2. LEFT SIDEBAR: Actions (Fixed width on desktop) */}
                     <aside className="w-full lg:w-87.5 space-y-6">
-                        <div className="">
-                            <AddInvoice deliveryId={id} onAdded={fetchDelivery} />
-                        </div>
+                        {!delivery?.startedAt && (
+                            <div className="">
+                                <AddInvoice deliveryId={id} onAdded={fetchDelivery} />
+                            </div>
+                        )}
 
                         <div className='space-y-2'>
-                            <StartDeliveryButton disabled={invoices.length === 0} deliveryId={id} onStarted={fetchDelivery} />
+                            <StartDeliveryButton disabled={invoices.length === 0 || !!(delivery?.startedAt)} deliveryId={id} onStarted={fetchDelivery} />
                             <CompleteDeliveryButton disabled={!delivery?.startedAt} deliveryId={id} onStarted={fetchDelivery} />
                         </div>
+                        {delivery?.startedAt && (
+                            <div className="relative overflow-hidden bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
+                                {/* Decorative background icon */}
+                                <Timer className="absolute -right-2 -top-2 w-24 h-24 text-slate-50 opacity-[0.03] -rotate-12" />
 
-                        <div className="bg-amber-50 border border-amber-100 rounded-xl p-4 flex gap-3 text-amber-800">
-                            <Info className="w-5 h-5 shrink-0 mt-0.5" />
-                            <p className="text-sm">
-                                Add invoices to this delivery run. Ensure the status is set correctly for tracking.
-                            </p>
-                        </div>
+                                <div className="relative flex flex-col gap-4">
+                                    <div className="flex items-center justify-between">
+                                        <div className="flex items-center gap-2">
+                                            <div className={cn(
+                                                "p-2 rounded-lg",
+                                                delivery?.endedAt ? "bg-slate-100 text-slate-600" : "bg-blue-50 text-blue-600"
+                                            )}>
+                                                <Timer className="w-5 h-5" />
+                                            </div>
+                                            <div>
+                                                <h2 className="text-sm font-bold text-slate-900 leading-none">
+                                                    {delivery?.endedAt ? "Total Duration" : "Time Elapsed"}
+                                                </h2>
+                                                <p className="text-[11px] text-slate-500 mt-1 uppercase tracking-wider font-medium">
+                                                    {delivery?.endedAt ? "Delivery Completed" : "Live Tracking"}
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        {!delivery?.endedAt && (
+                                            <span className="flex h-2 w-2">
+                                                <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-blue-400 opacity-75"></span>
+                                                <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-600"></span>
+                                            </span>
+                                        )}
+                                    </div>
+
+                                    <div className="flex items-baseline gap-2">
+                                        <span className="text-3xl font-mono font-black text-slate-900">
+                                            {delivery?.endedAt
+                                                ? Math.ceil((new Date(delivery.endedAt).getTime() - new Date(delivery.startedAt).getTime()) / 60000)
+                                                : Math.ceil((Date.now() - new Date(delivery.startedAt).getTime()) / 60000)
+                                            }
+                                        </span>
+                                        <span className="text-slate-500 font-bold text-sm uppercase">Minutes</span>
+                                    </div>
+
+                                    {/* Progress visualizer */}
+                                    <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                                        <div
+                                            className={cn(
+                                                "h-full rounded-full transition-all duration-1000",
+                                                delivery?.endedAt ? "bg-slate-400 w-full" : "bg-blue-600 animate-pulse w-2/3"
+                                            )}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        )}
                     </aside>
 
                     {/* 3. RIGHT CONTENT: Invoice Grid */}
@@ -170,6 +232,7 @@ export default function ParticularDeliveryPage() {
                                         <InvoiceCard
                                             invoice={inv}
                                             onDelete={removeInvoice}
+                                            showDeleteInvoice={!delivery?.startedAt}
                                         />
                                     </div>
                                 ))}

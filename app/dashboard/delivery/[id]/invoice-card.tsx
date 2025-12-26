@@ -15,9 +15,11 @@ type Invoice = {
 export default function InvoiceCard({
   invoice,
   onDelete,
+  showDeleteInvoice=true,
 }: {
   invoice: Invoice;
   onDelete: (invType: string, invNo: string) => void;
+  showDeleteInvoice?: boolean;
 }) {
 
   const getStatusColor = (status: string) => {
@@ -36,14 +38,6 @@ export default function InvoiceCard({
             {invoice.invType}/{invoice.invNo}
           </span>
         </div>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="h-7 w-7 text-slate-400 hover:text-red-600 hover:bg-red-50"
-          onClick={() => onDelete(invoice.invType, invoice.invNo)}
-        >
-          <Trash2 className="h-4 w-4" />
-        </Button>
       </div>
 
       <div className="space-y-1.5">
@@ -59,6 +53,9 @@ export default function InvoiceCard({
             {invoice.status}
           </Badge>
         </div>
+        {showDeleteInvoice && (
+          <Button className='mt-2 w-full bg-red-100 text-red-500 hover:bg-red-200' onClick={() => onDelete(invoice.invType, invoice.invNo)}>Delete Invoice</Button>
+        )}
       </div>
     </div>
   );

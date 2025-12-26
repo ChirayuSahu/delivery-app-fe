@@ -80,7 +80,7 @@ export default function CompleteDeliveryButton({ deliveryId, onStarted, disabled
             disabled={loading}
             className="flex-1 bg-blue-600 hover:bg-blue-700"
           >
-            {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Confirm & Start"}
+            {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Confirm & Complete"}
           </Button>
         </DialogFooter>
       </DialogContent>
