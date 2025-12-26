@@ -123,7 +123,7 @@ export default function ParticularDeliveryPage() {
                     {/* 3. RIGHT CONTENT: Invoice Grid */}
                     <section className="flex-1">
                         <div className="flex items-center justify-between mb-6">
-                            <h2 className="text-lg font-semibold text-slate-800">Assigned Invoices</h2>
+                            <h2 className="text-lg font-semibold text-slate-800">Added Invoices</h2>
                         </div>
 
                         {loading ? (
