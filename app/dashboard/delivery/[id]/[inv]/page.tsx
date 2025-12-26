@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import {
     Receipt, User, Calendar, Truck, ArrowLeft, ExternalLink,
-    Clock, IndianRupee, MapPin, ChevronLeft, CircleX, Loader
+    Clock, IndianRupee, MapPin, ChevronLeft, CircleX, Loader, Box, ShoppingBag, Snowflake, Archive
 } from "lucide-react"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
@@ -32,12 +32,20 @@ type InvoiceData = {
     };
 };
 
+type Packaging = {
+    boxes: number;
+    bags: number;
+    icePacks: number;
+    cases: number;
+}
+
 const InvoicePage = () => {
     const params = useParams();
     const { id, inv } = params; // delivery ID and invoice ID/No
 
     const [data, setData] = useState<InvoiceData | null>(null);
     const [loading, setLoading] = useState(true);
+    const [packaging, setPackaging] = useState<Packaging | null>(null);
 
     const router = useRouter();
 
@@ -53,8 +61,21 @@ const InvoicePage = () => {
         }
     };
 
+    const fetchPackagingInfo = async () => {
+        try {
+            const res = await fetch(`/api/status?invoice=${inv}`);
+            const json = await res.json();
+            if (json) setPackaging(json.data.packaging);
+        } catch (error) {
+            console.error("Failed to fetch invoice", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     useEffect(() => {
         if (inv) fetchInvoice();
+        if (inv) fetchPackagingInfo();
     }, [inv]);
 
     if (loading) {
@@ -156,6 +177,9 @@ const InvoicePage = () => {
                     </Card>
                 </div>
 
+
+                    <PackagingSection packaging={packaging} />
+
                 <div>
                     <DeliverInvoiceButton onSuccess={fetchInvoice} delivered={!!data.deliveredAt} invoiceId={String(inv)} />
                 </div>
@@ -250,6 +274,56 @@ const DetailRow = ({ icon, label, value, isLocation }: DetailRowProps) => {
                 </span>
             )}
         </div>
+    );
+};
+
+const PackagingSection = ({ packaging }: { packaging: Packaging | null }) => {
+    if (!packaging) return null;
+
+    const items = [
+        { label: "Boxes", value: packaging.boxes, icon: <Box className="w-4 h-4" /> },
+        { label: "Bags", value: packaging.bags, icon: <ShoppingBag className="w-4 h-4" /> },
+        { label: "Ice Packs", value: packaging.icePacks, icon: <Snowflake className="w-4 h-4" /> },
+        { label: "Cases", value: packaging.cases, icon: <Archive className="w-4 h-4" /> },
+    ];
+
+    return (
+        <Card className="border-slate-200 shadow-sm overflow-hidden">
+            <CardHeader className="bg-slate-50/50 border-b py-3 px-4">
+                <CardTitle className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+                    Packaging Materials
+                </CardTitle>
+            </CardHeader>
+            <CardContent className="p-0">
+                <div className="grid grid-cols-2 sm:grid-cols-4 divide-x divide-slate-100">
+                    {items.map((item) => (
+                        <div 
+                            key={item.label} 
+                            className={cn(
+                                "flex flex-col items-center justify-center py-4 px-2 transition-colors",
+                                item.value > 0 ? "bg-blue-50/30" : "opacity-40"
+                            )}
+                        >
+                            <div className={cn(
+                                "p-2 rounded-full mb-2",
+                                item.value > 0 ? "bg-blue-100 text-blue-600" : "bg-slate-100 text-slate-400"
+                            )}>
+                                {item.icon}
+                            </div>
+                            <span className="text-[10px] font-bold text-slate-500 uppercase tracking-tighter">
+                                {item.label}
+                            </span>
+                            <span className={cn(
+                                "text-lg font-black",
+                                item.value > 0 ? "text-slate-900" : "text-slate-400"
+                            )}>
+                                {item.value}
+                            </span>
+                        </div>
+                    ))}
+                </div>
+            </CardContent>
+        </Card>
     );
 };
 
