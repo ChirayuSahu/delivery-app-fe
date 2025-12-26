@@ -6,7 +6,7 @@ import { toast } from 'sonner';
 import AddInvoice from './add-invoice';
 import InvoiceCard from './invoice-card';
 import Link from 'next/link';
-import { ArrowLeft, CircleX, Info, Loader, Loader2, Package, Star, Timer } from 'lucide-react';
+import { AlertCircle, ArrowLeft, CircleX, Info, Loader, Loader2, Package, Timer, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import StartDeliveryButton from './start';
 import CompleteDeliveryButton from './complete';
@@ -31,6 +31,7 @@ type DeliveryResponse = {
         startedAt: Date | null;
         endedAt: Date | null;
         invoices: Invoice[];
+        failedDeliveries: string[];
     };
 };
 
@@ -143,10 +144,60 @@ export default function ParticularDeliveryPage() {
                             </div>
                         )}
 
-                        <div className='space-y-2'>
-                            <StartDeliveryButton disabled={invoices.length === 0 || !!(delivery?.startedAt)} deliveryId={id} onStarted={fetchDelivery} />
-                            <CompleteDeliveryButton disabled={!delivery?.startedAt} deliveryId={id} onStarted={fetchDelivery} />
-                        </div>
+                        {!delivery?.endedAt && (
+                            <div className='space-y-2'>
+                                <StartDeliveryButton disabled={invoices.length === 0 || !!(delivery?.startedAt)} deliveryId={id} onStarted={fetchDelivery} />
+                                <CompleteDeliveryButton disabled={!delivery?.startedAt || !!delivery?.endedAt} deliveryId={id} onStarted={fetchDelivery} />
+                            </div>
+                        )}
+
+                        {delivery?.endedAt && (
+                            <div>
+                                <div className="relative overflow-hidden bg-white border border-emerald-100 rounded-xl shadow-sm">
+                                    {/* Success Accent Bar */}
+                                    <div className="h-1 bg-emerald-500 w-full" />
+
+                                    <div className="p-5 flex flex-col sm:flex-row gap-4 items-start">
+                                        {/* Icon Section */}
+                                        <div className="shrink-0 w-12 h-12 bg-emerald-50 rounded-full flex items-center justify-center border border-emerald-100">
+                                            <CheckCircle2 className="w-6 h-6 text-emerald-600" />
+                                        </div>
+
+                                        {/* Content Section */}
+                                        <div className="flex-1 space-y-1">
+                                            <div className="flex items-center gap-2">
+                                                <h3 className="font-bold text-slate-900">Shipment Completed</h3>
+                                                <span className="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 text-[10px] font-black uppercase tracking-wider">
+                                                    Archived
+                                                </span>
+                                            </div>
+
+                                            <p className="text-sm text-slate-500 leading-relaxed">
+                                                This run was finalized on <span className="font-semibold text-slate-700">{new Date(delivery.endedAt).toLocaleString()}</span>.
+                                                All logs have been synced to the primary database.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                {/* Failed Deliveries Sub-Section */}
+                                {delivery.failedDeliveries && delivery.failedDeliveries.length > 0 && (
+                                    <div className="mt-4 p-3 bg-red-50/50 border border-red-100 rounded-lg">
+                                        <div className="flex items-center gap-2 text-red-700 mb-1">
+                                            <AlertCircle className="w-4 h-4" />
+                                            <p className="text-xs font-bold uppercase tracking-tight">Returns/Failed</p>
+                                        </div>
+                                        <div className="flex flex-wrap gap-2 mt-2">
+                                            {delivery.failedDeliveries.map((inv: string) => (
+                                                <span key={inv} className="px-2 py-1 bg-white border border-red-200 rounded text-red-600 font-mono text-[11px] font-bold">
+                                                    {inv}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        )}
+
                         {delivery?.startedAt && (
                             <div className="relative overflow-hidden bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
                                 {/* Decorative background icon */}
@@ -234,6 +285,7 @@ export default function ParticularDeliveryPage() {
                                             onDelete={removeInvoice}
                                             showDeleteInvoice={!delivery?.startedAt}
                                             started={!!delivery?.startedAt}
+                                            ended={!!delivery?.endedAt}
                                         />
                                     </div>
                                 ))}

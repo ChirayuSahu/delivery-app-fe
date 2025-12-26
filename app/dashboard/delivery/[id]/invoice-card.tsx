@@ -20,11 +20,13 @@ export default function InvoiceCard({
   onDelete,
   showDeleteInvoice = true,
   started,
+  ended,
 }: {
   invoice: Invoice;
   onDelete: (invType: string, invNo: string) => void;
   showDeleteInvoice?: boolean;
   started?: boolean;
+  ended?: boolean;
 }) {
 
   const pathname = usePathname();
@@ -38,7 +40,7 @@ export default function InvoiceCard({
   };
 
   return (
-    <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
+    <div className={`bg-white border border-slate-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow ${invoice.status === 'DELIVERED' && !ended ? 'opacity-50' : 'opacity-100'}`}>
       <div className="flex items-start justify-between mb-3">
         <div className="flex items-center gap-2">
           <span className="font-mono text-sm font-bold text-slate-900">
@@ -63,7 +65,7 @@ export default function InvoiceCard({
         {started && (
           <Link href={`${pathname}/${invoice.invType}${invoice.invNo}`} className="block w-full">
             <Button
-              className="mt-2 w-full bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white border border-blue-100 transition-all gap-2 font-semibold shadow-sm group"
+              className="mt-2 h-12 w-full bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white border border-blue-100 transition-all gap-2 font-semibold shadow-sm group"
             >
               <FileText className="w-4 h-4 transition-transform group-hover:scale-110" />
               View Details
