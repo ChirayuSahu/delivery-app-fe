@@ -6,7 +6,8 @@ import { toast } from 'sonner';
 import AddInvoice from './add-invoice';
 import InvoiceCard from './invoice-card';
 import Link from 'next/link';
-import { ArrowLeft, Info, Loader2, Package } from 'lucide-react';
+import { ArrowLeft, CircleX, Info, Loader2, Package } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 type Invoice = {
     invType: string;
@@ -19,6 +20,13 @@ type DeliveryResponse = {
     success: boolean;
     message: string;
     data: {
+        id: string;
+        deliveryNo: string;
+        deliveryManId: string;
+        createdAt: Date;
+        updatedAt: Date;
+        startedAt: Date | null;
+        endedAt: Date | null;
         invoices: Invoice[];
     };
 };
@@ -27,6 +35,7 @@ export default function ParticularDeliveryPage() {
     const { id } = useParams<{ id: string }>();
 
     const [isValidDelivery, setIsValidDelivery] = useState<boolean | null>(true);
+    const [delivery, setDelivery] = useState<DeliveryResponse['data'] | null>(null);
     const [invoices, setInvoices] = useState<Invoice[]>([]);
     const [loading, setLoading] = useState(false);
 
@@ -40,6 +49,7 @@ export default function ParticularDeliveryPage() {
             const json: DeliveryResponse = await res.json();
             if (!res.ok || !json.success) throw new Error(json.message);
 
+            setDelivery(json.data);
             setInvoices(json.data.invoices);
             setIsValidDelivery(true);
         } catch {
@@ -73,10 +83,15 @@ export default function ParticularDeliveryPage() {
 
     if (!isValidDelivery) {
         return (
-            <div className="min-h-screen flex items-center justify-center">
-                <p className="text-sm text-muted-foreground">
-                    Invalid delivery ID.
-                </p>
+            <div className="min-h-screen flex flex-col items-center justify-center py-20 bg-white rounded-2xl border border-dashed">
+                <div className="p-4 bg-red-50 rounded-full mb-4">
+                    <CircleX className="w-10 h-10 text-red-500" />
+                </div>
+                <h3 className="text-slate-900 font-medium">Failed to Load Delivery</h3>
+                <p className="text-slate-500 text-sm">Delivery not found or an error occurred.</p>
+                <Button asChild className="mt-6">
+                    <Link href="/dashboard">Dashboard</Link>
+                </Button>
             </div>
         );
     }
@@ -92,7 +107,7 @@ export default function ParticularDeliveryPage() {
                         </Link>
                         <div>
                             <h1 className="text-xl font-bold text-slate-900">Delivery Details</h1>
-                            <p className="text-xs text-slate-500 font-mono uppercase">ID: {id}</p>
+                            <p className="text-xs text-slate-500 font-mono uppercase">No: {delivery ? delivery.deliveryNo : 'Loading...'}</p>
                         </div>
                     </div>
                     <div className="flex items-center gap-2 px-3 py-1 bg-blue-50 text-blue-700 rounded-full border border-blue-100">
@@ -127,8 +142,11 @@ export default function ParticularDeliveryPage() {
 
                         {loading ? (
                             <div className="flex flex-col items-center justify-center py-20 bg-white rounded-2xl border border-dashed">
-                                <Loader2 className="w-8 h-8 text-blue-500 animate-spin mb-2" />
-                                <p className="text-slate-500 animate-pulse">Fetching invoice data...</p>
+                                <div className="p-4 bg-slate-50 rounded-full mb-4">
+                                    <Loader2 className="w-10 h-10 text-slate-300" />
+                                </div>
+                                <h3 className="text-slate-900 font-medium">Fetching Added Invoices</h3>
+                                <p className="text-slate-500 text-sm">Please wait while we load the invoices.</p>
                             </div>
                         ) : invoices.length === 0 ? (
                             <div className="flex flex-col items-center justify-center py-20 bg-white rounded-2xl border border-dashed">
