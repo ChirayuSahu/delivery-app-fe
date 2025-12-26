@@ -1,12 +1,13 @@
 'use client';
 
 import { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Loader2, Search, Receipt, User, Package, Tag, IndianRupee } from 'lucide-react';
 import { toast } from 'sonner';
+import Link from 'next/link';
 
 type StatusResponse = {
   success: boolean;
@@ -40,7 +41,7 @@ export default function StatusPage() {
       const res = await fetch(`/api/status?invoice=${encodeURIComponent(invoice.trim())}`, {
         method: 'GET',
         headers: {
-            'Content-Type': 'application/json',
+          'Content-Type': 'application/json',
         },
         credentials: 'include',
       });
@@ -97,31 +98,31 @@ export default function StatusPage() {
           {data && (
             <div className="space-y-1 animate-in fade-in slide-in-from-bottom-2 duration-300">
               <div className="rounded-xl border border-slate-100 bg-slate-50/50 p-4 space-y-3">
-                <Info 
-                  icon={<Receipt className="w-3.5 h-3.5" />} 
-                  label="Invoice" 
-                  value={data.invoice} 
+                <Info
+                  icon={<Receipt className="w-3.5 h-3.5" />}
+                  label="Invoice"
+                  value={data.invoice}
                 />
-                <Info 
-                  icon={<User className="w-3.5 h-3.5" />} 
-                  label="Customer" 
-                  value={data.name} 
+                <Info
+                  icon={<User className="w-3.5 h-3.5" />}
+                  label="Customer"
+                  value={data.name}
                 />
-                <Info 
-                  icon={<Tag className="w-3.5 h-3.5" />} 
-                  label="Status" 
+                <Info
+                  icon={<Tag className="w-3.5 h-3.5" />}
+                  label="Status"
                   value={
                     <Badge variant="secondary" className="bg-blue-100 text-blue-700 border-none hover:bg-blue-100 font-bold text-[10px] uppercase">
                       {data.status}
                     </Badge>
-                  } 
+                  }
                 />
-                <Info 
-                  icon={<Package className="w-3.5 h-3.5" />} 
-                  label="Total Items" 
-                  value={data.totalItems.toString()} 
+                <Info
+                  icon={<Package className="w-3.5 h-3.5" />}
+                  label="Total Items"
+                  value={data.totalItems.toString()}
                 />
-                
+
                 <div className="pt-3 mt-1 border-t flex items-center justify-between">
                   <span className="text-xs font-bold text-slate-400 uppercase tracking-tight">Total Amount</span>
                   <span className="text-lg font-bold text-slate-900">
@@ -132,6 +133,13 @@ export default function StatusPage() {
             </div>
           )}
         </CardContent>
+        <CardFooter className="">
+          <Button asChild variant="outline" className="mx-auto">
+            <Link href="/dashboard" className="text-sm">
+              Back to Dashboard
+            </Link>
+          </Button>
+        </CardFooter>
       </Card>
     </div>
   );
