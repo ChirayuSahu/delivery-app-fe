@@ -34,7 +34,7 @@ export default function ParticularDeliveryPage() {
         setLoading(true);
         try {
             const res = await fetch(
-                `${process.env.NEXT_PUBLIC_BE_URL}/delivery/${id}`,
+                `${process.env.NEXT_PUBLIC_BE_URL}/delivery/get?id=${id}`,
                 { credentials: 'include' }
             );
 
