@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useEffect, useState } from "react";
-import { Loader2 } from "lucide-react";
+import { Loader2, Package } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { ArrowDownUp, Search, Plus, ExternalLink } from "lucide-react";
+import { ArrowDownUp, PackageCheck, Plus, ExternalLink } from "lucide-react";
 import Link from "next/link";
 
 type Delivery = {
@@ -48,7 +48,7 @@ export default function DashboardPage() {
 
   }, []);
 
-  if(loading){
+  if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <Loader2 className="h-8 w-8 text-blue-600 animate-spin" />
@@ -73,10 +73,10 @@ export default function DashboardPage() {
               </Button>
             </Link>
             <Link href={'/dashboard/delivery'}>
-            <Button className="gap-2 bg-blue-600 hover:bg-blue-700 shadow-sm shadow-blue-200">
-              <Plus className="h-4 w-4" />
-              Create Delivery
-            </Button>
+              <Button className="gap-2 bg-blue-600 hover:bg-blue-700 shadow-sm shadow-blue-200">
+                <Plus className="h-4 w-4" />
+                Create Delivery
+              </Button>
             </Link>
           </div>
         </div>
@@ -99,11 +99,16 @@ export default function DashboardPage() {
               className="group block p-5 bg-white border border-slate-200 rounded-xl shadow-sm hover:border-blue-500 hover:shadow-md transition-all active:scale-[0.98]"
             >
               <div className="flex justify-between items-start">
-                <div className="space-y-1">
-                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Delivery No</p>
-                  <p className="text-lg font-mono font-bold text-slate-900 group-hover:text-blue-600 transition-colors">
-                    {delivery.deliveryNo}
-                  </p>
+                <div className="flex gap-4 items-center">
+                  {delivery.endedAt && (
+                    <PackageCheck className="w-6 h-6 text-green-500" />
+                  )}
+                  <div className="space-y-1">
+                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Delivery No</p>
+                    <p className="text-lg font-mono font-bold text-slate-900 group-hover:text-blue-600 transition-colors">
+                      {delivery.deliveryNo}
+                    </p>
+                  </div>
                 </div>
                 <div className="p-2 bg-slate-50 rounded-lg group-hover:bg-blue-50 transition-colors">
                   <ExternalLink className="w-4 h-4 text-slate-400 group-hover:text-blue-600" />
@@ -115,7 +120,12 @@ export default function DashboardPage() {
                   <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
                   {delivery.invoiceCount} Invoices
                 </div>
-                <span>{delivery.startedAt ? new Date(delivery.startedAt).toLocaleDateString() : 'N/A'}</span>
+                {delivery.startedAt && !delivery.endedAt && (
+                  <span>Started {new Date(delivery.startedAt).toLocaleString()}</span>
+                )}
+                {delivery.endedAt && (
+                  <span>Ended {new Date(delivery.endedAt).toLocaleString()}</span>
+                )}
               </div>
             </Link>
           ))}
@@ -124,18 +134,3 @@ export default function DashboardPage() {
     </div>
   );
 }
-
-// Helper for row styles
-const getStatusStyles = (status: string) => {
-  const s = status.toLowerCase();
-  if (s === "delivered") return "bg-emerald-50 text-emerald-700 border-emerald-100";
-  if (s === "dispatched") return "bg-blue-50 text-blue-700 border-blue-100";
-  if (s === "processing") return "bg-amber-50 text-amber-700 border-amber-100";
-  return "bg-slate-50 text-slate-700 border-slate-100";
-};
-
-const data = [
-  { id: "ORD-21085", customer: "Rajesh Pharma", status: "Dispatched", date: "25 Dec 2025", amount: "₹12,430" },
-  { id: "ORD-21086", customer: "Apollo Medicals", status: "Processing", date: "25 Dec 2025", amount: "₹8,210" },
-  { id: "ORD-21087", customer: "City Care", status: "Delivered", date: "24 Dec 2025", amount: "₹15,900" },
-];
