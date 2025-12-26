@@ -4,6 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Trash2, User, Package } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 type Invoice = {
   invType: string;
@@ -15,12 +17,14 @@ type Invoice = {
 export default function InvoiceCard({
   invoice,
   onDelete,
-  showDeleteInvoice=true,
+  showDeleteInvoice = true,
 }: {
   invoice: Invoice;
   onDelete: (invType: string, invNo: string) => void;
   showDeleteInvoice?: boolean;
 }) {
+
+  const pathname = usePathname();
 
   const getStatusColor = (status: string) => {
     if (status === 'ASSIGNED') return 'bg-yellow-50 text-yellow-800 border border-yellow-200';
@@ -53,6 +57,11 @@ export default function InvoiceCard({
             {invoice.status}
           </Badge>
         </div>
+        <Link href={`${pathname}/${invoice.invType}${invoice.invNo}`}>
+        <Button className='mt-2 w-full bg-blue-100 text-blue-500 hover:bg-blue-200'>
+          Open Invoice
+        </Button>
+        </Link>
         {showDeleteInvoice && (
           <Button className='mt-2 w-full bg-red-100 text-red-500 hover:bg-red-200' onClick={() => onDelete(invoice.invType, invoice.invNo)}>Delete Invoice</Button>
         )}
