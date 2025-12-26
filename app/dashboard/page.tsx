@@ -11,6 +11,7 @@ type Delivery = {
   startedAt: string | null;
   endedAt: string | null;
   invoiceCount: number;
+  deliveryNo: string;
 }
 
 export default function DashboardPage() {
@@ -99,9 +100,9 @@ export default function DashboardPage() {
             >
               <div className="flex justify-between items-start">
                 <div className="space-y-1">
-                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Delivery ID</p>
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Delivery No</p>
                   <p className="text-lg font-mono font-bold text-slate-900 group-hover:text-blue-600 transition-colors">
-                    {delivery.id}
+                    {delivery.deliveryNo}
                   </p>
                 </div>
                 <div className="p-2 bg-slate-50 rounded-lg group-hover:bg-blue-50 transition-colors">
