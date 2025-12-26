@@ -1,11 +1,12 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { Trash2, User, Package } from 'lucide-react';
+import { Trash2, User, Package, FileText, ArrowRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { start } from 'repl';
 
 type Invoice = {
   invType: string;
@@ -18,10 +19,12 @@ export default function InvoiceCard({
   invoice,
   onDelete,
   showDeleteInvoice = true,
+  started,
 }: {
   invoice: Invoice;
   onDelete: (invType: string, invNo: string) => void;
   showDeleteInvoice?: boolean;
+  started?: boolean;
 }) {
 
   const pathname = usePathname();
@@ -57,13 +60,26 @@ export default function InvoiceCard({
             {invoice.status}
           </Badge>
         </div>
-        <Link href={`${pathname}/${invoice.invType}${invoice.invNo}`}>
-        <Button className='mt-2 w-full bg-blue-100 text-blue-500 hover:bg-blue-200'>
-          Open Invoice
-        </Button>
-        </Link>
+        {started && (
+          <Link href={`${pathname}/${invoice.invType}${invoice.invNo}`} className="block w-full">
+            <Button
+              className="mt-2 w-full bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white border border-blue-100 transition-all gap-2 font-semibold shadow-sm group"
+            >
+              <FileText className="w-4 h-4 transition-transform group-hover:scale-110" />
+              View Details
+              <ArrowRight className="w-4 h-4 ml-auto opacity-50 group-hover:translate-x-1 transition-transform" />
+            </Button>
+          </Link>
+        )}
         {showDeleteInvoice && (
-          <Button className='mt-2 w-full bg-red-100 text-red-500 hover:bg-red-200' onClick={() => onDelete(invoice.invType, invoice.invNo)}>Delete Invoice</Button>
+          <Button
+            variant="ghost"
+            className="mt-2 h-12 w-full bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700 border border-red-100 transition-colors gap-2 font-semibold"
+            onClick={() => onDelete(invoice.invType, invoice.invNo)}
+          >
+            <Trash2 className="w-4 h-4" />
+            Remove Invoice
+          </Button>
         )}
       </div>
     </div>

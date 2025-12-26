@@ -16,6 +16,7 @@ export async function GET(request: NextRequest){
 
     try {
         const response = await fetch(`${BACKEND_URL}/delivery/complete/${id}`, {
+            method: "POST",
             headers: {
                 Authorization: `Bearer ${token}`
             }

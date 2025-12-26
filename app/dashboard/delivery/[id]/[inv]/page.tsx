@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import {
-    Receipt, User, Calendar, Truck,
+    Receipt, User, Calendar, Truck, ArrowLeft,
     Clock, IndianRupee, MapPin, ChevronLeft, CircleX, Loader
 } from "lucide-react"
 import Link from "next/link"
@@ -86,19 +86,22 @@ const InvoicePage = () => {
     }
 
     return (
-        <div className="min-h-screen bg-[#f8fafc] p-4 md:p-8">
-            <div className="max-w-3xl mx-auto space-y-6">
+        <div className="min-h-screen bg-[#f8fafc]">
+            <header className="sticky top-0 z-10 border-b bg-white/80 backdrop-blur-md px-6 py-4">
+                <div className="max-w-7xl mx-auto flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                        <Link href={`/dashboard/delivery/${id}`} className="p-2 hover:bg-slate-100 rounded-full transition-colors">
+                            <ArrowLeft className="w-5 h-5 text-slate-600" />
+                        </Link>
+                        <div>
+                            <h1 className="text-xl font-bold text-slate-900">Invoice Details</h1>
+                            <p className="text-xs text-slate-500 font-mono uppercase">{data.invType}/{data.invNo}</p>
+                        </div>
+                    </div>
+                </div>
+            </header>
 
-                {/* Back Link */}
-                <Link href={`/dashboard/delivery/${id}`}>
-                    <Button
-                        variant={"default"}
-                        className="inline-flex items-center text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 transition-colors mb-6"
-                    >
-                        <ChevronLeft className="w-4 h-4 mr-1" /> Back to Delivery Run
-                    </Button>
-                </Link>
-
+            <div className="max-w-3xl mx-auto space-y-6 p-4 md:p-8">
                 {/* Header Section */}
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div className="flex items-center gap-4">

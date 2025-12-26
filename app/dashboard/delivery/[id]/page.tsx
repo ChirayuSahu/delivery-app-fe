@@ -233,6 +233,7 @@ export default function ParticularDeliveryPage() {
                                             invoice={inv}
                                             onDelete={removeInvoice}
                                             showDeleteInvoice={!delivery?.startedAt}
+                                            started={!!delivery?.startedAt}
                                         />
                                     </div>
                                 ))}
