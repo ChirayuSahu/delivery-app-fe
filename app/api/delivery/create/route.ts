@@ -14,6 +14,7 @@ export async function POST(request: NextRequest){
 
     try {
         const response = await fetch(`${BACKEND_URL}/delivery/create`, {
+            method: 'POST',
             headers: {
                 Authorization: `Bearer ${token}`
             }
