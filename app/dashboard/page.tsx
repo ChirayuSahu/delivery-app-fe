@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { ArrowDownUp, Search, Plus, ExternalLink } from "lucide-react";
 import Link from "next/link";
 
@@ -72,10 +71,12 @@ export default function DashboardPage() {
                 Order Status
               </Button>
             </Link>
+            <Link href={'/dashboard/delivery'}>
             <Button className="gap-2 bg-blue-600 hover:bg-blue-700 shadow-sm shadow-blue-200">
               <Plus className="h-4 w-4" />
               Create Delivery
             </Button>
+            </Link>
           </div>
         </div>
       </header>
