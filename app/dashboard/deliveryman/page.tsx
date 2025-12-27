@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowDownUp, PackageCheck, Plus, ExternalLink } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import CreateDeliveryButton from "@/components/deliveryman/create-delivery";
 
 type Delivery = {
   id: string;
@@ -54,7 +55,7 @@ export default function DashboardPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <Loader2 className="h-8 w-8 text-blue-600 animate-spin" />
+        <Loader2 className="h-8 w-8 text-green-600 animate-spin" />
       </div>
     );
   }
@@ -75,12 +76,7 @@ export default function DashboardPage() {
                 Order Status
               </Button>
             </Link>
-            <Link href={`${pathname}/delivery`}>
-              <Button className="gap-2 bg-blue-600 hover:bg-blue-700 shadow-sm shadow-blue-200">
-                <Plus className="h-4 w-4" />
-                Create Delivery
-              </Button>
-            </Link>
+            <CreateDeliveryButton />
           </div>
         </div>
       </header>
@@ -99,7 +95,7 @@ export default function DashboardPage() {
             <Link
               key={delivery.id}
               href={`${pathname}/deliveries/${delivery.id}`}
-              className="group block p-5 bg-white border border-slate-200 rounded-xl shadow-sm hover:border-blue-500 hover:shadow-md transition-all active:scale-[0.98]"
+              className="group block p-5 bg-white border border-slate-200 rounded-xl shadow-sm hover:border-green-500 hover:shadow-md transition-all active:scale-[0.98]"
             >
               <div className="flex justify-between items-start">
                 <div className="flex gap-4 items-center">
@@ -108,13 +104,13 @@ export default function DashboardPage() {
                   )}
                   <div className="space-y-1">
                     <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Delivery No</p>
-                    <p className="text-lg font-mono font-bold text-slate-900 group-hover:text-blue-600 transition-colors">
+                    <p className="text-lg font-mono font-bold text-slate-900 group-hover:text-green-600 transition-colors">
                       {delivery.deliveryNo}
                     </p>
                   </div>
                 </div>
-                <div className="p-2 bg-slate-50 rounded-lg group-hover:bg-blue-50 transition-colors">
-                  <ExternalLink className="w-4 h-4 text-slate-400 group-hover:text-blue-600" />
+                <div className="p-2 bg-slate-50 rounded-lg group-hover:bg-green-50 transition-colors">
+                  <ExternalLink className="w-4 h-4 text-slate-400 group-hover:text-green-600" />
                 </div>
               </div>
 

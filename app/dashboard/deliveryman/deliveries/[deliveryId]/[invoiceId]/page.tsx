@@ -87,8 +87,8 @@ const InvoicePage = () => {
     if (loading) {
         return (
             <div className="min-h-screen flex flex-col items-center justify-center py-20 bg-white rounded-2xl border border-dashed">
-                <div className="p-4 bg-blue-50 rounded-full mb-4">
-                    <Loader2 className="w-10 h-10 text-blue-500 animate-spin" />
+                <div className="p-4 bg-green-50 rounded-full mb-4">
+                    <Loader2 className="w-10 h-10 text-green-500 animate-spin" />
                 </div>
                 <h3 className="text-slate-900 font-medium">Loading Invoice...</h3>
                 <p className="text-slate-500 text-sm">Please wait while the invoice details are being loaded.</p>
@@ -132,7 +132,7 @@ const InvoicePage = () => {
             <div className="max-w-3xl mx-auto space-y-6 p-4 md:p-8">
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div className="flex items-center gap-4">
-                        <div className="p-3 bg-white border rounded-2xl shadow-sm text-blue-600">
+                        <div className="p-3 bg-white border rounded-2xl shadow-sm text-green-600">
                             <Image alt='Rajesh Pharma Logo' src='https://rajeshpharma.com/img/rp.svg' className='w-8 h-8' width={100} height={100} />
                         </div>
                         <div>
@@ -144,7 +144,7 @@ const InvoicePage = () => {
                     </div>
                     <Badge className={cn(
                         "w-fit px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest",
-                        data.status === 'DELIVERED' ? "bg-emerald-500 hover:bg-emerald-500" : "bg-blue-600 hover:bg-blue-600"
+                        data.status === 'DELIVERED' ? "bg-emerald-500 hover:bg-emerald-500" : "bg-green-600 hover:bg-green-600"
                     )}>
                         {data.status.replace(/_/g, ' ')}
                     </Badge>
@@ -165,7 +165,7 @@ const InvoicePage = () => {
                             <div className="pt-4 border-t border-slate-50">
                                 <p className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter mb-1">Total Amount</p>
                                 <p className="text-2xl font-black text-slate-900 flex items-center">
-                                    <IndianRupee className="w-5 h-5 mr-0.5 text-blue-600" />
+                                    <IndianRupee className="w-5 h-5 mr-0.5 text-green-600" />
                                     {data.amount.toLocaleString('en-IN')}
                                 </p>
                             </div>
@@ -265,7 +265,7 @@ const DetailRow = ({ icon, label, value, isLocation }: DetailRowProps) => {
             {isLocation && hasValue ? (
                 <button
                     onClick={handleLocationClick}
-                    className="flex items-center gap-1.5 text-blue-600 hover:text-blue-700 font-bold transition-colors group"
+                    className="flex items-center gap-1.5 text-green-600 hover:text-green-700 font-bold transition-colors group"
                 >
                     <span>View on Map</span>
                     <ExternalLink className="w-3 h-3 transition-transform" />
@@ -303,12 +303,12 @@ const PackagingSection = ({ packaging }: { packaging: Packaging | null }) => {
                             key={item.label} 
                             className={cn(
                                 "flex flex-col items-center justify-center py-4 px-2 transition-colors",
-                                item.value > 0 ? "bg-blue-50/30" : "opacity-40"
+                                item.value > 0 ? "bg-green-50/30" : "opacity-40"
                             )}
                         >
                             <div className={cn(
                                 "p-2 rounded-full mb-2",
-                                item.value > 0 ? "bg-blue-100 text-blue-600" : "bg-slate-100 text-slate-400"
+                                item.value > 0 ? "bg-green-100 text-green-600" : "bg-slate-100 text-slate-400"
                             )}>
                                 {item.icon}
                             </div>
@@ -334,16 +334,16 @@ const TimelineNode = ({ icon, title, desc, time, isDone, isLast }: any) => (
         <div className="flex flex-col items-center">
             <div className={cn(
                 "z-10 w-10 h-10 rounded-full flex items-center justify-center border-2 transition-colors",
-                isDone ? "bg-blue-600 border-blue-600 text-white shadow-lg shadow-blue-100" : "bg-white border-slate-200 text-slate-300"
+                isDone ? "bg-green-600 border-green-600 text-white shadow-lg shadow-green-100" : "bg-white border-slate-200 text-slate-300"
             )}>
                 {icon}
             </div>
-            {!isLast && <div className={cn("w-0.5 h-12 -my-1", isDone ? "bg-blue-600" : "bg-slate-100")} />}
+            {!isLast && <div className={cn("w-0.5 h-12 -my-1", isDone ? "bg-green-600" : "bg-slate-100")} />}
         </div>
         <div className="pb-6">
             <p className={cn("text-sm font-bold leading-none", isDone ? "text-slate-900" : "text-slate-400")}>{title}</p>
             <p className="text-[11px] text-slate-500 mt-1">{desc}</p>
-            <p className="text-[10px] font-mono font-bold text-blue-500 mt-2 uppercase tracking-tighter">{time}</p>
+            <p className="text-[10px] font-mono font-bold text-green-500 mt-2 uppercase tracking-tighter">{time}</p>
         </div>
     </div>
 )

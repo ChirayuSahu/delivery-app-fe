@@ -112,7 +112,7 @@ export default function StatusPage() {
                   icon={<Tag className="w-3.5 h-3.5" />}
                   label="Status"
                   value={
-                    <Badge variant="secondary" className="bg-blue-100 text-blue-700 border-none hover:bg-blue-100 font-bold text-[10px] uppercase">
+                    <Badge variant="secondary" className="bg-green-100 text-green-700 border-none hover:bg-green-100 font-bold text-[10px] uppercase">
                       {data.status}
                     </Badge>
                   }

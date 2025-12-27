@@ -65,7 +65,7 @@ export default function InvoiceCard({
         {started && (
           <Link href={`${pathname}/${invoice.invType}${invoice.invNo}`} className="block w-full">
             <Button
-              className="mt-2 h-12 w-full bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white border border-blue-100 transition-all gap-2 font-semibold shadow-sm group"
+              className="mt-2 h-12 w-full bg-green-50 text-green-600 hover:bg-green-600 hover:text-white border border-green-100 transition-all gap-2 font-semibold shadow-sm group"
             >
               <FileText className="w-4 h-4 transition-transform group-hover:scale-110" />
               View Details

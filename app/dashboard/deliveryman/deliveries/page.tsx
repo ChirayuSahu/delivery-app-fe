@@ -42,11 +42,11 @@ export default function DeliveryPage() {
     <div className="min-h-screen flex items-center justify-center p-6 bg-[#f8fafc]">
       <Card className="w-full max-w-md border-slate-200 shadow-sm overflow-hidden">
         {/* Decorative Top Accent */}
-        <div className="h-1.5 bg-blue-600 w-full" />
+        <div className="h-1.5 bg-green-600 w-full" />
 
         <CardHeader className="text-center pt-8">
-          <div className="mx-auto w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center mb-4">
-            <Truck className="w-6 h-6 text-blue-600" />
+          <div className="mx-auto w-12 h-12 bg-green-50 rounded-full flex items-center justify-center mb-4">
+            <Truck className="w-6 h-6 text-green-600" />
           </div>
           <CardTitle className="text-xl font-bold text-slate-900">Start New Run</CardTitle>
           <CardDescription className="text-slate-500">
@@ -56,7 +56,7 @@ export default function DeliveryPage() {
 
         <CardContent className="pb-8 px-8 flex flex-col gap-4">
           <Button
-            className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white font-semibold transition-all active:scale-[0.98] flex gap-2"
+            className="w-full h-12 bg-green-600 hover:bg-green-700 text-white font-semibold transition-all active:scale-[0.98] flex gap-2"
             onClick={createDelivery}
             disabled={loading}
           >

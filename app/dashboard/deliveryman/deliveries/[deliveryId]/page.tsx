@@ -88,8 +88,8 @@ export default function ParticularDeliveryPage() {
     if (loading) {
         return (
             <div className="min-h-screen flex flex-col items-center justify-center py-20 bg-white rounded-2xl border border-dashed">
-                <div className="p-4 bg-blue-50 rounded-full mb-4">
-                    <Loader2 className="w-10 h-10 text-blue-500 animate-spin" />
+                <div className="p-4 bg-green-50 rounded-full mb-4">
+                    <Loader2 className="w-10 h-10 text-green-500 animate-spin" />
                 </div>
                 <h3 className="text-slate-900 font-medium">Loading Delivery...</h3>
                 <p className="text-slate-500 text-sm">Please wait while the delivery details are being loaded.</p>
@@ -126,7 +126,7 @@ export default function ParticularDeliveryPage() {
                             <p className="text-xs text-slate-500 font-mono uppercase">No: {delivery ? delivery.deliveryNo : 'Loading...'}</p>
                         </div>
                     </div>
-                    <div className="flex items-center gap-2 px-3 py-1 bg-blue-50 text-blue-700 rounded-full border border-blue-100">
+                    <div className="flex items-center gap-2 px-3 py-1 bg-green-50 text-green-700 rounded-full border border-green-100">
                         <Package className="w-4 h-4" />
                         <span className="text-sm font-medium">{invoices.length} <span className='hidden sm:inline'>{invoices.length === 1 ? 'Invoice' : 'Invoices'}</span></span>
                     </div>
@@ -208,7 +208,7 @@ export default function ParticularDeliveryPage() {
                                         <div className="flex items-center gap-2">
                                             <div className={cn(
                                                 "p-2 rounded-lg",
-                                                delivery?.endedAt ? "bg-slate-100 text-slate-600" : "bg-blue-50 text-blue-600"
+                                                delivery?.endedAt ? "bg-slate-100 text-slate-600" : "bg-green-50 text-green-600"
                                             )}>
                                                 <Timer className="w-5 h-5" />
                                             </div>
@@ -224,8 +224,8 @@ export default function ParticularDeliveryPage() {
 
                                         {!delivery?.endedAt && (
                                             <span className="flex h-2 w-2">
-                                                <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-blue-400 opacity-75"></span>
-                                                <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-600"></span>
+                                                <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-green-400 opacity-75"></span>
+                                                <span className="relative inline-flex rounded-full h-2 w-2 bg-green-600"></span>
                                             </span>
                                         )}
                                     </div>
@@ -245,7 +245,7 @@ export default function ParticularDeliveryPage() {
                                         <div
                                             className={cn(
                                                 "h-full rounded-full transition-all duration-1000",
-                                                delivery?.endedAt ? "bg-slate-400 w-full" : "bg-blue-600 animate-pulse w-2/3"
+                                                delivery?.endedAt ? "bg-slate-400 w-full" : "bg-green-600 animate-pulse w-2/3"
                                             )}
                                         />
                                     </div>

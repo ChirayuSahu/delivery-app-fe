@@ -12,14 +12,14 @@ export default function HomePage() {
       <nav className="border-b bg-white/80 backdrop-blur-md sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="bg-blue-600 p-1.5 rounded-lg">
+            <div className="bg-green-600 p-1.5 rounded-lg">
               <Package className="w-5 h-5 text-white" />
             </div>
             <span className="font-bold text-xl tracking-tight text-slate-900">Rajesh Pharma</span>
           </div>
           
           <Link href="/login">
-            <Button variant="default" className="bg-blue-600 hover:bg-blue-700 rounded-full px-6">
+            <Button variant="default" className="bg-green-600 hover:bg-green-700 rounded-full px-6">
               Login
             </Button>
           </Link>
@@ -29,16 +29,16 @@ export default function HomePage() {
       {/* Hero Section */}
       <main className="flex-1">
         <section className="max-w-7xl mx-auto px-6 pt-20 pb-16 text-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-100 mb-6">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-green-50 text-green-700 border border-green-100 mb-6">
             <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-600"></span>
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-green-600"></span>
             </span>
             <span className="text-xs font-bold uppercase tracking-wider">v2.0 Live Now</span>
           </div>
           
           <h1 className="text-5xl md:text-6xl font-extrabold text-slate-900 mb-6 tracking-tight">
-            Streamlined delivery Delivery Workflow for <span className="text-blue-600">Rajesh Pharma</span>
+            Streamlined delivery Delivery Workflow for <span className="text-green-600">Rajesh Pharma</span>
           </h1>
           <p className="text-lg text-slate-600 max-w-2xl mx-auto mb-10 leading-relaxed">
             A high-performance logistics tool designed for scanning, tracking, and managing 
@@ -47,7 +47,7 @@ export default function HomePage() {
 
           <div className="flex items-center justify-center gap-4">
             <Link href="/login">
-              <Button size="lg" className="h-12 px-8 bg-blue-600 hover:bg-blue-700 text-lg shadow-lg shadow-blue-200">
+              <Button size="lg" className="h-12 px-8 bg-green-600 hover:bg-green-700 text-lg shadow-lg shadow-green-200">
                 Get Started <ArrowRight className="ml-2 w-5 h-5" />
               </Button>
             </Link>
@@ -58,7 +58,7 @@ export default function HomePage() {
         <section className="max-w-7xl mx-auto px-6 py-12">
           <div className="grid md:grid-cols-3 gap-8">
             <FeatureCard 
-              icon={<Zap className="w-6 h-6 text-blue-600" />}
+              icon={<Zap className="w-6 h-6 text-green-600" />}
               title="Quick Scan"
               description="Camera-integrated barcode scanning for rapid invoice entry on any device."
             />

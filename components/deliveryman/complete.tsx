@@ -50,7 +50,7 @@ export default function CompleteDeliveryButton({ deliveryId, onStarted, disabled
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button disabled={disabled} className="text-white gap-2 shadow-sm shadow-blue-100 w-full">
+        <Button disabled={disabled} className="text-white gap-2 shadow-sm shadow-green-100 w-full">
           <PackageCheck className="w-4 h-4" />
           Complete Delivery
         </Button>
@@ -78,7 +78,7 @@ export default function CompleteDeliveryButton({ deliveryId, onStarted, disabled
           <Button 
             onClick={handleStart} 
             disabled={loading}
-            className="flex-1 bg-blue-600 hover:bg-blue-700"
+            className="flex-1 bg-green-600 hover:bg-green-700"
           >
             {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Confirm & Complete"}
           </Button>

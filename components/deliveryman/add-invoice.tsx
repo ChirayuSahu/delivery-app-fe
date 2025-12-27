@@ -44,7 +44,7 @@ export default function AddInvoice({ deliveryId, onAdded }: { deliveryId: string
   return (
     <div className="bg-white border rounded-lg p-4 shadow-sm">
       <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
-        <Plus className="w-4 h-4 text-blue-600" /> Add New Invoice
+        <Plus className="w-4 h-4 text-green-600" /> Add New Invoice
       </h3>
       
       <div className="flex gap-2">
@@ -59,7 +59,7 @@ export default function AddInvoice({ deliveryId, onAdded }: { deliveryId: string
         </Button>
       </div>
 
-      <Button className="w-full mt-2 bg-blue-600" disabled={invoice.trim().length < 7} onClick={() => submitInvoice(invoice)}>
+      <Button className="w-full mt-2 bg-green-600" disabled={invoice.trim().length < 7} onClick={() => submitInvoice(invoice)}>
         Add Invoice
       </Button>
 
