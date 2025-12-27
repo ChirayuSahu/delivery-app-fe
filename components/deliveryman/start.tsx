@@ -27,8 +27,8 @@ export default function StartDeliveryButton({ deliveryId, onStarted, disabled }:
   async function handleStart() {
     setLoading(true);
     try {
-      const res = await fetch(`/api/delivery/start?id=${deliveryId}`, {
-        method: 'GET',
+      const res = await fetch(`/api/deliveries/${deliveryId}/start`, {
+        method: 'POST',
         credentials: 'include',
       });
 
