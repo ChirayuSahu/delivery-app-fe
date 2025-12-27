@@ -26,7 +26,6 @@ export default function DeliverInvoiceButton({ invoiceId, onSuccess, delivered }
     const [loading, setLoading] = useState(false);
     const [remark, setRemark] = useState('');
 
-    // Helper to get coordinates
     const getCoordinates = (): Promise<{ lat: number; lng: number } | null> => {
         return new Promise((resolve) => {
             if (!navigator.geolocation) {
