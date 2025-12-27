@@ -26,18 +26,33 @@ export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
   const token = request.cookies.get('token')?.value
 
-  if (pathname === '/login' && !token) {
-    return NextResponse.next()
+  /* ---------- LOGIN (HANDLE FIRST) ---------- */
+
+  if (pathname === '/login') {
+    if (!token) return NextResponse.next()
+
+    // verify token only once
+    try {
+      const { payload } = await jose.jwtVerify<JWTUser>(token, jwtSecret, {
+        algorithms: ['HS256'],
+      })
+      return NextResponse.redirect(
+        new URL(roleDashboard(payload.role), request.url)
+      )
+    } catch {
+      return NextResponse.next()
+    }
   }
 
+  /* ---------- DASHBOARD REQUIRES AUTH ---------- */
 
   if (!token && pathname.startsWith('/dashboard')) {
     return NextResponse.redirect(new URL('/login', request.url))
   }
 
-  if (!token) {
-    return NextResponse.next()
-  }
+  if (!token) return NextResponse.next()
+
+  /* ---------- VERIFY TOKEN ---------- */
 
   let payload: JWTUser
   try {
@@ -49,39 +64,39 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(new URL('/login', request.url))
   }
 
-
-  if (pathname === '/login') {
-    return NextResponse.redirect(new URL(roleDashboard(payload.role), request.url))
-  }
+  /* ---------- DASHBOARD ROOT ---------- */
 
   if (pathname === '/dashboard') {
-    return NextResponse.redirect(new URL(roleDashboard(payload.role), request.url))
+    return NextResponse.redirect(
+      new URL(roleDashboard(payload.role), request.url)
+    )
   }
 
-  if (
-    pathname.startsWith('/dashboard/admin') &&
-    payload.role !== 'ADMIN'
-  ) {
-    return NextResponse.redirect(new URL(roleDashboard(payload.role), request.url))
+  /* ---------- ROLE PROTECTION ---------- */
+
+  if (pathname.startsWith('/dashboard/admin') && payload.role !== 'ADMIN') {
+    return NextResponse.redirect(
+      new URL(roleDashboard(payload.role), request.url)
+    )
   }
 
   if (
     pathname.startsWith('/dashboard/supervisor') &&
     payload.role !== 'SUPERVISOR'
   ) {
-    return NextResponse.redirect(new URL(roleDashboard(payload.role), request.url))
+    return NextResponse.redirect(
+      new URL(roleDashboard(payload.role), request.url)
+    )
   }
 
   if (
     pathname.startsWith('/dashboard/deliveryman') &&
     payload.role !== 'DELIVERY_MAN'
   ) {
-    return NextResponse.redirect(new URL(roleDashboard(payload.role), request.url))
+    return NextResponse.redirect(
+      new URL(roleDashboard(payload.role), request.url)
+    )
   }
 
   return NextResponse.next()
-}
-
-export const config = {
-  matcher: ['/login', '/dashboard/:path*'],
 }
