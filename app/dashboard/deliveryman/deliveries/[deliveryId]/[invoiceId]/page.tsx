@@ -294,8 +294,8 @@ const PackagingSection = ({ packaging }: { packaging: Packaging | null }) => {
 
     return (
         <Card className="border-slate-200 shadow-sm overflow-hidden">
-            <CardHeader className="bg-slate-50/50 border-b py-3 px-4">
-                <CardTitle className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+            <CardHeader className="bg-slate-50/50 border-b px-4">
+                <CardTitle className="text-xs font-bold text-slate-500 uppercase tracking-widest">
                     Packaging Materials
                 </CardTitle>
             </CardHeader>
