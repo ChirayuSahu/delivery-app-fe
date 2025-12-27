@@ -12,6 +12,7 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { useRouter } from "next/navigation"
 import DeliverInvoiceButton from "../../../../../../components/deliveryman/deliver"
+import Image from "next/image"
 
 type InvoiceData = {
     id: string;
@@ -44,7 +45,7 @@ type Packaging = {
 
 const InvoicePage = () => {
     const params = useParams();
-    const { deliveryId, invoiceId } = params; // delivery ID and invoice ID/No
+    const { deliveryId, invoiceId } = params;
 
     const [data, setData] = useState<InvoiceData | null>(null);
     const [loading, setLoading] = useState(true);
@@ -129,11 +130,10 @@ const InvoicePage = () => {
             </header>
 
             <div className="max-w-3xl mx-auto space-y-6 p-4 md:p-8">
-                {/* Header Section */}
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div className="flex items-center gap-4">
                         <div className="p-3 bg-white border rounded-2xl shadow-sm text-blue-600">
-                            <Receipt className="w-8 h-8" />
+                            <Image alt='Rajesh Pharma Logo' src='https://rajeshpharma.com/img/rp.svg' className='w-8 h-8' width={100} height={100} />
                         </div>
                         <div>
                             <h1 className="text-2xl font-black text-slate-900 leading-tight">
@@ -150,7 +150,6 @@ const InvoicePage = () => {
                     </Badge>
                 </div>
 
-                {/* Summary Cards */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <Card className="border-slate-200 shadow-sm">
                         <CardContent className="">
@@ -202,7 +201,6 @@ const InvoicePage = () => {
                     )}
                 </div>
 
-                {/* Timeline Section */}
                 <Card className="border-slate-200 shadow-sm overflow-hidden">
                     <CardHeader className="bg-slate-50/50 border-b">
                         <CardTitle className="text-xs font-bold text-slate-500 uppercase tracking-widest">Shipment Timeline</CardTitle>
@@ -236,15 +234,14 @@ interface DetailRowProps {
     icon: React.ReactNode;
     label: string;
     value: string | null | undefined;
-    isLocation?: boolean; // New flag to trigger location logic
+    isLocation?: boolean;
 }
 
 const DetailRow = ({ icon, label, value, isLocation }: DetailRowProps) => {
-    // Logic to handle Google Maps redirect
+
     const handleLocationClick = () => {
         if (!value) return;
         try {
-            // Assuming value is a JSON string like '{"lat": 21.123, "lng": 78.456}'
             const coords = typeof value === 'string' ? JSON.parse(value) : value;
 
             if (coords.lat && coords.lng) {
@@ -332,7 +329,6 @@ const PackagingSection = ({ packaging }: { packaging: Packaging | null }) => {
     );
 };
 
-// Small helper for Timeline Nodes
 const TimelineNode = ({ icon, title, desc, time, isDone, isLast }: any) => (
     <div className="flex gap-4">
         <div className="flex flex-col items-center">
