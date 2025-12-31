@@ -33,8 +33,8 @@ export default function CombinedDeliveryDashboard() {
           </div>
         </div>
       </header>
-      <div className='max-w-7xl w-full grid grid-cols-1 md:grid-cols-3 gap-6 mx-auto flex-1'>
-          <div className="col-span-1 p-6 border-r overflow-y-auto">
+      <div className='max-w-7xl w-full grid grid-cols-1 lg:grid-cols-3 gap-0 lg:gap-6 mx-auto flex-1'>
+          <div className="col-span-1 p-6 lg:border-r overflow-y-auto">
             <UserInfoCard userId={userId} />
           </div>
           <div className="col-span-2 overflow-y-auto p-6">
