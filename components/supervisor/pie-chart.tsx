@@ -77,7 +77,7 @@ function DeliveryPersonnelChart() {
         </div>
       </div>
 
-      <div className="p-6 relative h-[400px]">
+      <div className="p-6 relative h-100">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
             <Tooltip

@@ -316,7 +316,7 @@ export default function ParticularDeliveryPage() {
                                     <div key={`${inv.invType}-${inv.invNo}`} className="transition-transform active:scale-[0.98]">
                                         <InvoiceCard
                                             invoice={inv}
-                                            onDelete={removeInvoice}
+                                            onDelete={() => removeInvoice(inv.invType, inv.invNo)}
                                             showDeleteInvoice={!delivery?.startedAt}
                                             started={!!delivery?.startedAt}
                                             ended={!!delivery?.endedAt}
