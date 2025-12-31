@@ -21,6 +21,7 @@ type InvoiceData = {
     amount: number;
     customerName: string;
     customerPhone: string;
+    customerAddress: string;
     status: string;
     createdAt: string;
     deliveredAt: string | null;
@@ -122,7 +123,7 @@ const InvoicePage = () => {
             <header className="sticky top-0 z-10 border-b bg-white/80 backdrop-blur-md px-6 py-4">
                 <div className="max-w-7xl mx-auto flex items-center justify-between">
                     <div className="flex items-center gap-4">
-                        <div onClick={()=>router.back()} className="p-2 hover:bg-slate-100 rounded-full transition-colors">
+                        <div onClick={() => router.back()} className="p-2 hover:bg-slate-100 rounded-full transition-colors">
                             <ArrowLeft className="w-5 h-5 text-slate-600" />
                         </div>
                         <div>
@@ -165,17 +166,22 @@ const InvoicePage = () => {
                     <Card className="border-slate-200 shadow-sm">
                         <CardContent className="">
                             <div className="flex items-center gap-3 mb-4">
-                                <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-500">
-                                    <User className="w-5 h-5" />
-                                </div>
-                                <div className="flex-1 overflow-hidden">
-                                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">Customer</p>
-                                    <p className="font-bold text-slate-900">{data.customerName}</p>
+                                <div className="flex-1 overflow-hidden space-y-4">
+                                    <div>
+                                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">Customer</p>
+                                        <p className="font-bold text-slate-900">{data.customerName}</p>
+                                    </div>
                                     {data.customerPhone && (
-                                        <>
+                                        <div>
                                             <p className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">Phone</p>
                                             <p className="font-bold text-slate-900 truncate">{data.customerPhone}</p>
-                                        </>
+                                        </div>
+                                    )}
+                                    {data.customerAddress && (
+                                        <div>
+                                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">Address</p>
+                                            <p className="text-xs font-bold text-slate-900">{data.customerAddress}</p>
+                                        </div>
                                     )}
                                 </div>
                             </div>
@@ -191,7 +197,7 @@ const InvoicePage = () => {
 
                     <Card className="border-slate-200 shadow-sm">
                         <CardContent className="space-y-4">
-                            { data.delivery && <DetailRow icon={<Truck className="w-4 h-4" />} label="Run ID" value={data.delivery.deliveryNo} />}
+                            {data.delivery && <DetailRow icon={<Truck className="w-4 h-4" />} label="Run ID" value={data.delivery.deliveryNo} />}
                             <DetailRow icon={<Calendar className="w-4 h-4" />} label="Date" value={new Date(data.createdAt).toLocaleDateString('en-GB')} />
                             <DetailRow icon={<MapPin className="w-4 h-4" />} label="Delivery Location" value={data.location} isLocation />
                         </CardContent>

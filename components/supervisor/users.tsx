@@ -56,7 +56,7 @@ function UsersCard() {
   }
 
   return (
-    <Card className="border-slate-200 shadow-lg shadow-slate-200/50 overflow-hidden flex flex-col max-h-full pt-0">
+    <Card className="border-slate-200 shadow-lg shadow-slate-200/50 overflow-hidden flex flex-col min-h-full pt-0">
       <CardHeader className="border-b bg-white p-4 space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -102,7 +102,7 @@ function UsersCard() {
             ))}
           </div>
         ) : (
-          <div className="flex flex-col items-center justify-center h-full text-slate-400 py-10">
+          <div className="flex flex-col items-center justify-center min-h-full text-slate-400 py-10">
             <Search className="h-10 w-10 mb-2 opacity-10" />
             <p className="text-sm font-medium">No team members found</p>
           </div>
