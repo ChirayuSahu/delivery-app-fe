@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { Html5Qrcode } from 'html5-qrcode';
+import { Html5Qrcode, Html5QrcodeSupportedFormats } from 'html5-qrcode';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScanLine, Plus, X } from 'lucide-react';
@@ -33,7 +33,7 @@ export default function AddInvoice({ deliveryId, onAdded }: { deliveryId: string
   useEffect(() => {
     if (!scanning) return;
     const scanner = new Html5Qrcode('scanner-area');
-    scanner.start({ facingMode: 'environment' }, { fps: 10, qrbox: 200 }, 
+    scanner.start({ facingMode: 'environment' }, { fps: 12, qrbox: { width: 300, height: 120 }, disableFlip: true }, 
       (text) => { submitInvoice(text); setScanning(false); }, 
       () => {}
     ).then(() => { scannerRef.current = scanner; });
