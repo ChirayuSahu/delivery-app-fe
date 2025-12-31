@@ -131,7 +131,7 @@ export function UserDeliveriesCard({ userId }: { userId: string }) {
                   <div className="flex items-center gap-4">
                     <div className="flex-1 h-1.5 bg-slate-100 rounded-full overflow-hidden">
                       <div 
-                        className={`h-full rounded-full ${isFailed ? 'bg-red-400' : isCompleted ? 'bg-emerald-500' : 'bg-blue-500 animate-shimmer'}`} 
+                        className={`h-full rounded-full ${isFailed ? 'bg-green-500' : isCompleted ? 'bg-green-500' : 'bg-blue-500 animate-shimmer'}`} 
                         style={{ width: isCompleted || isFailed ? '100%' : '65%' }}
                       />
                     </div>

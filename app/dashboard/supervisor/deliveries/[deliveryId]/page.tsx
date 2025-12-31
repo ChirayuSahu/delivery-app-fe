@@ -9,6 +9,7 @@ import { AlertCircle, ArrowLeft, CircleX, Info, Loader2, Package, Timer, CheckCi
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import DeliveryMap from '@/components/supervisor/delivery-map';
+import DeliveryStats from '@/components/supervisor/delivery-stats';
 
 export type Invoice = {
     invType: string;
@@ -16,7 +17,7 @@ export type Invoice = {
     customerName: string;
     status: string;
     location?: string;
-    deliveredAt: Date;
+    deliveredAt: string;
 };
 
 type DeliveryResponse = {
@@ -28,8 +29,8 @@ type DeliveryResponse = {
         deliveryManId: string;
         createdAt: Date;
         updatedAt: Date;
-        startedAt: Date | null;
-        endedAt: Date | null;
+        startedAt: string | null;
+        endedAt: string | null;
         invoices: Invoice[];
         failedDeliveries: string[];
     };
@@ -275,6 +276,7 @@ export default function ParticularDeliveryPage() {
                                     </div>
                                 </div>
                             )}
+                            <DeliveryStats delivery={delivery} />
                         </aside>
                     )}
 
