@@ -8,12 +8,15 @@ import Link from 'next/link';
 import { AlertCircle, ArrowLeft, CircleX, Info, Loader2, Package, Timer, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import DeliveryMap from '@/components/supervisor/delivery-map';
 
-type Invoice = {
+export type Invoice = {
     invType: string;
     invNo: string;
     customerName: string;
     status: string;
+    location?: string;
+    deliveredAt: Date;
 };
 
 type DeliveryResponse = {
@@ -45,7 +48,7 @@ export default function ParticularDeliveryPage() {
     async function fetchDelivery() {
         setLoading(true);
         try {
-            const res = await fetch(`/api/deliveries/${deliveryId}`,
+            const res = await fetch(`/api/deliveries/${deliveryId}?location=true`,
                 { credentials: 'include' }
             );
 
@@ -240,7 +243,15 @@ export default function ParticularDeliveryPage() {
                     )}
 
                     {/* 3. RIGHT CONTENT: Invoice Grid */}
-                    <section className="flex-1">
+                    <section className="flex-1 space-y-6">
+                        {invoices.length > 0 && (
+                            <div>
+                                <h2 className="text-lg font-semibold text-slate-800 mb-2">
+                                    Delivery Route
+                                </h2>
+                                <DeliveryMap invoices={invoices} />
+                            </div>
+                        )}
                         <div className="flex items-center justify-between mb-6">
                             <h2 className="text-lg font-semibold text-slate-800">Added Invoices</h2>
                         </div>
