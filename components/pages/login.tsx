@@ -47,6 +47,12 @@ export default function LoginPage() {
         setLoading(false);
     };
 
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === 'Enter') {
+            handleLogin(e as unknown as React.FormEvent);
+        }
+    };
+
     return (
         <div className="flex min-h-screen items-center justify-center bg-slate-50 p-4">
             <Card className="w-full max-w-md shadow-lg">
@@ -56,7 +62,7 @@ export default function LoginPage() {
                         Enter your email and password to access your account
                     </CardDescription>
                 </CardHeader>
-                <CardContent className="grid gap-4">
+                <CardContent className="grid gap-4" onKeyDown={handleKeyDown}>
                     <div className="grid gap-2">
                         <Label htmlFor="email">Email</Label>
                         <Input
