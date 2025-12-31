@@ -23,7 +23,7 @@ export default function DashboardPage() {
                 </div>
             </header>
             <div className="max-w-7xl mx-auto space-y-10 p-6 lg:p-10">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 max-h-50">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 max-h-full">
                     <div className="col-span-1">
                         <DeliveryPersonnelChart />
                     </div>

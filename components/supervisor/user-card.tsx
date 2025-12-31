@@ -57,7 +57,7 @@ export function UserInfoCard({ userId }: { userId: string }) {
     <Card className="group border-slate-200 shadow-sm hover:shadow-xl transition-all duration-500 h-full flex flex-col overflow-hidden bg-white">
       {/* Header / Banner Section */}
       <div className="relative shrink-0">
-        <div className="px-6 -mt-12 pb-4 relative z-10">          
+        <div className="px-6 pb-4 relative z-10">          
           <div className="flex justify-between items-center mt-4">
             <h3 className="text-2xl font-black text-slate-900 tracking-tight">{user.name}</h3>
                <Badge className="text-xs bg-gray-50 border border-slate-400 text-slate-400 font-medium tracking-wide">Delivery Executive</Badge>
@@ -99,14 +99,6 @@ export function UserInfoCard({ userId }: { userId: string }) {
             </div>
             <div className="h-8 w-px bg-slate-200" />
           </div>
-        </div>
-
-        {/* Footer Actions */}
-        <div className="pt-8 mt-auto">
-          <button className="group/btn w-full py-3.5 bg-slate-900 hover:bg-indigo-600 text-white text-xs font-bold rounded-2xl transition-all duration-300 flex items-center justify-center gap-2 shadow-lg shadow-slate-900/10 hover:shadow-indigo-500/20">
-            View Profile Analytics
-            <ArrowRight className="h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
-          </button>
         </div>
       </CardContent>
     </Card>
