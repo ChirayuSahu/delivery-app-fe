@@ -82,7 +82,7 @@ export default function DeliveryMap({ invoices }: { invoices: Invoice[] }) {
     if (points.length === 0) {
         return (
             <div className="w-full h-110 bg-slate-100 animate-pulse rounded-xl flex items-center justify-center">
-                <p className="text-slate-400">No delivery locations available.</p>
+                <p className="text-slate-400">No Items delivered yet.</p>
             </div>
         );
     }
