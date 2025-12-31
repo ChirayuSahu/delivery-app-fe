@@ -1,15 +1,12 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { toast } from 'sonner';
-import AddInvoice from '@/components/deliveryman/add-invoice';
-import InvoiceCard from '@/components/deliveryman/invoice-card';
+import InvoiceCard from '@/components/supervisor/invoice-card';
 import Link from 'next/link';
 import { AlertCircle, ArrowLeft, CircleX, Info, Loader2, Package, Timer, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import StartDeliveryButton from '../../../../../components/deliveryman/start';
-import CompleteDeliveryButton from '@/components/deliveryman/complete';
 import { cn } from '@/lib/utils';
 
 type Invoice = {
@@ -42,6 +39,8 @@ export default function ParticularDeliveryPage() {
     const [delivery, setDelivery] = useState<DeliveryResponse['data'] | null>(null);
     const [invoices, setInvoices] = useState<Invoice[]>([]);
     const [loading, setLoading] = useState(true);
+
+    const router = useRouter();
 
     async function fetchDelivery() {
         setLoading(true);
@@ -118,9 +117,9 @@ export default function ParticularDeliveryPage() {
             <header className="sticky top-0 z-10 border-b bg-white/80 backdrop-blur-md px-6 py-4">
                 <div className="max-w-7xl mx-auto flex items-center justify-between">
                     <div className="flex items-center gap-4">
-                        <Link href="/dashboard" className="p-2 hover:bg-slate-100 rounded-full transition-colors">
+                        <div onClick={() => router.back()} className="p-2 hover:bg-slate-100 rounded-full transition-colors cursor-pointer">
                             <ArrowLeft className="w-5 h-5 text-slate-600" />
-                        </Link>
+                        </div>
                         <div>
                             <h1 className="text-xl font-bold text-slate-900">Delivery Details</h1>
                             <p className="text-xs text-slate-500 font-mono uppercase">No: {delivery ? delivery.deliveryNo : 'Loading...'}</p>
@@ -135,23 +134,9 @@ export default function ParticularDeliveryPage() {
 
             <main className="max-w-7xl mx-auto p-6">
                 <div className="flex flex-col lg:flex-row gap-8">
-
                     {/* 2. LEFT SIDEBAR: Actions (Fixed width on desktop) */}
-                    <aside className="w-full lg:w-87.5 space-y-6">
-                        {!delivery?.startedAt && (
-                            <div className="">
-                                <AddInvoice deliveryId={deliveryId} onAdded={fetchDelivery} />
-                            </div>
-                        )}
-
-                        {!delivery?.endedAt && (
-                            <div className='space-y-2'>
-                                <StartDeliveryButton disabled={invoices.length === 0 || !!(delivery?.startedAt)} deliveryId={deliveryId} onStarted={fetchDelivery} />
-                                <CompleteDeliveryButton disabled={!delivery?.startedAt || !!delivery?.endedAt} deliveryId={deliveryId} onStarted={fetchDelivery} />
-                            </div>
-                        )}
-
-                        {delivery?.endedAt && (
+                    {delivery?.endedAt && (
+                        <aside className="w-full lg:w-87.5 space-y-6">
                             <div>
                                 <div className="relative overflow-hidden bg-white border border-emerald-100 rounded-xl shadow-sm">
                                     {/* Success Accent Bar */}
@@ -196,63 +181,63 @@ export default function ParticularDeliveryPage() {
                                     </div>
                                 )}
                             </div>
-                        )}
 
-                        {delivery?.startedAt && (
-                            <div className="relative overflow-hidden bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
-                                {/* Decorative background icon */}
-                                <Timer className="absolute -right-2 -top-2 w-24 h-24 text-slate-50 opacity-[0.03] -rotate-12" />
+                            {delivery?.startedAt && (
+                                <div className="relative overflow-hidden bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
+                                    {/* Decorative background icon */}
+                                    <Timer className="absolute -right-2 -top-2 w-24 h-24 text-slate-50 opacity-[0.03] -rotate-12" />
 
-                                <div className="relative flex flex-col gap-4">
-                                    <div className="flex items-center justify-between">
-                                        <div className="flex items-center gap-2">
-                                            <div className={cn(
-                                                "p-2 rounded-lg",
-                                                delivery?.endedAt ? "bg-slate-100 text-slate-600" : "bg-green-50 text-green-600"
-                                            )}>
-                                                <Timer className="w-5 h-5" />
+                                    <div className="relative flex flex-col gap-4">
+                                        <div className="flex items-center justify-between">
+                                            <div className="flex items-center gap-2">
+                                                <div className={cn(
+                                                    "p-2 rounded-lg",
+                                                    delivery?.endedAt ? "bg-slate-100 text-slate-600" : "bg-green-50 text-green-600"
+                                                )}>
+                                                    <Timer className="w-5 h-5" />
+                                                </div>
+                                                <div>
+                                                    <h2 className="text-sm font-bold text-slate-900 leading-none">
+                                                        {delivery?.endedAt ? "Total Duration" : "Time Elapsed"}
+                                                    </h2>
+                                                    <p className="text-[11px] text-slate-500 mt-1 uppercase tracking-wider font-medium">
+                                                        {delivery?.endedAt ? "Delivery Completed" : "Live Tracking"}
+                                                    </p>
+                                                </div>
                                             </div>
-                                            <div>
-                                                <h2 className="text-sm font-bold text-slate-900 leading-none">
-                                                    {delivery?.endedAt ? "Total Duration" : "Time Elapsed"}
-                                                </h2>
-                                                <p className="text-[11px] text-slate-500 mt-1 uppercase tracking-wider font-medium">
-                                                    {delivery?.endedAt ? "Delivery Completed" : "Live Tracking"}
-                                                </p>
-                                            </div>
+
+                                            {!delivery?.endedAt && (
+                                                <span className="flex h-2 w-2">
+                                                    <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-green-400 opacity-75"></span>
+                                                    <span className="relative inline-flex rounded-full h-2 w-2 bg-green-600"></span>
+                                                </span>
+                                            )}
                                         </div>
 
-                                        {!delivery?.endedAt && (
-                                            <span className="flex h-2 w-2">
-                                                <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-green-400 opacity-75"></span>
-                                                <span className="relative inline-flex rounded-full h-2 w-2 bg-green-600"></span>
+                                        <div className="flex items-baseline gap-2">
+                                            <span className="text-3xl font-mono font-black text-slate-900">
+                                                {delivery?.endedAt
+                                                    ? Math.ceil((new Date(delivery.endedAt).getTime() - new Date(delivery.startedAt).getTime()) / 60000)
+                                                    : Math.ceil((Date.now() - new Date(delivery.startedAt).getTime()) / 60000)
+                                                }
                                             </span>
-                                        )}
-                                    </div>
+                                            <span className="text-slate-500 font-bold text-sm uppercase">Minutes</span>
+                                        </div>
 
-                                    <div className="flex items-baseline gap-2">
-                                        <span className="text-3xl font-mono font-black text-slate-900">
-                                            {delivery?.endedAt
-                                                ? Math.ceil((new Date(delivery.endedAt).getTime() - new Date(delivery.startedAt).getTime()) / 60000)
-                                                : Math.ceil((Date.now() - new Date(delivery.startedAt).getTime()) / 60000)
-                                            }
-                                        </span>
-                                        <span className="text-slate-500 font-bold text-sm uppercase">Minutes</span>
-                                    </div>
-
-                                    {/* Progress visualizer */}
-                                    <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
-                                        <div
-                                            className={cn(
-                                                "h-full rounded-full transition-all duration-1000",
-                                                delivery?.endedAt ? "bg-slate-400 w-full" : "bg-green-600 animate-pulse w-2/3"
-                                            )}
-                                        />
+                                        {/* Progress visualizer */}
+                                        <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                                            <div
+                                                className={cn(
+                                                    "h-full rounded-full transition-all duration-1000",
+                                                    delivery?.endedAt ? "bg-slate-400 w-full" : "bg-green-600 animate-pulse w-2/3"
+                                                )}
+                                            />
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        )}
-                    </aside>
+                            )}
+                        </aside>
+                    )}
 
                     {/* 3. RIGHT CONTENT: Invoice Grid */}
                     <section className="flex-1">
