@@ -81,12 +81,6 @@ export default function DeliverySidebarStats({ delivery }: { delivery: DeliveryD
           subValue="Completed"
         />
         <StatRow 
-          icon={<Timer className="w-4 h-4" />} 
-          label="Elapsed" 
-          value={`${stats.totalMin}m`} 
-          subValue="Total Time"
-        />
-        <StatRow 
           icon={<TrendingUp className="w-4 h-4" />} 
           label="Average" 
           value={`${stats.avgMin}m`} 
