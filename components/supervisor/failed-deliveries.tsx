@@ -23,7 +23,7 @@ const dummyFailedDeliveries: FailedDelivery[] = Array.from({ length: 20 }, (_, i
 }));
 
 
-export function FailedDeliveriesSection() {
+function FailedDeliveriesSection() {
 
     const [deliveries, setDeliveries] = useState<FailedDelivery[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
@@ -55,7 +55,7 @@ export function FailedDeliveriesSection() {
             </div>
 
             {deliveries.length > 0 ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {deliveries.map((delivery) => (
                         <Link href={`${pathname}/invoice/${delivery.invType}${delivery.invNo}`} key={delivery.id}>
                             <div key={delivery.id} className="flex items-start gap-4 p-4 bg-white border-l-4 border-l-red-500 border border-slate-200 rounded-xl shadow-sm">
@@ -86,3 +86,5 @@ export function FailedDeliveriesSection() {
         </section>
     );
 }
+
+export default FailedDeliveriesSection;

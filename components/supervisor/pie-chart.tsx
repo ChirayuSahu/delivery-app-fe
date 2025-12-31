@@ -12,7 +12,7 @@ interface Delivery {
 
 const COLORS = ['#10b981', '#3b82f6', '#f59e0b', '#8b5cf6', '#ef4444'];
 
-export function DeliveryPersonnelChart() {
+function DeliveryPersonnelChart() {
   const [deliveries, setDeliveries] = useState<Delivery[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -46,7 +46,7 @@ export function DeliveryPersonnelChart() {
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
           <CardTitle className="text-base font-semibold text-slate-800">
-            Delivery Distribution
+            Today's Delivery Distribution
           </CardTitle>
           <User2 className="h-4 w-4 text-slate-400" />
         </div>
@@ -103,3 +103,5 @@ export function DeliveryPersonnelChart() {
     </Card>
   );
 }
+
+export default DeliveryPersonnelChart;
