@@ -48,7 +48,7 @@ export function UserDeliveriesCard({ userId }: { userId: string }) {
     return (
       <Card className="border-slate-200 shadow-sm h-full flex items-center justify-center">
         <div className="flex flex-col items-center gap-3">
-          <Loader2 className="animate-spin h-8 w-8 text-indigo-500" />
+          <Loader2 className="animate-spin h-8 w-8 text-green-500" />
           <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Loading Trips</p>
         </div>
       </Card>
@@ -60,7 +60,7 @@ export function UserDeliveriesCard({ userId }: { userId: string }) {
       <CardHeader className="border-b border-slate-100 bg-slate-50/50 p-5 shrink-0">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 bg-indigo-600 rounded-xl shadow-lg shadow-indigo-200">
+            <div className="p-2.5 bg-green-600 rounded-xl shadow-lg shadow-green-200">
               <History className="h-5 w-5 text-white" />
             </div>
             <div>
@@ -88,7 +88,7 @@ export function UserDeliveriesCard({ userId }: { userId: string }) {
 
               return (
                 <Link href={`/dashboard/supervisor/deliveries/${delivery.id}`} key={delivery.id}>
-                <div className="relative p-5 hover:bg-indigo-50/30 transition-all group cursor-pointer border-l-4 border-transparent hover:border-indigo-500">
+                <div className="relative p-5 hover:bg-indigo-50/30 transition-all group cursor-pointer border-l-4 border-transparent hover:border-blue-500">
                   <div className="flex items-start justify-between mb-4">
                     <div>
                       <div className="flex items-center gap-2 mb-1">
@@ -131,7 +131,7 @@ export function UserDeliveriesCard({ userId }: { userId: string }) {
                   <div className="flex items-center gap-4">
                     <div className="flex-1 h-1.5 bg-slate-100 rounded-full overflow-hidden">
                       <div 
-                        className={`h-full rounded-full ${isFailed ? 'bg-amber-400' : isCompleted ? 'bg-emerald-500' : 'bg-indigo-500 animate-shimmer'}`} 
+                        className={`h-full rounded-full ${isFailed ? 'bg-amber-400' : isCompleted ? 'bg-emerald-500' : 'bg-blue-500 animate-shimmer'}`} 
                         style={{ width: isCompleted ? '100%' : '65%' }}
                       />
                     </div>
@@ -140,11 +140,6 @@ export function UserDeliveriesCard({ userId }: { userId: string }) {
                         {delivery.isPaid ? 'Paid' : 'Unpaid'}
                       </p>
                     </div>
-                  </div>
-
-                  {/* Hover Quick Action Overlay */}
-                  <div className="absolute right-4 bottom-4 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1 text-indigo-600 font-bold text-[10px] uppercase">
-                    Details <ChevronRight className="h-3 w-3" />
                   </div>
                 </div>
                 </Link>

@@ -122,9 +122,9 @@ const InvoicePage = () => {
             <header className="sticky top-0 z-10 border-b bg-white/80 backdrop-blur-md px-6 py-4">
                 <div className="max-w-7xl mx-auto flex items-center justify-between">
                     <div className="flex items-center gap-4">
-                        <Link href={`/dashboard/deliveryman/deliveries/${deliveryId}`} className="p-2 hover:bg-slate-100 rounded-full transition-colors">
+                        <div onClick={()=>router.back()} className="p-2 hover:bg-slate-100 rounded-full transition-colors">
                             <ArrowLeft className="w-5 h-5 text-slate-600" />
-                        </Link>
+                        </div>
                         <div>
                             <h1 className="text-xl font-bold text-slate-900">Invoice Details</h1>
                             <p className="text-xs text-slate-500 font-mono uppercase">{data.invType}/{data.invNo}</p>

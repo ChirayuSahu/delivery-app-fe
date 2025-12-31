@@ -43,7 +43,7 @@ export function UserInfoCard({ userId }: { userId: string }) {
     return (
       <Card className="border-slate-200 h-full flex flex-col items-center justify-center space-y-4">
         <div className="relative flex items-center justify-center">
-          <Loader2 className="animate-spin h-8 w-8 text-indigo-500" />
+          <Loader2 className="animate-spin h-8 w-8 text-green-500" />
           <div className="absolute h-12 w-12 border-4 border-slate-100 rounded-full border-t-transparent animate-pulse" />
         </div>
         <p className="text-sm font-medium text-slate-400 animate-pulse">Syncing profile data...</p>
@@ -70,7 +70,7 @@ export function UserInfoCard({ userId }: { userId: string }) {
         <div className="space-y-5">
           <div className="flex flex-col gap-4">
             <div className="group/item flex items-center gap-4 cursor-pointer">
-                <Mail className="h-5 w-5 text-slate-400 group-hover/item:text-indigo-600" />
+                <Mail className="h-5 w-5 text-slate-400 group-hover/item:text-green-600" />
               <div className="flex-1">
                 <p className="text-md text-slate-400 font-bold uppercase tracking-widest">Email Address</p>
                 <p className="text-sm font-semibold text-slate-700">{user.email}</p>
@@ -78,7 +78,7 @@ export function UserInfoCard({ userId }: { userId: string }) {
             </div>
 
             <div className="group/item flex items-center gap-4 cursor-pointer">
-                <Phone className="h-5 w-5 text-slate-400 group-hover/item:text-indigo-600" />
+                <Phone className="h-5 w-5 text-slate-400 group-hover/item:text-green-600" />
               <div className="flex-1">
                 <p className="text-md text-slate-400 font-bold uppercase tracking-widest">Mobile Contact</p>
                 <p className="text-sm font-semibold text-slate-700">{user.phone}</p>
@@ -90,7 +90,7 @@ export function UserInfoCard({ userId }: { userId: string }) {
           <div className="mt-6 p-4 bg-slate-50/50 rounded-2xl border border-slate-100/80 flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="bg-white p-2 rounded-lg shadow-sm">
-                <Fingerprint className="h-5 w-5 text-indigo-500" />
+                <Fingerprint className="h-5 w-5 text-green-500" />
               </div>
               <div>
                 <p className="text-[10px] font-bold text-slate-400 uppercase leading-none mb-1">EasySol ID</p>
