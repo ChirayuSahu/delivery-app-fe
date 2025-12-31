@@ -10,7 +10,7 @@ const AllDeliveries = () => {
     
 
     return (
-        <div className="h-screen bg-[#f8fafc] pb-12">
+        <div className="min-h-screen bg-[#f8fafc] pb-12">
             {/* Header */}
             <header className="sticky top-0 z-30 border-b bg-white/80 backdrop-blur-md px-6 py-4">
                 <div className="max-w-4xl mx-auto flex items-center justify-between">
@@ -24,7 +24,7 @@ const AllDeliveries = () => {
                     </div>
                 </div>
             </header>
-            <main className="max-w-4xl mx-auto px-6 py-8 h-full">
+            <main className="max-w-4xl mx-auto px-6 py-10">
                 <AllDeliveriesCard />
             </main>
         </div>
