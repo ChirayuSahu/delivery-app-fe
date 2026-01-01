@@ -88,7 +88,7 @@ function FailedDeliveriesSection() {
                 >
                     {deliveries.map((delivery) => (
                         <Link 
-                            href={`/supervisor/invoice/${delivery.invType}${delivery.invNo}`} 
+                            href={`/dashboard/supervisor/invoice/${delivery.invType}${delivery.invNo}`} 
                             key={delivery.id}
                         >
                             <motion.div 
