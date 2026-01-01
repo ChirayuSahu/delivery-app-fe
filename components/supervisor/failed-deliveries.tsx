@@ -1,9 +1,8 @@
 'use client';
 
 import { AlertCircle, CheckCircle2, Loader2, ArrowRight, ShieldAlert, History } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { motion, Variants } from "motion/react";
 
 interface FailedDelivery {
@@ -27,7 +26,8 @@ const itemVariants: Variants = {
 function FailedDeliveriesSection() {
     const [deliveries, setDeliveries] = useState<FailedDelivery[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
-    const pathname = usePathname();
+
+    const hasFetched = useRef(false);
 
     async function fetchFailedDeliveries() {
         try {
@@ -42,6 +42,8 @@ function FailedDeliveriesSection() {
     }
 
     useEffect(() => {
+        if (hasFetched.current) return;
+        hasFetched.current = true;
         fetchFailedDeliveries();
     }, []);
 
@@ -86,7 +88,7 @@ function FailedDeliveriesSection() {
                 >
                     {deliveries.map((delivery) => (
                         <Link 
-                            href={`${pathname}/invoice/${delivery.invType}${delivery.invNo}`} 
+                            href={`/supervisor/invoice/${delivery.invType}${delivery.invNo}`} 
                             key={delivery.id}
                         >
                             <motion.div 

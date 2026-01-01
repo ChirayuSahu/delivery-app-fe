@@ -1,13 +1,13 @@
 'use client';
 
-import React, { useEffect, useState, useMemo } from "react";
-import { Loader2, CheckCircle2, AlertCircle, User } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+import { CheckCircle2 } from "lucide-react";
 import DeliveryPersonnelChart from "@/components/supervisor/pie-chart";
 import FailedDeliveriesSection from "@/components/supervisor/failed-deliveries";
 import UsersCard from "@/components/supervisor/users";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { Input } from "@/components/ui/input";
+import InvoiceSearchBar from "@/components/supervisor/invoice-search-bar";
 
 export default function DashboardPage() {
 
@@ -34,6 +34,7 @@ export default function DashboardPage() {
                 </div>
             </header>
             <div className="max-w-7xl mx-auto space-y-10 p-6 lg:p-10">
+                <InvoiceSearchBar />
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-2 h-full">
                     <div className="col-span-1">
                         <DeliveryPersonnelChart />

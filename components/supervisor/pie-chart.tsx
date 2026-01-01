@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo, useEffect, useState } from 'react';
+import React, { useMemo, useEffect, useState, useRef } from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
 import { User2, Loader2, TrendingUp, PieChart as PieIcon, CalendarIcon } from "lucide-react";
 import { motion, Variants } from "framer-motion";
@@ -136,6 +136,7 @@ function DeliveryPersonnelChart() {
               stroke="none"
               animationBegin={200}
               animationDuration={1200}
+              isAnimationActive={!loading}
             >
               {chartData.map((_, index) => (
                 <Cell
