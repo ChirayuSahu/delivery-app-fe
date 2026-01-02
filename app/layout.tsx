@@ -15,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Deliveries - Rajesh Pharma",
-  description: "Delivery management system for Rajesh Pharma",
+  title: `Deliveries - ${process.env.NEXT_PUBLIC_COMPANY_NAME}`,
+  description: `Delivery management system for ${process.env.NEXT_PUBLIC_COMPANY_NAME}`,
 };
 
 export default function RootLayout({

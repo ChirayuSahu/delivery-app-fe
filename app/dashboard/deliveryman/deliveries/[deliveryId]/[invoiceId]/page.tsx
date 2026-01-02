@@ -136,7 +136,7 @@ const InvoicePage = () => {
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div className="flex items-center gap-4">
                         <div className="p-3 bg-white border rounded-2xl shadow-sm text-green-600">
-                            <Image alt='Rajesh Pharma Logo' src='https://rajeshpharma.com/img/rp.svg' className='w-8 h-8' width={100} height={100} />
+                            <Image alt={`${process.env.NEXT_PUBLIC_COMPANY_NAME} Logo`} src='https://rajeshpharma.com/img/rp.svg' className='w-8 h-8' width={100} height={100} />
                         </div>
                         <div>
                             <h1 className="text-2xl font-black text-slate-900 leading-tight">

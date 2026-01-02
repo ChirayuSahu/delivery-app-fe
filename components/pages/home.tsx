@@ -15,7 +15,7 @@ export default function HomePage() {
             <div className="bg-green-600 p-1.5 rounded-lg">
               <Package className="w-5 h-5 text-white" />
             </div>
-            <span className="font-bold text-xl tracking-tight text-slate-900">Rajesh Pharma</span>
+            <span className="font-bold text-xl tracking-tight text-slate-900">{process.env.NEXT_PUBLIC_COMPANY_NAME}</span>
           </div>
           
           <Link href="/login">
@@ -38,7 +38,7 @@ export default function HomePage() {
           </div>
           
           <h1 className="text-5xl md:text-6xl font-extrabold text-slate-900 mb-6 tracking-tight">
-            Streamlined delivery Delivery Workflow for <span className="text-green-600">Rajesh Pharma</span>
+            Streamlined delivery Delivery Workflow for <span className="text-green-600">{process.env.NEXT_PUBLIC_COMPANY_NAME}</span>
           </h1>
           <p className="text-lg text-slate-600 max-w-2xl mx-auto mb-10 leading-relaxed">
             A high-performance logistics tool designed for scanning, tracking, and managing 
@@ -81,7 +81,7 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-6 flex flex-col items-center gap-4">
           <div className="flex items-center gap-2 opacity-50 grayscale">
             <Package className="w-5 h-5" />
-            <span className="font-bold tracking-tight">Rajesh Pharma</span>
+            <span className="font-bold tracking-tight">{process.env.NEXT_PUBLIC_COMPANY_NAME}</span>
           </div>
           <p className="text-slate-400 text-sm">
             © 2025 All Rights Reserved.
