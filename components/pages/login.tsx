@@ -43,6 +43,7 @@ export default function LoginPage() {
             
         } else {
             toast.error(`Login failed: ${data.message}`);
+            console.log("Login error:", data);
         }
         setLoading(false);
     };
