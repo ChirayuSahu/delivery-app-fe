@@ -11,6 +11,8 @@ import {
   CheckCircle2
 } from "lucide-react";
 import { motion, Variants } from "framer-motion";
+import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
 
 interface UserProfile {
   id: string;
@@ -37,6 +39,8 @@ export function UserInfoCard({ userId }: { userId: string }) {
   const [user, setUser] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
+  const router = useRouter();
+
   useEffect(() => {
     async function fetchUserData() {
       try {
@@ -51,6 +55,25 @@ export function UserInfoCard({ userId }: { userId: string }) {
     }
     fetchUserData();
   }, [userId]);
+
+  const handleDeleteUser = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch(`/api/users/${userId}`, {
+        method: 'DELETE',
+      });
+      const json = await response.json();
+      if (!response.ok) throw new Error(json.message || 'Failed to delete user');
+
+      toast.success(json.message || 'User deleted successfully');
+      router.push('/dashboard');
+    } catch (error) {
+      console.error("Error deleting user:", error);
+      toast.error(error instanceof Error ? error.message : 'Error deleting user');
+    } finally {
+      setLoading(false);
+    }
+  }
 
   if (loading) {
     return (
@@ -131,12 +154,12 @@ export function UserInfoCard({ userId }: { userId: string }) {
         </div>
 
         {/* Action Button - Green Theme */}
-        {/* <motion.div variants={itemVariants} className="mt-8">
-          <button className="w-full flex items-center justify-between px-5 py-3.5 bg-green-600 hover:bg-green-700 text-white rounded-2xl font-bold text-xs transition-all group shadow-lg shadow-green-100">
-            View Performance
+        <motion.div variants={itemVariants} className="mt-8">
+          <button onClick={handleDeleteUser} disabled={loading} className="w-full flex items-center justify-between px-5 py-3.5 bg-red-600 hover:bg-red-700 text-white rounded-2xl font-bold text-xs transition-all group shadow-lg shadow-red-100">
+            Delete User
             <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
           </button>
-        </motion.div> */}
+        </motion.div>
       </div>
     </motion.div>
   );
