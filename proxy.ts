@@ -25,6 +25,7 @@ function roleDashboard(role: JWTUser['role']) {
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
   const token = request.cookies.get('token')?.value
+  const refreshToken = request.cookies.get('refreshToken')?.value
 
 
   if (pathname === '/login') {
@@ -44,9 +45,10 @@ export async function proxy(request: NextRequest) {
   }
 
 
-  if (!token && pathname.startsWith('/dashboard')) {
+  if (!token && !refreshToken && pathname.startsWith('/dashboard')) {
     return NextResponse.redirect(new URL('/login', request.url))
   }
+
 
   if (!token) return NextResponse.next()
 
