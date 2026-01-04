@@ -3,119 +3,69 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Search, MapPin, Info } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { motion } from 'framer-motion';
+import { Search, Info } from 'lucide-react';
 
-type SearchMode = 'status' | 'track';
-
-const InvoiceSearchContainer = () => {
-    const [mode, setMode] = useState<SearchMode>('status');
+const InvoiceStatusSearch = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const router = useRouter();
 
-    const config = {
-        status: {
-            placeholder: "Enter Invoice No. for Status...",
-            redirect: (id: string) => `/dashboard/supervisor/invoice/${id}`,
-            color: "text-blue-600",
-            bg: "bg-blue-50",
-            border: "border-blue-200"
-        },
-        track: {
-            placeholder: "Enter Invoice No. to Track...",
-            redirect: (id: string) => `/dashboard/supervisor/invoice/track/${id}`,
-            color: "text-emerald-600",
-            bg: "bg-emerald-50",
-            border: "border-emerald-200"
-        }
-    };
-
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
-        if (searchTerm.trim()) {
-            const url = config[mode].redirect(encodeURIComponent(searchTerm));
-            router.push(url);
+        if (isValidSearchTerm(searchTerm)) {
+            router.push(`/dashboard/supervisor/invoice/${encodeURIComponent(searchTerm)}`);
         }
     };
 
+    // Regex to match your pattern (e.g., SB21602)
     const isValidSearchTerm = (term: string) => {
-        return term.match(/^([A-Z]{2})(\d+)$/)
+        return term.match(/^([A-Z]{2})(\d+)$/);
     }
 
     return (
         <div className="w-full space-y-4">
-            {/* Toggle Buttons */}
-            <div className="flex p-1 bg-slate-100 rounded-xl relative">
-                {(['status', 'track'] as SearchMode[]).map((m) => (
-                    <button
-                        key={m}
-                        onClick={() => {
-                            setMode(m);
-                            setSearchTerm(''); // Clear on switch
-                        }}
-                        className={cn(
-                            "relative flex-1 flex items-center justify-center gap-2 py-2 text-sm font-bold transition-colors z-10",
-                            mode === m ? "text-slate-900" : "text-slate-500"
-                        )}
-                    >
-                        {m === 'status' ? <Info className="w-4 h-4" /> : <MapPin className="w-4 h-4" />}
-                        <span className="capitalize">{m === 'status' ? 'Invoice Status' : 'Track Invoice'}</span>
-
-                        {mode === m && (
-                            <motion.div
-                                layoutId="activeTab"
-                                className="absolute inset-0 bg-white rounded-lg shadow-sm -z-10"
-                                transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-                            />
-                        )}
-                    </button>
-                ))}
+            {/* Header / Label */}
+            <div className="flex items-center gap-2 px-1">
+                <div className="p-1.5 bg-blue-50 rounded-lg">
+                    <Info className="w-4 h-4 text-blue-600" />
+                </div>
+                <h2 className="text-sm font-bold text-slate-700 uppercase tracking-tight">
+                    Invoice Status
+                </h2>
             </div>
 
-            {/* Search Bar with Animation */}
-            <AnimatePresence mode="wait">
-                <motion.form
-                    key={mode}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    transition={{ duration: 0.2 }}
-                    onSubmit={handleSearch}
-                    className="flex gap-2"
-                >
-                    <div className="relative flex-1">
-                        <Input
-                            type="search"
-                            value={searchTerm}
-                            placeholder={config[mode].placeholder}
-                            className="w-full h-12 pl-10 bg-white border-slate-200 shadow-sm focus:ring-2 focus:ring-offset-0 focus:ring-slate-200 transition-all"
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                        />
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                    </div>
+            {/* Search Bar */}
+            <motion.form
+                initial={{ opacity: 0, y: 5 }}
+                animate={{ opacity: 1, y: 0 }}
+                onSubmit={handleSearch}
+                className="flex gap-2"
+            >
+                <div className="relative flex-1">
+                    <Input
+                        type="search"
+                        value={searchTerm}
+                        placeholder="Enter Invoice No. (e.g. SB21602)"
+                        className="w-full h-12 pl-10 bg-white border-slate-200 shadow-sm focus:ring-2 focus:ring-blue-100 focus:border-blue-400 transition-all rounded-xl"
+                        onChange={(e) => setSearchTerm(e.target.value.toUpperCase())}
+                    />
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                </div>
 
-                    <Button
-                        type="submit"
-                        className={cn(
-                            "h-12 px-6 font-bold shadow-sm transition-all active:scale-95",
-                            config[mode].bg,
-                            config[mode].color,
-                            config[mode].border,
-                            "hover:brightness-95 border"
-                        )}
-                        disabled={!isValidSearchTerm(searchTerm)}
-                    >
-                        Search
-                    </Button>
-                </motion.form>
-            </AnimatePresence>
+                <Button
+                    type="submit"
+                    disabled={!isValidSearchTerm(searchTerm)}
+                    className="h-12 px-6 font-bold shadow-sm transition-all active:scale-95 bg-blue-50 text-blue-600 border border-blue-200 hover:bg-blue-100 disabled:opacity-50 disabled:bg-slate-50 disabled:text-slate-400 disabled:border-slate-200 rounded-xl"
+                >
+                    Search
+                </Button>
+            </motion.form>
 
             <p className="text-[10px] text-center text-slate-400 font-medium uppercase tracking-widest">
-                Currently searching by <span className="font-bold text-slate-600">{mode}</span>
+                Search verified records
             </p>
         </div>
     );
 };
 
-export default InvoiceSearchContainer;
+export default InvoiceStatusSearch;
