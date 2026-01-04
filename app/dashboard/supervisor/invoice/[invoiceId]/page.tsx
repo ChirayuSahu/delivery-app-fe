@@ -13,6 +13,7 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import Link from "next/link"
 
 // Types strictly following your provided InvoiceData
 type Track = {
@@ -39,6 +40,8 @@ type InvoiceData = {
     deliveryMan?: string
     deliveredAt?: string
     items: Item[]
+    failedDeliveryId?: string
+    failedBy?: string
 };
 
 const containerVariants: Variants = {
@@ -161,24 +164,26 @@ const InvoicePage = () => {
                             <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4">Delivery Status</p>
 
                             {/* Main Status Badge */}
-                            <div className={cn(
-                                "mb-6 p-4 rounded-2xl border flex items-center gap-3",
-                                data.status === 'DELIVERED' ? "bg-green-50 border-green-100" :
-                                    data.status === 'FAILED' ? "bg-red-50 border-red-100" : "bg-blue-50 border-blue-100"
-                            )}>
+                            <Link href={data.failedDeliveryId ? `/dashboard/supervisor/deliveries/${data.failedDeliveryId}` : ''} className="block">
                                 <div className={cn(
-                                    "h-2 w-2 rounded-full animate-pulse",
-                                    data.status === 'DELIVERED' ? "bg-green-600" :
-                                        data.status === 'FAILED' ? "bg-red-600" : "bg-blue-600"
-                                )} />
-                                <span className={cn(
-                                    "text-sm font-black uppercase tracking-tight",
-                                    data.status === 'DELIVERED' ? "text-green-700" :
-                                        data.status === 'FAILED' ? "text-red-700" : "text-blue-700"
+                                    "mb-6 p-4 rounded-2xl border flex items-center gap-3",
+                                    data.status === 'DELIVERED' ? "bg-green-50 border-green-100" :
+                                        data.status === 'FAILED' ? "bg-red-50 border-red-100" : "bg-blue-50 border-blue-100"
                                 )}>
-                                    {data.status.replace(/_/g, ' ')}
-                                </span>
-                            </div>
+                                    <div className={cn(
+                                        "h-2 w-2 rounded-full animate-pulse",
+                                        data.status === 'DELIVERED' ? "bg-green-600" :
+                                            data.status === 'FAILED' ? "bg-red-600" : "bg-blue-600"
+                                    )} />
+                                    <span className={cn(
+                                        "text-sm font-black uppercase tracking-tight",
+                                        data.status === 'DELIVERED' ? "text-green-700" :
+                                            data.status === 'FAILED' ? "text-red-700" : "text-blue-700"
+                                    )}>
+                                        {data.status.replace(/_/g, ' ')}
+                                    </span>
+                                </div>
+                            </Link>
 
                             <div className="space-y-5">
                                 {/* Executive Info */}
