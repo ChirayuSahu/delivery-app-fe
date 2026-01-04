@@ -11,7 +11,6 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import DeliveryMap from '@/components/supervisor/delivery-map';
 import DeliveryStats from '@/components/supervisor/delivery-stats';
-import { set } from 'date-fns';
 
 export type Invoice = {
     invType: string;
@@ -29,6 +28,7 @@ type DeliveryResponse = {
         id: string;
         deliveryNo: string;
         deliveryManId: string;
+        deliveryMan: string;
         createdAt: Date;
         updatedAt: Date;
         startedAt: string | null;
@@ -147,6 +147,24 @@ export default function ParticularDeliveryPage() {
                     {/* 2. LEFT SIDEBAR: Actions (Fixed width on desktop) */}
                     {delivery && (
                         <aside className="w-full lg:w-87.5 space-y-6">
+
+                            <div className="group relative w-full overflow-hidden rounded-2xl border border-green-200 bg-white shadow-xs transition-all">
+                                <div className="absolute top-0 left-0 h-1 w-full from-emerald-400 to-teal-500" />
+
+                                <div className="p-5">
+                                    <div className="flex items-center justify-between">
+                                        <div className="space-y-1">
+                                            <p className="text-[11px] font-bold uppercase tracking-[0.15em] text-slate-400">
+                                                Assigned Delivery Man
+                                            </p>
+                                            <h3 className="text-lg font-semibold text-slate-800">
+                                                {delivery?.deliveryMan || "Unassigned"}
+                                            </h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div>
                                 {delivery.endedAt && (
 
@@ -282,7 +300,9 @@ export default function ParticularDeliveryPage() {
                                     </div>
                                 </div>
                             )}
+
                             <DeliveryStats delivery={delivery} />
+
                         </aside>
                     )}
 
