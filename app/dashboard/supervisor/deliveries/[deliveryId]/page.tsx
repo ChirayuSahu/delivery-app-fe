@@ -4,12 +4,14 @@ import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import InvoiceCard from '@/components/supervisor/invoice-card';
+import FailedInvoiceCard from '@/components/supervisor/failed-invoice-card';
 import Link from 'next/link';
 import { AlertCircle, ArrowLeft, CircleX, Loader2, Package, Timer, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import DeliveryMap from '@/components/supervisor/delivery-map';
 import DeliveryStats from '@/components/supervisor/delivery-stats';
+import { set } from 'date-fns';
 
 export type Invoice = {
     invType: string;
@@ -33,6 +35,7 @@ type DeliveryResponse = {
         endedAt: string | null;
         invoices: Invoice[];
         failedDeliveries: string[];
+        failedInvoices: Invoice[];
     };
 };
 
@@ -42,9 +45,11 @@ export default function ParticularDeliveryPage() {
     const [isValidDelivery, setIsValidDelivery] = useState<boolean | null>(true);
     const [delivery, setDelivery] = useState<DeliveryResponse['data'] | null>(null);
     const [invoices, setInvoices] = useState<Invoice[]>([]);
+    const [failedInvoices, setFailedInvoices] = useState<Invoice[]>([]);
     const [loading, setLoading] = useState(true);
 
     const router = useRouter();
+    console.log(failedInvoices)
 
     async function fetchDelivery() {
         setLoading(true);
@@ -58,6 +63,7 @@ export default function ParticularDeliveryPage() {
 
             setDelivery(json.data);
             setInvoices(json.data.invoices);
+            setFailedInvoices(json.data.failedInvoices);
             setIsValidDelivery(true);
         } catch {
             setIsValidDelivery(false);
@@ -317,6 +323,16 @@ export default function ParticularDeliveryPage() {
                                         <InvoiceCard
                                             invoice={inv}
                                             onDelete={() => removeInvoice(inv.invType, inv.invNo)}
+                                            showDeleteInvoice={!delivery?.startedAt}
+                                            started={!!delivery?.startedAt}
+                                            ended={!!delivery?.endedAt}
+                                        />
+                                    </div>
+                                ))}
+                                {failedInvoices.slice().map((inv) => (
+                                    <div key={`${inv.invType}-${inv.invNo}`} className="transition-transform active:scale-[0.98]">
+                                        <FailedInvoiceCard
+                                            invoice={inv}
                                             showDeleteInvoice={!delivery?.startedAt}
                                             started={!!delivery?.startedAt}
                                             ended={!!delivery?.endedAt}
