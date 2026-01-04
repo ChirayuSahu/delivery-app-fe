@@ -45,7 +45,7 @@ export async function proxy(request: NextRequest) {
   }
 
 
-  if (!token && !refreshToken && pathname.startsWith('/dashboard')) {
+  if (!token && pathname.startsWith('/dashboard')) {
     return NextResponse.redirect(new URL('/login', request.url))
   }
 
