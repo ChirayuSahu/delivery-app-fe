@@ -35,7 +35,7 @@ export default function CreateDeliveryButton() {
             if (!response.ok) throw new Error(json.message || 'Failed to create delivery');
 
             toast.success(json.message || 'Delivery created successfully');
-            router.push(`/deliveryman/deliveries/${json.data.id}`);
+            router.push(`deliveryman/deliveries/${json.data.id}`);
             setOpen(false); // Close dialog on success
         } catch (error) {
             toast.error("Error creating delivery");
