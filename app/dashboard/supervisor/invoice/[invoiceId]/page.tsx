@@ -163,7 +163,7 @@ const InvoicePage = () => {
                             <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4">Delivery Status</p>
 
                             {/* Main Status Badge */}
-                            <Link href={data.failedDeliveryId && data.status !== 'FAILED' ? `/dashboard/supervisor/deliveries/${data.failedDeliveryId}` : ''} className="block">
+                            <Link href={!!data.failedDeliveryId && data.status === 'FAILED' ? `/dashboard/supervisor/deliveries/${data.failedDeliveryId}` : ''} className="block">
                                 <div className={cn(
                                     "mb-6 p-4 rounded-2xl border flex items-center gap-3",
                                     data.status === 'DELIVERED' ? "bg-green-50 border-green-100" :
