@@ -17,7 +17,16 @@ interface Delivery {
 }
 
 // Strictly Blue and Green palette
-const COLORS = ['#2563eb', '#10b981', '#3b82f6', '#059669', '#60a5fa', '#34d399'];
+const COLORS = [
+  '#f59e0b', // Amber/Yellow
+  '#ef4444', // Red
+  '#3b82f6', // Bright Blue
+  '#10b981', // Emerald Green
+  '#8b5cf6', // Violet/Purple
+  '#ec4899', // Pink
+  '#06b6d4', // Cyan
+  '#f97316'  // Orange
+];
 
 function DeliveryPersonnelChart() {
   const [deliveries, setDeliveries] = useState<Delivery[]>([]);
