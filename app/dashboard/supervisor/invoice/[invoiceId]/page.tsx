@@ -41,6 +41,8 @@ type InvoiceData = {
     items: Item[]
     failedDeliveryId?: string
     failedBy?: string
+    customerAddress: string
+    customerPhone: string
 };
 
 const containerVariants: Variants = {
@@ -153,6 +155,12 @@ const InvoicePage = () => {
                             <div>
                                 <h3 className="text-xl font-bold text-slate-900">{data.name}</h3>
                                 <p className="text-sm font-medium text-slate-500">{data.email}</p>
+                            </div>
+                            <div>
+                                <h3 className="text-sm font-bold text-slate-900">{data.customerAddress}</h3>
+                            </div>
+                            <div>
+                                <h3 className="text-sm font-bold text-slate-900">{data.customerPhone}</h3>
                             </div>
                         </div>
                     </motion.div>
