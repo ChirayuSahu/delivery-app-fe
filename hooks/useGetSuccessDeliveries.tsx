@@ -24,14 +24,6 @@ export function useGetSuccessDeliveries<T>(
 
     const socket = getSocket()
 
-    const token = localStorage.getItem('token')
-    if (!token) {
-      console.error('❌ No token found for socket')
-      return
-    }
-
-    socket.auth = { token }
-
     if (!socket.connected) {
       socket.connect()
     }
