@@ -10,6 +10,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { cn } from '@/lib/utils';
 import { useGetSuccessDeliveries } from '@/hooks/useGetSuccessDeliveries';
+import Link from 'next/link';
 
 interface Delivery {
   id: string;
@@ -200,9 +201,9 @@ function DeliveryPersonnelChart() {
             {chartData.length} Personnel Active
           </span>
         </div>
-        <button onClick={() => window.open('/dashboard/supervisor/reports/daily', '_blank')} className="text-[10px] font-black text-blue-600 uppercase hover:underline">
+        <Link href="/dashboard/supervisor/reports" className="text-[10px] font-black text-blue-600 uppercase hover:underline">
           Full Report
-        </button>
+        </Link>
       </div>
     </motion.div>
   );
