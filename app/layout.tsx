@@ -17,6 +17,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: `Deliveries - ${process.env.NEXT_PUBLIC_COMPANY_NAME}`,
   description: `Delivery management system for ${process.env.NEXT_PUBLIC_COMPANY_NAME}`,
+  icons: {
+    icon: "./favicon1.png",
+  },
 };
 
 export default function RootLayout({
