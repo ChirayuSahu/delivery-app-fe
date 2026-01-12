@@ -30,8 +30,7 @@ export async function POST(request: NextRequest) {
             secure: true,
             sameSite: 'none',
             path: '/',
-            maxAge: 60 * 60 * 12, // 12 hours
-            domain: '.rajeshpharma.com',
+            maxAge: 60 * 60 * 12,
         });
 
         cookieStore.set("refreshToken", data.data.refreshToken, {
@@ -39,8 +38,7 @@ export async function POST(request: NextRequest) {
             secure: true,
             sameSite: 'none',
             path: '/',
-            maxAge: 60 * 60 * 24 * 7, // 7 days
-            domain: '.rajeshpharma.com',
+            maxAge: 60 * 60 * 24 * 7,
         });
 
         return NextResponse.json({ message: "Login successful", token: data.data.token }, { status: 200 });
