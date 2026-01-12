@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { cn } from '@/lib/utils';
+import { useGetSuccessDeliveries } from '@/hooks/useGetSuccessDeliveries';
 
 interface Delivery {
   id: string;
@@ -47,8 +48,13 @@ function DeliveryPersonnelChart() {
     }
   }
 
+  useGetSuccessDeliveries<Delivery[]>(date, (data) => {
+    setDeliveries(data)
+  })
+
   useEffect(() => {
     fetchDeliveries();
+
   }, [date]);
 
   const chartData = useMemo(() => {
