@@ -11,7 +11,7 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { PlusCircle, Truck, Loader2 } from "lucide-react";
+import { PackageMinus, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from 'next/navigation';
 
@@ -55,8 +55,8 @@ export default function ReturnInvoice({ invoiceId }: { invoiceId: string }) {
 
             <DialogContent className="sm:max-w-106.25">
                 <DialogHeader>
-                    <div className="mx-auto w-12 h-12 bg-green-50 rounded-full flex items-center justify-center mb-4">
-                        <Truck className="w-6 h-6 text-green-600" />
+                    <div className="mx-auto w-12 h-12 bg-red-50 rounded-full flex items-center justify-center mb-4">
+                        <PackageMinus className="w-6 h-6 text-red-600" />
                     </div>
                     <DialogTitle className="text-center text-xl">Return Invoice</DialogTitle>
                     <DialogDescription className="text-center">
@@ -75,7 +75,7 @@ export default function ReturnInvoice({ invoiceId }: { invoiceId: string }) {
                     <Button 
                         onClick={handleReturnInvoice} 
                         disabled={isReturning}
-                        className="flex-1 bg-green-600 hover:bg-green-700"
+                        className="flex-1 bg-red-600 hover:bg-red-700"
                     >
                         {isReturning ? (
                             <>
