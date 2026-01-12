@@ -6,7 +6,7 @@ import { toast } from 'sonner';
 import InvoiceCard from '@/components/supervisor/invoice-card';
 import FailedInvoiceCard from '@/components/supervisor/failed-invoice-card';
 import Link from 'next/link';
-import { AlertCircle, ArrowLeft, CircleX, Loader2, Package, Timer, CheckCircle2 } from 'lucide-react';
+import { AlertCircle, ArrowLeft, CircleX, Loader2, Package, Timer, CheckCircle2, Home } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import DeliveryMap from '@/components/supervisor/delivery-map';
@@ -127,8 +127,13 @@ export default function ParticularDeliveryPage() {
             <header className="sticky top-0 z-10 border-b bg-white/80 backdrop-blur-md px-6 py-4">
                 <div className="max-w-7xl mx-auto flex items-center justify-between">
                     <div className="flex items-center gap-4">
-                        <div onClick={() => router.back()} className="p-2 hover:bg-slate-100 rounded-full transition-colors cursor-pointer">
-                            <ArrowLeft className="w-5 h-5 text-slate-600" />
+                        <div className="flex items-center gap-1">
+                            <button onClick={() => router.back()} className="p-2 hover:bg-slate-100 rounded-full transition-colors">
+                                <ArrowLeft className="w-5 h-5 text-slate-600" />
+                            </button>
+                            <button onClick={() => router.push('/dashboard')} className="p-2 hover:bg-slate-100 rounded-full transition-colors">
+                                <Home className="w-5 h-5 text-slate-600" />
+                            </button>
                         </div>
                         <div>
                             <h1 className="text-xl font-bold text-slate-900">Delivery Details</h1>

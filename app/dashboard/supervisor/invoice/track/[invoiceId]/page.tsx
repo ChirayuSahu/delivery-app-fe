@@ -4,7 +4,8 @@ import { useEffect, useState } from "react"
 import {
     ArrowLeft, Loader2, CircleX, Package, 
     User, Calendar, CheckCircle2, Clock, Printer, 
-    Settings, Search, ClipboardCheck, Truck
+    Settings, Search, ClipboardCheck, Truck,
+    Home
 } from "lucide-react"
 import Image from "next/image"
 import { motion, AnimatePresence } from "framer-motion"
@@ -82,9 +83,14 @@ const InvoiceTrackingPage = () => {
             <header className="sticky top-0 z-30 border-b bg-white/80 backdrop-blur-md px-6 py-4">
                 <div className="max-w-3xl mx-auto flex items-center justify-between">
                     <div className="flex items-center gap-4">
-                        <button onClick={() => router.back()} className="p-2 hover:bg-slate-100 rounded-full transition-colors">
-                            <ArrowLeft className="w-5 h-5 text-slate-600" />
-                        </button>
+                        <div className="flex items-center gap-1">
+                            <button onClick={() => router.back()} className="p-2 hover:bg-slate-100 rounded-full transition-colors">
+                                <ArrowLeft className="w-5 h-5 text-slate-600" />
+                            </button>
+                            <button onClick={() => router.push('/dashboard')} className="p-2 hover:bg-slate-100 rounded-full transition-colors">
+                                <Home className="w-5 h-5 text-slate-600" />
+                            </button>
+                        </div>
                         <div>
                             <h1 className="text-lg font-bold text-slate-900 leading-none">Tracking Details</h1>
                             <p className="text-[10px] font-mono text-slate-400 mt-1 uppercase tracking-widest">#{data.invoice}</p>

@@ -3,9 +3,9 @@ import { useParams, useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import {
     Calendar, ArrowLeft, IndianRupee,
-    CircleX, Loader2, Truck, Phone, Fingerprint,
-    CheckCircle2, Package, User, Clock, Printer,
-    Search, ClipboardCheck, ShoppingCart, Tag
+    CircleX, Loader2, Truck, Phone,
+    CheckCircle2, Clock, Printer,
+    Search, ClipboardCheck, ShoppingCart, Home
 } from "lucide-react"
 import Image from "next/image"
 import { motion, Variants, AnimatePresence } from "framer-motion"
@@ -44,6 +44,7 @@ type InvoiceData = {
     failedBy?: string
     customerAddress: string
     customerPhone: string
+    deliveryId?: string
 };
 
 const containerVariants: Variants = {
@@ -100,9 +101,14 @@ const InvoicePage = () => {
             <header className="sticky top-0 z-30 border-b bg-white/80 backdrop-blur-md px-6 py-4">
                 <div className="max-w-4xl mx-auto flex items-center justify-between">
                     <div className="flex items-center gap-4">
-                        <button onClick={() => router.back()} className="p-2 hover:bg-slate-100 rounded-full transition-colors">
-                            <ArrowLeft className="w-5 h-5 text-slate-600" />
-                        </button>
+                        <div className="flex items-center gap-1">
+                            <button onClick={() => router.back()} className="p-2 hover:bg-slate-100 rounded-full transition-colors">
+                                <ArrowLeft className="w-5 h-5 text-slate-600" />
+                            </button>
+                            <button onClick={() => router.push('/dashboard')} className="p-2 hover:bg-slate-100 rounded-full transition-colors">
+                                <Home className="w-5 h-5 text-slate-600" />
+                            </button>
+                        </div>
                         <div>
                             <h1 className="text-lg font-bold text-slate-900 leading-none">Invoice Details</h1>
                             <p className="text-[10px] font-mono text-slate-400 mt-1 uppercase tracking-widest">#{data.invoice}</p>
@@ -172,7 +178,7 @@ const InvoicePage = () => {
                             <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4">Delivery Status</p>
 
                             {/* Main Status Badge */}
-                            <Link href={!!data.failedDeliveryId && data.status === 'FAILED' ? `/dashboard/supervisor/deliveries/${data.failedDeliveryId}` : ''} className="block">
+                            <Link href={!!data.failedDeliveryId && data.status === 'FAILED' ? `/dashboard/supervisor/deliveries/${data.failedDeliveryId}` : `/dashboard/supervisor/deliveries/${data.deliveryId}`} className="block">
                                 <div className={cn(
                                     "mb-6 p-4 rounded-2xl border flex items-center gap-3",
                                     data.status === 'DELIVERED' ? "bg-green-50 border-green-100" :
