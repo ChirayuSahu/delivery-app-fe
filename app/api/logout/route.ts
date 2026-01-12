@@ -13,6 +13,12 @@ export async function GET(request: NextRequest) {
             value: "",
             maxAge: 0,
         });
+        response.cookies.set({
+            name: "token",
+            value: "",
+            maxAge: 0,
+            domain: '.rajeshpharma.com',
+        });
     }
 
     return response;
