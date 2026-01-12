@@ -13,6 +13,7 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import Link from "next/link"
+import ReturnInvoice from "@/components/supervisor/return-invoice"
 
 // Types strictly following your provided InvoiceData
 type Track = {
@@ -193,16 +194,20 @@ const InvoicePage = () => {
                             </Link>
 
                             <div className="space-y-5">
-                                {/* Executive Info */}
-                                <div className="flex items-center gap-4">
-                                    <div className="h-11 w-11 bg-slate-100 rounded-xl flex items-center justify-center shrink-0">
-                                        <Truck className="w-5 h-5 text-slate-600" />
+                                {data.status === 'FAILED' && (
+                                    <ReturnInvoice invoiceId={String(invoiceId)} />
+                                )}
+                                {data.status !== 'FAILED' && (
+                                    <div className="flex items-center gap-4">
+                                        <div className="h-11 w-11 bg-slate-100 rounded-xl flex items-center justify-center shrink-0">
+                                            <Truck className="w-5 h-5 text-slate-600" />
+                                        </div>
+                                        <div>
+                                            <p className="text-[10px] text-slate-400 uppercase font-bold leading-none mb-1">Assigned Executive</p>
+                                            <p className="text-sm font-bold text-slate-900">{data.deliveryMan || "Awaiting Assignment"}</p>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <p className="text-[10px] text-slate-400 uppercase font-bold leading-none mb-1">Assigned Executive</p>
-                                        <p className="text-sm font-bold text-slate-900">{data.deliveryMan || "Awaiting Assignment"}</p>
-                                    </div>
-                                </div>
+                                )}
 
                                 {/* Time Info */}
                                 <div className="flex items-center gap-4">

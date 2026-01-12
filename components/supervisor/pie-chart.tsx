@@ -194,7 +194,7 @@ function DeliveryPersonnelChart() {
             {chartData.length} Personnel Active
           </span>
         </div>
-        <button className="text-[10px] font-black text-blue-600 uppercase hover:underline">
+        <button onClick={() => window.open('/dashboard/supervisor/reports/daily', '_blank')} className="text-[10px] font-black text-blue-600 uppercase hover:underline">
           Full Report
         </button>
       </div>
