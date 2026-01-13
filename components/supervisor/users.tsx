@@ -71,7 +71,7 @@ export function UsersCard() {
   }
 
   return (
-    <div className="w-full bg-white border border-gray-200 rounded-[24px] overflow-hidden flex flex-col shadow-sm min-h-100 h-120">
+    <div className="w-full bg-white border border-gray-200 rounded-[24px] overflow-hidden flex flex-col shadow-sm h-full">
       {/* Header - Matches your Profile/Trip UI */}
       <div className="bg-gray-50 p-6">
         <div className="flex items-center justify-between mb-6">

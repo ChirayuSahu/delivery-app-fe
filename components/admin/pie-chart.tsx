@@ -83,7 +83,7 @@ function DeliveryPersonnelChart() {
     <motion.div
       initial="hidden"
       animate="visible"
-      className="w-full h-120 bg-white border border-gray-200 rounded-[24px] overflow-hidden flex flex-col shadow-sm"
+      className="w-full min-h-120 bg-white border border-gray-200 rounded-[24px] overflow-hidden flex flex-col shadow-sm"
     >
       {/* Header Section */}
       <div className="bg-gray-50 p-6 flex flex-col gap-4">
