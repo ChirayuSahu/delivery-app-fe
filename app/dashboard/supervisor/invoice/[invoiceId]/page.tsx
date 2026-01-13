@@ -5,7 +5,8 @@ import {
     Calendar, ArrowLeft, IndianRupee,
     CircleX, Loader2, Truck, Phone,
     CheckCircle2, Clock, Printer,
-    Search, ClipboardCheck, ShoppingCart, Home
+    Search, ClipboardCheck, ShoppingCart, Home,
+    Package
 } from "lucide-react"
 import Image from "next/image"
 import { motion, Variants, AnimatePresence } from "framer-motion"
@@ -45,6 +46,7 @@ type InvoiceData = {
     customerAddress: string
     customerPhone: string
     deliveryId?: string
+    deliveryRemark?: string
 };
 
 const containerVariants: Variants = {
@@ -244,6 +246,21 @@ const InvoicePage = () => {
                     </motion.div>
                 </div>
 
+                {/* Delivery Remark Section */}
+                {data.deliveryRemark && (
+                    < motion.div variants={itemVariants} className="bg-white border border-slate-200 rounded-[28px] overflow-hidden shadow-xs">
+                        <div className="bg-slate-50/50 px-8 py-4 border-b">
+                            <p className="text-xs font-bold text-slate-700 uppercase tracking-widest flex items-center gap-2">
+                                <Package className="w-4 h-4 text-green-600" />
+                                Delivery Remark
+                            </p>
+                        </div>
+                        <div className="p-8 relative">
+                            {data.deliveryRemark}
+                        </div>
+                    </motion.div>
+                )}
+
                 {/* Combined Tracking Journey */}
                 <motion.div variants={itemVariants} className="bg-white border border-slate-200 rounded-[28px] overflow-hidden shadow-xs">
                     <div className="bg-slate-50/50 px-8 py-4 border-b">
@@ -255,7 +272,6 @@ const InvoicePage = () => {
                     <div className="p-8 relative">
                         {/* Line */}
                         <div className="absolute left-10 top-12 bottom-12 w-0.5 bg-slate-100" />
-
                         <div className="space-y-10">
                             {data.trackingDetails.map((step, idx) => (
                                 <TimelineStep
@@ -320,7 +336,7 @@ const InvoicePage = () => {
                     </div>
                 </motion.div>
             </motion.div>
-        </div>
+        </div >
     )
 }
 
