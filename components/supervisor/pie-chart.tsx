@@ -11,6 +11,7 @@ import { format } from "date-fns";
 import { cn } from '@/lib/utils';
 import { useGetSuccessDeliveries } from '@/hooks/useGetSuccessDeliveries';
 import Link from 'next/link';
+import { toast } from 'sonner';
 
 interface Delivery {
   id: string;
@@ -50,7 +51,9 @@ function DeliveryPersonnelChart() {
   }
 
   useGetSuccessDeliveries<Delivery[]>(date, (data) => {
-    setDeliveries(data)
+    toast.success('Delivery data updated');
+    setDate(new Date());
+    setDeliveries(data);
   })
 
   useEffect(() => {
