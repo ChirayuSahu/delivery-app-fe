@@ -51,14 +51,12 @@ function DeliveryPersonnelChart() {
   }
 
   useGetSuccessDeliveries<Delivery[]>(date, (data) => {
-    toast.success('Delivery data updated');
-    setDate(new Date());
+    toast.success('Delivery Chart updated');
     setDeliveries(data);
   })
 
   useEffect(() => {
     fetchDeliveries();
-
   }, [date]);
 
   const chartData = useMemo(() => {
