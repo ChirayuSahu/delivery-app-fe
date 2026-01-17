@@ -40,7 +40,7 @@ type InvoiceData = {
     status: 'PENDING' | 'OUT_FOR_DELIVERY' | 'DELIVERED' | 'FAILED' | 'ASSIGNED'
     deliveryMan?: string
     deliveredAt?: string
-    items: Item[]
+    items?: Item[]
     failedDeliveryId?: string
     failedBy?: string
     customerAddress: string
@@ -299,7 +299,7 @@ const InvoicePage = () => {
                     </div>
                 </motion.div>
 
-                {/* Items Section */}
+                {data.items && data.items.length > 0 && (          
                 <motion.div variants={itemVariants} className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-xs">
                     <div className="bg-slate-50/50 px-8 py-4 border-b flex items-center justify-between">
                         <div className="flex items-center gap-2">
@@ -335,6 +335,7 @@ const InvoicePage = () => {
                         </table>
                     </div>
                 </motion.div>
+                )} 
             </motion.div>
         </div >
     )
