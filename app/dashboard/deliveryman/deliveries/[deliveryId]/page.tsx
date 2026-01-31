@@ -3,7 +3,10 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { toast } from 'sonner';
+
 import AddInvoice from '@/components/deliveryman/add-invoice';
+import AddSlip from '@/components/deliveryman/add-slip';
+
 import InvoiceCard from '@/components/deliveryman/invoice-card';
 import Link from 'next/link';
 import { AlertCircle, ArrowLeft, CircleX, Info, Loader2, Package, Timer, CheckCircle2 } from 'lucide-react';
@@ -139,8 +142,9 @@ export default function ParticularDeliveryPage() {
                     {/* 2. LEFT SIDEBAR: Actions (Fixed width on desktop) */}
                     <aside className="w-full lg:w-87.5 space-y-6">
                         {!delivery?.startedAt && (
-                            <div className="">
+                            <div className="flex flex-col gap-4">
                                 <AddInvoice deliveryId={deliveryId} onAdded={fetchDelivery} />
+                                <AddSlip deliveryId={deliveryId} onAdded={fetchDelivery} />
                             </div>
                         )}
 

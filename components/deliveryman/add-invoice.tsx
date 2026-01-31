@@ -49,7 +49,7 @@ export default function AddInvoice({ deliveryId, onAdded }: { deliveryId: string
       
       <div className="flex gap-2">
         <Input 
-          placeholder="Invoice #" 
+          placeholder="Enter Invoice Number" 
           value={invoice} 
           onChange={(e) => setInvoice(e.target.value.toUpperCase())}
           onKeyDown={(e) => e.key === 'Enter' && submitInvoice(invoice)}
@@ -59,7 +59,7 @@ export default function AddInvoice({ deliveryId, onAdded }: { deliveryId: string
         </Button>
       </div>
 
-      <Button className="w-full mt-2 bg-green-600" disabled={invoice.trim().length < 7} onClick={() => submitInvoice(invoice)}>
+      <Button className="w-full mt-2 bg-green-600" disabled={invoice.trim().length == 0} onClick={() => submitInvoice(invoice)}>
         Add Invoice
       </Button>
 
