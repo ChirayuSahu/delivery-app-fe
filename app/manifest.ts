@@ -6,7 +6,7 @@ export default function manifest(): MetadataRoute.Manifest {
         short_name: "Rajesh Pharma",
         theme_color: "#00a73c",
         background_color: "#00a73c",
-        display: "fullscreen",
+        display: "standalone",
         orientation: "portrait",
         scope: "/",
         start_url: "/",
