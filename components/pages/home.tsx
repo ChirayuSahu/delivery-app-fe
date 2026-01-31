@@ -38,7 +38,7 @@ export default function HomePage() {
           </div>
           
           <h1 className="text-5xl md:text-6xl font-extrabold text-slate-900 mb-6 tracking-tight">
-            Streamlined delivery Delivery Workflow for <span className="text-green-600">{process.env.NEXT_PUBLIC_COMPANY_NAME}</span>
+            Streamlined Delivery Workflow for <span className="text-green-600">{process.env.NEXT_PUBLIC_COMPANY_NAME}</span>
           </h1>
           <p className="text-lg text-slate-600 max-w-2xl mx-auto mb-10 leading-relaxed">
             A high-performance logistics tool designed for scanning, tracking, and managing 
