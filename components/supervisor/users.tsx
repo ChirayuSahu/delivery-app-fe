@@ -20,6 +20,7 @@ type User = {
   email: string;
   esId: string;
   phone: string;
+  time: Date[];
 }
 
 const containerVariants: Variants = {
@@ -90,7 +91,7 @@ export function UsersCard() {
         </div>
 
         {/* Search Input inside Header */}
-        <div className="relative">
+        {/* <div className="relative">
           <input
             type="text"
             placeholder="Search by name or ID..."
@@ -99,7 +100,7 @@ export function UsersCard() {
             className="w-full bg-white border border-slate-500/20 rounded-xl py-2 pl-9 pr-4 text-xs text-slate-900 placeholder:text-slate-400 outline-none focus:bg-white/20 transition-all font-medium"
           />
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400" />
-        </div>
+        </div> */}
       </div>
 
       <div className="flex-1 overflow-y-auto max-h-150 scrollbar-hide">
@@ -116,23 +117,34 @@ export function UsersCard() {
                   variants={itemVariants}
                   className="group flex items-center justify-between py-4 px-6 hover:bg-blue-50/50 transition-all cursor-pointer border-l-4 border-transparent hover:border-blue-600"
                 >
-                  <div className="flex items-center gap-4">
-                    <div className="h-10 w-10 rounded-xl bg-gray-100 flex items-center justify-center text-blue-600 font-black text-sm group-hover:bg-blue-600 group-hover:text-white transition-all duration-300">
-                      {user.name.charAt(0)}
-                    </div>
-                    <div>
-                      <p className="text-sm font-black text-gray-900 leading-tight">
-                        {user.name}
-                      </p>
-                      <div className="flex items-center gap-3 mt-1">
-                        <span className="flex items-center gap-1 text-[10px] text-gray-400 font-bold uppercase tracking-tighter">
-                          <Fingerprint className="h-3 w-3 text-green-500" /> #{user.esId}
-                        </span>
-                        <span className="flex items-center gap-1 text-[10px] text-gray-400 font-bold uppercase tracking-tighter">
-                          <Phone className="h-3 w-3 text-blue-500" /> {user.phone}
-                        </span>
+                  <div className='flex flex-col gap-4'>
+                    <div className="flex items-center gap-4">
+                      <div className="h-10 w-10 rounded-xl bg-gray-100 flex items-center justify-center text-blue-600 font-black text-sm group-hover:bg-blue-600 group-hover:text-white transition-all duration-300">
+                        {user.name.charAt(0)}
+                      </div>
+                      <div>
+                        <p className="text-sm font-black text-gray-900 leading-tight">
+                          {user.name}
+                        </p>
+                        <div className="flex items-center gap-3 mt-1">
+                          <span className="flex items-center gap-1 text-[10px] text-gray-400 font-bold uppercase tracking-tighter">
+                            <Fingerprint className="h-3 w-3 text-green-500" /> #{user.esId}
+                          </span>
+                          <span className="flex items-center gap-1 text-[10px] text-gray-400 font-bold uppercase tracking-tighter">
+                            <Phone className="h-3 w-3 text-blue-500" /> {user.phone}
+                          </span>
+                        </div>
                       </div>
                     </div>
+                    {user.time.length > 0 && (
+                      <div className="flex items-center gap-2">
+                        {user.time.length > 0 && user.time.map((deltime, index) => (
+                          <div key={index} className="text-[10px] text-green-700 bg-green-50 px-3 py-1.5 border border-green-200 rounded-full font-bold tracking-wider">
+                            {Math.ceil((new Date().getTime() - new Date(deltime).getTime()) / 60000)} mins
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
                   <ChevronRight className="h-4 w-4 text-gray-300 group-hover:text-blue-600 group-hover:translate-x-1 transition-all" />
                 </motion.div>
