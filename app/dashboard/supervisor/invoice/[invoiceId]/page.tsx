@@ -171,6 +171,9 @@ const InvoicePage = () => {
                             <div>
                                 <h3 className="text-sm font-bold text-slate-900">{data.customerPhone}</h3>
                             </div>
+                            {data.status === "DELIVERED" && (
+                                <Image alt='Logo' src='/delivered.png' className='top-0 right-0 w-50' width={1000} height={1000} draggable={false} />
+                            )}
                         </div>
                     </motion.div>
 

@@ -158,7 +158,7 @@ const InvoicePage = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     {/* Customer Info */}
-                    <motion.div variants={itemVariants} className="md:col-span-2 bg-white border border-slate-200 rounded-xl p-6 shadow-xs">
+                    <motion.div variants={itemVariants} className="relative md:col-span-2 bg-white border border-slate-200 rounded-xl p-6 shadow-xs">
                         <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4">Customer Information</p>
                         <div className="space-y-4">
                             <div>
@@ -171,6 +171,9 @@ const InvoicePage = () => {
                             <div>
                                 <h3 className="text-sm font-bold text-slate-900">{data.customerPhone}</h3>
                             </div>
+                            {data.status === "DELIVERED" && (
+                                <Image alt='Logo' src='/delivered.png' className='top-0 right-0 w-50' width={1000} height={1000} draggable={false} />
+                            )}
                         </div>
                     </motion.div>
 
