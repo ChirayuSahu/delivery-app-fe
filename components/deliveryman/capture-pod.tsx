@@ -17,10 +17,12 @@ import { toast } from 'sonner';
 
 interface CameraCaptureProps {
     onCapture: (file: File) => void;
+    for: string;
 }
 
 export default function CameraCapture({
-    onCapture
+    onCapture,
+    for: forLabel
 }: CameraCaptureProps) {
     const videoRef =
         useRef<HTMLVideoElement>(null);
@@ -105,7 +107,7 @@ export default function CameraCapture({
 
                 const file = new File(
                     [blob],
-                    'pod.jpg',
+                    `${forLabel.toLowerCase()}.jpg`,
                     {
                         type: 'image/jpeg'
                     }
@@ -173,7 +175,7 @@ export default function CameraCapture({
                         src={
                             previewUrl || ''
                         }
-                        alt="Captured POD"
+                        alt={`Captured ${forLabel}`}
                         className="w-full aspect-video object-contain bg-black"
                     />
                 )}
@@ -193,7 +195,7 @@ export default function CameraCapture({
                     className="w-full"
                 >
                     <Camera className="w-4 h-4 mr-2" />
-                    Capture POD
+                    Capture {forLabel}
                 </Button>
             ) : (
                 <Button

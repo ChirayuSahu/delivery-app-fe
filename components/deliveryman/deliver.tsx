@@ -169,6 +169,7 @@ export default function DeliverInvoiceButton({ deliveryId, invoiceId, onSuccess,
                     onCapture={(file) => {
                         setProofFile(file);
                     }}
+                    for="POD"
                 />
 
                 <DialogFooter className="flex gap-2">
