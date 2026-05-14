@@ -47,6 +47,7 @@ type InvoiceData = {
     customerPhone: string
     deliveryId?: string
     deliveryRemark?: string
+    podUrl?: string
 };
 
 const containerVariants: Variants = {
@@ -251,7 +252,7 @@ const InvoicePage = () => {
 
                 {/* Delivery Remark Section */}
                 {data.deliveryRemark && (
-                    < motion.div variants={itemVariants} className="bg-white border border-slate-200 rounded-[28px] overflow-hidden shadow-xs">
+                    <motion.div variants={itemVariants} className="bg-white border border-slate-200 rounded-[28px] overflow-hidden shadow-xs">
                         <div className="bg-slate-50/50 px-8 py-4 border-b">
                             <p className="text-xs font-bold text-slate-700 uppercase tracking-widest flex items-center gap-2">
                                 <Package className="w-4 h-4 text-green-600" />
@@ -261,6 +262,9 @@ const InvoicePage = () => {
                         <div className="p-8 relative">
                             {data.deliveryRemark}
                         </div>
+                        {data.podUrl && (
+                            <Image alt='POD' draggable={false} src={data.podUrl} className='w-full h-auto mt-4' width={1000} height={1000} unoptimized />
+                        )}
                     </motion.div>
                 )}
 
@@ -302,43 +306,43 @@ const InvoicePage = () => {
                     </div>
                 </motion.div>
 
-                {data.items && data.items.length > 0 && (          
-                <motion.div variants={itemVariants} className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-xs">
-                    <div className="bg-slate-50/50 px-8 py-4 border-b flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                            <ShoppingCart className="w-4 h-4 text-green-600" />
-                            <span className="text-xs font-bold text-slate-700 uppercase tracking-widest">Order Summary</span>
+                {data.items && data.items.length > 0 && (
+                    <motion.div variants={itemVariants} className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-xs">
+                        <div className="bg-slate-50/50 px-8 py-4 border-b flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                                <ShoppingCart className="w-4 h-4 text-green-600" />
+                                <span className="text-xs font-bold text-slate-700 uppercase tracking-widest">Order Summary</span>
+                            </div>
+                            <Badge variant="outline" className="bg-white text-[10px] font-bold">{data.items.length} Items</Badge>
                         </div>
-                        <Badge variant="outline" className="bg-white text-[10px] font-bold">{data.items.length} Items</Badge>
-                    </div>
-                    <div className="overflow-x-auto">
-                        <table className="w-full text-left border-collapse">
-                            <thead>
-                                <tr className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter border-b">
-                                    <th className="px-8 py-4">Item Name</th>
-                                    <th className="px-4 py-4 text-center">Batch</th>
-                                    <th className="px-4 py-4 text-center">Qty</th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-slate-50">
-                                {data.items.map((item, idx) => (
-                                    <tr key={idx} className="group hover:bg-slate-50/50 transition-colors">
-                                        <td className="px-8 py-4">
-                                            <p className="text-sm font-bold text-slate-900 group-hover:text-green-700">{item.name}</p>
-                                        </td>
-                                        <td className="px-4 py-4 text-center">
-                                            <Badge variant="secondary" className="text-[9px] font-mono font-bold bg-slate-100">{item.batch}</Badge>
-                                        </td>
-                                        <td className="px-4 py-4 text-center">
-                                            <span className="text-sm font-black text-slate-700">{item.quantity}</span>
-                                        </td>
+                        <div className="overflow-x-auto">
+                            <table className="w-full text-left border-collapse">
+                                <thead>
+                                    <tr className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter border-b">
+                                        <th className="px-8 py-4">Item Name</th>
+                                        <th className="px-4 py-4 text-center">Batch</th>
+                                        <th className="px-4 py-4 text-center">Qty</th>
                                     </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                </motion.div>
-                )} 
+                                </thead>
+                                <tbody className="divide-y divide-slate-50">
+                                    {data.items.map((item, idx) => (
+                                        <tr key={idx} className="group hover:bg-slate-50/50 transition-colors">
+                                            <td className="px-8 py-4">
+                                                <p className="text-sm font-bold text-slate-900 group-hover:text-green-700">{item.name}</p>
+                                            </td>
+                                            <td className="px-4 py-4 text-center">
+                                                <Badge variant="secondary" className="text-[9px] font-mono font-bold bg-slate-100">{item.batch}</Badge>
+                                            </td>
+                                            <td className="px-4 py-4 text-center">
+                                                <span className="text-sm font-black text-slate-700">{item.quantity}</span>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    </motion.div>
+                )}
             </motion.div>
         </div >
     )

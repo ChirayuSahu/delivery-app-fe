@@ -36,6 +36,7 @@ type InvoiceData = {
     bags: number;
     icePacks: number;
     cases: number;
+    podUrl: string | null;
 };
 
 type Packaging = {
@@ -204,12 +205,22 @@ const InvoicePage = () => {
 
                 <div>
                     {data.deliveryRemark && (
-                        <Card className="border-slate-200 shadow-sm">
+                        <Card className="border-slate-200 shadow-sm mb-4">
                             <CardHeader className="bg-slate-50/50 border-b">
                                 <CardTitle className="text-xs font-bold text-slate-500 uppercase tracking-widest">Delivery Remarks</CardTitle>
                             </CardHeader>
                             <CardContent className="pt-4">
                                 <p className="text-sm text-slate-700">{data.deliveryRemark}</p>
+                            </CardContent>
+                        </Card>
+                    )}
+                    {data.podUrl && (
+                        <Card className="border-slate-200 shadow-sm">
+                            <CardHeader className="bg-slate-50/50 border-b">
+                                <CardTitle className="text-xs font-bold text-slate-500 uppercase tracking-widest">Proof of Delivery</CardTitle>
+                            </CardHeader>
+                            <CardContent className="pt-4">
+                                <Image alt='Proof of Delivery' draggable={false} src={data.podUrl} className='w-full h-auto rounded-lg' width={1000} height={1000} unoptimized />
                             </CardContent>
                         </Card>
                     )}

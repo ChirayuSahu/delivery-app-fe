@@ -4,6 +4,15 @@ const nextConfig: NextConfig = {
   allowedDevOrigins: [
     '*',
   ],
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'pod.rajeshpharma.com',
+        pathname: '/**',
+      },
+    ],
+  },
 };
 
 

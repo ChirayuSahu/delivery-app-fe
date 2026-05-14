@@ -14,6 +14,7 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { CheckCircle2, MessageSquare, Loader2, MapPin } from 'lucide-react';
 import { toast } from 'sonner';
+import CameraCapture from './capture-pod';
 
 interface DeliverInvoiceProps {
     deliveryId: string;
@@ -26,6 +27,7 @@ export default function DeliverInvoiceButton({ deliveryId, invoiceId, onSuccess,
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(false);
     const [remark, setRemark] = useState('');
+    const [proofFile, setProofFile] = useState<File | null>(null);
 
     const getCoordinates = (): Promise<{ lat: number; lng: number } | null> => {
         return new Promise((resolve) => {
@@ -77,16 +79,40 @@ export default function DeliverInvoiceButton({ deliveryId, invoiceId, onSuccess,
             return; // Stop if location is mandatory and failed
         }
 
+        if (!proofFile) {
+            toast.error("Please capture a photo as proof of delivery.");
+            setLoading(false);
+            return;
+        }
+
         try {
-            const res = await fetch(`/api/deliveries/${deliveryId}/invoices/${invoiceId}/deliver`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    remarks: remark.trim(),
-                    location: location
-                }),
-                credentials: 'include',
-            });
+            const formData = new FormData();
+
+            formData.append(
+                'remarks',
+                remark.trim()
+            );
+
+            formData.append(
+                'location',
+                JSON.stringify(location)
+            );
+
+            formData.append(
+                'proof',
+                proofFile
+            );
+
+            const res = await fetch(
+                `/api/deliveries/${deliveryId}/invoices/${invoiceId}/deliver`,
+                {
+                    method: 'POST',
+
+                    body: formData,
+
+                    credentials: 'include'
+                }
+            );
 
             const json = await res.json();
             if (!res.ok) throw new Error(json.message || 'Failed to deliver');
@@ -138,6 +164,12 @@ export default function DeliverInvoiceButton({ deliveryId, invoiceId, onSuccess,
                         GPS coordinates will be attached to this remark
                     </div>
                 </div>
+
+                <CameraCapture
+                    onCapture={(file) => {
+                        setProofFile(file);
+                    }}
+                />
 
                 <DialogFooter className="flex gap-2">
                     <Button

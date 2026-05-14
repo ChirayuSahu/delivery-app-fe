@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import Link from "next/link"
 import ReturnInvoice from "@/components/supervisor/return-invoice"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
 // Types strictly following your provided InvoiceData
 type Track = {
@@ -47,6 +48,7 @@ type InvoiceData = {
     customerPhone: string
     deliveryId?: string
     deliveryRemark?: string
+    podUrl: string | null
 };
 
 const containerVariants: Variants = {
@@ -251,7 +253,7 @@ const InvoicePage = () => {
 
                 {/* Delivery Remark Section */}
                 {data.deliveryRemark && (
-                    < motion.div variants={itemVariants} className="bg-white border border-slate-200 rounded-[28px] overflow-hidden shadow-xs">
+                    < motion.div variants={itemVariants} className="bg-white border border-slate-200 rounded-[28px] overflow-hidden shadow-xs mb-4">
                         <div className="bg-slate-50/50 px-8 py-4 border-b">
                             <p className="text-xs font-bold text-slate-700 uppercase tracking-widest flex items-center gap-2">
                                 <Package className="w-4 h-4 text-green-600" />
@@ -262,6 +264,17 @@ const InvoicePage = () => {
                             {data.deliveryRemark}
                         </div>
                     </motion.div>
+                )}
+
+                {data.podUrl && (
+                    <Card className="border-slate-200 shadow-sm">
+                        <CardHeader className="bg-slate-50/50 border-b">
+                            <CardTitle className="text-xs font-bold text-slate-500 uppercase tracking-widest">Proof of Delivery</CardTitle>
+                        </CardHeader>
+                        <CardContent className="pt-4">
+                            <Image alt='Proof of Delivery' draggable={false} src={data.podUrl} className='w-full h-auto rounded-lg' width={1000} height={1000} unoptimized />
+                        </CardContent>
+                    </Card>
                 )}
 
                 {/* Combined Tracking Journey */}
