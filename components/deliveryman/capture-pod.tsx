@@ -166,7 +166,7 @@ export default function CameraCapture({
                         autoPlay
                         playsInline
                         muted
-                        className="w-full aspect-video object-cover"
+                        className="w-full aspect-video object-contain bg-black"
                     />
                 ) : (
                     <img
@@ -174,7 +174,7 @@ export default function CameraCapture({
                             previewUrl || ''
                         }
                         alt="Captured POD"
-                        className="w-full aspect-video object-cover"
+                        className="w-full aspect-video object-contain bg-black"
                     />
                 )}
             </div>
