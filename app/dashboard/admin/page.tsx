@@ -19,7 +19,7 @@ export default function DashboardPage() {
                         <h1 className="text-2xl font-bold text-slate-900">Delivery Dashboard</h1>
                         <p className="text-slate-500 text-sm">Admin</p>
                     </div>
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2 md:gap-3 flex-wrap">
                         <Button variant="outline" className="bg-green-50 border-green-200 text-green-700 hover:bg-green-100">
                             <Link href="/dashboard/admin/deliveries" className="flex gap-2">
                                 <CheckCircle2 className="h-4 w-4" />

@@ -4,6 +4,7 @@ import * as React from "react"
 import { format } from "date-fns"
 import { Calendar as CalendarIcon } from "lucide-react"
 import { DateRange } from "react-day-picker"
+import { useMediaQuery } from "@/hooks/use-media-query"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -24,6 +25,7 @@ export function DatePickerWithRange({
   date,
   setDate
 }: DatePickerWithRangeProps) {
+  const isDesktop = useMediaQuery("(min-width: 768px)")
   return (
     <div className={cn("grid gap-2", className)}>
       <Popover>
@@ -32,7 +34,7 @@ export function DatePickerWithRange({
             id="date"
             variant={"outline"}
             className={cn(
-              "w-[300px] justify-start text-left font-normal bg-white",
+              "w-full md:w-[300px] justify-start text-left font-normal bg-white",
               !date && "text-muted-foreground"
             )}
           >
@@ -58,7 +60,7 @@ export function DatePickerWithRange({
             defaultMonth={date?.from}
             selected={date}
             onSelect={setDate}
-            numberOfMonths={2}
+            numberOfMonths={isDesktop ? 2 : 1}
           />
         </PopoverContent>
       </Popover>

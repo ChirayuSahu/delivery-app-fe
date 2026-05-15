@@ -105,7 +105,7 @@ export function TransactionsTable({ dateRange, userId }: TransactionsTableProps)
   }
 
   return (
-    <div className="bg-white border rounded-lg shadow-sm overflow-hidden">
+    <div className="bg-white border rounded-lg shadow-sm overflow-x-auto">
       <Table>
         <TableHeader className="bg-slate-50">
           <TableRow>

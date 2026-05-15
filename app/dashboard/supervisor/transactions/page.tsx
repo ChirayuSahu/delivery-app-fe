@@ -41,7 +41,7 @@ export default function SupervisorFinancePage() {
 
       <main className="max-w-7xl mx-auto p-6 lg:p-10">
         <Tabs defaultValue="transactions" className="space-y-6">
-          <TabsList className="bg-white border rounded-lg p-1 space-x-1">
+          <TabsList className="bg-white border rounded-lg p-1 space-x-1 w-full justify-start overflow-x-auto flex-nowrap scrollbar-hide">
             <TabsTrigger value="transactions" className="data-[state=active]:bg-slate-100">Transactions</TabsTrigger>
             <TabsTrigger value="expenses" className="data-[state=active]:bg-slate-100">Expenses</TabsTrigger>
           </TabsList>

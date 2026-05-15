@@ -29,7 +29,7 @@ export default function SupervisorExpenseDetailPage() {
           </div>
         </div>
       </header>
-      <main className="max-w-7xl w-full mx-auto p-6 flex-1">
+      <main className="max-w-7xl w-full mx-auto p-4 md:p-6 lg:p-10 flex-1">
         <ExpenseDetail expenseId={id} backPath="/dashboard/supervisor/transactions" />
       </main>
     </div>

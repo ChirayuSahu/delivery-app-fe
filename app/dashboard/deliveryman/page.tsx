@@ -69,7 +69,7 @@ export default function DashboardPage() {
             <h1 className="text-2xl font-bold text-slate-900">Deliveries</h1>
             <p className="text-slate-500 text-sm">Manage and track your pharmaceutical shipments</p>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 md:gap-3 flex-wrap">
             <Link href={`${pathname}/status`}>
               <Button variant="outline" className="gap-2 bg-white">
                 <ArrowDownUp className="h-4 w-4" />
