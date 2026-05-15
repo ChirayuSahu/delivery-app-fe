@@ -25,9 +25,6 @@ export async function GET(request: NextRequest) {
             const data = await response.json();
             return NextResponse.json({ message: data.message || "Failed to fetch report" }, { status: response.status });
         }
-
-        // For file downloads, we need to handle the response differently if it's a stream
-        // But since we are proxying, we can pipe the blob
         const blob = await response.blob();
 
         return new NextResponse(blob, {
