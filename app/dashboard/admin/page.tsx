@@ -26,6 +26,11 @@ export default function DashboardPage() {
                                 <span className="text-xs font-bold">All Deliveries</span>
                             </Link>
                         </Button>
+                        <Button variant="outline" className="bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100">
+                            <Link href="/dashboard/admin/transactions" className="flex gap-2">
+                                <span className="text-xs font-bold">Finance</span>
+                            </Link>
+                        </Button>
                         <CreateUserButton />
                     </div>
                 </div>

@@ -76,6 +76,11 @@ export default function DashboardPage() {
                 Order Status
               </Button>
             </Link>
+            <Link href="/dashboard/deliveryman/expenses">
+              <Button variant="outline" className="gap-2 bg-white text-slate-700 hover:bg-slate-50 border-slate-200">
+                <span className="text-xs font-bold">Expenses</span>
+              </Button>
+            </Link>
             <CreateDeliveryButton />
           </div>
         </div>
