@@ -12,10 +12,22 @@ function Dialog({
   return <DialogPrimitive.Root data-slot="dialog" {...props} />
 }
 
+import { triggerHaptic } from "@/lib/haptics"
+
 function DialogTrigger({
+  onClick,
   ...props
 }: React.ComponentProps<typeof DialogPrimitive.Trigger>) {
-  return <DialogPrimitive.Trigger data-slot="dialog-trigger" {...props} />
+  return (
+    <DialogPrimitive.Trigger
+      data-slot="dialog-trigger"
+      onClick={(e) => {
+        triggerHaptic("light")
+        onClick?.(e)
+      }}
+      {...props}
+    />
+  )
 }
 
 function DialogPortal({
@@ -25,9 +37,19 @@ function DialogPortal({
 }
 
 function DialogClose({
+  onClick,
   ...props
 }: React.ComponentProps<typeof DialogPrimitive.Close>) {
-  return <DialogPrimitive.Close data-slot="dialog-close" {...props} />
+  return (
+    <DialogPrimitive.Close
+      data-slot="dialog-close"
+      onClick={(e) => {
+        triggerHaptic("light")
+        onClick?.(e)
+      }}
+      {...props}
+    />
+  )
 }
 
 function DialogOverlay({

@@ -35,7 +35,8 @@
     "shadcn": "^3.6.2",
     "socket.io-client": "^4.8.3",
     "sonner": "^2.0.7",
-    "tailwind-merge": "^3.4.0"
+    "tailwind-merge": "^3.4.0",
+    "web-haptics": "^0.0.6"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

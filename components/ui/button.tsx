@@ -1,3 +1,5 @@
+"use client"
+
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
@@ -36,17 +38,29 @@ const buttonVariants = cva(
   }
 )
 
+import { triggerHaptic, type HapticPattern } from "@/lib/haptics"
+
 function Button({
   className,
   variant = "default",
   size = "default",
   asChild = false,
+  haptic = "medium",
+  onClick,
   ...props
 }: React.ComponentProps<"button"> &
   VariantProps<typeof buttonVariants> & {
     asChild?: boolean
+    haptic?: HapticPattern | null
   }) {
   const Comp = asChild ? Slot : "button"
+
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (haptic) {
+      triggerHaptic(haptic)
+    }
+    onClick?.(e)
+  }
 
   return (
     <Comp
@@ -54,6 +68,7 @@ function Button({
       data-variant={variant}
       data-size={size}
       className={cn(buttonVariants({ variant, size, className }))}
+      onClick={handleClick}
       {...props}
     />
   )

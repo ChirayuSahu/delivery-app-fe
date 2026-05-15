@@ -11,10 +11,22 @@ function Popover({
   return <PopoverPrimitive.Root data-slot="popover" {...props} />
 }
 
+import { triggerHaptic } from "@/lib/haptics"
+
 function PopoverTrigger({
+  onClick,
   ...props
 }: React.ComponentProps<typeof PopoverPrimitive.Trigger>) {
-  return <PopoverPrimitive.Trigger data-slot="popover-trigger" {...props} />
+  return (
+    <PopoverPrimitive.Trigger
+      data-slot="popover-trigger"
+      onClick={(e) => {
+        triggerHaptic("light")
+        onClick?.(e)
+      }}
+      {...props}
+    />
+  )
 }
 
 function PopoverContent({
