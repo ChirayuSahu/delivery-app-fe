@@ -3,6 +3,8 @@
 import React, { useState } from "react"
 import { Loader2, Plus, Upload } from "lucide-react"
 import { toast } from "sonner"
+import CameraCapture from "@/components/deliveryman/capture-pod"
+import { Badge } from "@/components/ui/badge"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -22,6 +24,9 @@ export function AddExpenseDialog() {
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   const [file, setFile] = useState<File | null>(null)
+  const [notes, setNotes] = useState("")
+
+  const PRESET_NOTES = ["Fuel", "Stationary", "Food", "Maintenance"]
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -32,7 +37,7 @@ export function AddExpenseDialog() {
 
     setLoading(true)
     const formData = new FormData(e.currentTarget)
-    // The native input type="file" will be appended to formData automatically
+    formData.set('expense', file)
 
     try {
       const res = await fetch("/api/expenses", {
@@ -84,27 +89,33 @@ export function AddExpenseDialog() {
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="notes">Notes / Description</Label>
+              <div className="flex items-center justify-between">
+                <Label htmlFor="notes">Notes / Description</Label>
+              </div>
               <Textarea
                 id="notes"
                 name="notes"
                 required
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
                 placeholder="Briefly describe this expense..."
               />
+              <div className="flex flex-wrap gap-2 mt-1">
+                {PRESET_NOTES.map((preset) => (
+                  <Badge
+                    key={preset}
+                    variant="secondary"
+                    className="cursor-pointer hover:bg-slate-200"
+                    onClick={() => setNotes(preset)}
+                  >
+                    {preset}
+                  </Badge>
+                ))}
+              </div>
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="expense">Proof Document/Image</Label>
-              <div className="flex items-center gap-2">
-                <Input
-                  id="expense"
-                  name="expense"
-                  type="file"
-                  required
-                  accept="image/*,.pdf"
-                  className="cursor-pointer file:text-slate-700"
-                  onChange={(e) => setFile(e.target.files?.[0] || null)}
-                />
-              </div>
+              <Label>Proof Document/Image</Label>
+              <CameraCapture onCapture={setFile} for="Expense Proof" />
             </div>
           </div>
           <DialogFooter>

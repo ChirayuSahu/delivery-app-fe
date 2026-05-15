@@ -1,12 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
+import { getValidToken } from '@/lib/auth';
 
 const BACKEND_URL = process.env.BACKEND_URL;
 
 export async function GET(request: NextRequest) {
-
-    const cookieStore = await cookies();
-    const token = cookieStore.get('token')?.value;
+    const token = await getValidToken();
     const { searchParams } = new URL(request.url);
     const date = searchParams.get('date');
 

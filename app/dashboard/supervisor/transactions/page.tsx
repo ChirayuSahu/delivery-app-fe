@@ -51,7 +51,7 @@ export default function SupervisorFinancePage() {
           </TabsContent>
 
           <TabsContent value="expenses" className="mt-0">
-            <ExpensesTable dateRange={date} />
+            <ExpensesTable dateRange={date} role="SUPERVISOR" />
           </TabsContent>
         </Tabs>
       </main>

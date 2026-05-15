@@ -48,7 +48,7 @@ export default function DeliverymanExpensesPage() {
 
       <main className="max-w-7xl mx-auto p-6 lg:p-10">
         <div className="space-y-6">
-          <ExpensesTable dateRange={date} userId={undefined} />
+          <ExpensesTable dateRange={date} userId={undefined} role="DELIVERY_MAN" />
         </div>
       </main>
     </div>

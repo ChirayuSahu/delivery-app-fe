@@ -1,11 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { cookies } from "next/headers";
+import { getValidToken } from "@/lib/auth";
 
 const BACKEND_URL = process.env.BACKEND_URL;
 
 export async function POST(request: NextRequest) {
-    const cookieStore = await cookies();
-    const token = cookieStore.get('token')?.value;
+    const token = await getValidToken();
 
     if (!token) {
         return NextResponse.json({ message: "Unauthorized" }, { status: 401 });

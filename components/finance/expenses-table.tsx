@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react"
 import { Loader2, FileText, Download } from "lucide-react"
 import { format } from "date-fns"
 import { DateRange } from "react-day-picker"
+import { useRouter } from "next/navigation"
 
 import {
   Table,
@@ -14,6 +15,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 
 interface Expense {
   id: string
@@ -30,11 +32,16 @@ interface Expense {
 interface ExpensesTableProps {
   dateRange?: DateRange
   userId?: string
+  role?: 'ADMIN' | 'SUPERVISOR' | 'DELIVERY_MAN'
 }
 
-export function ExpensesTable({ dateRange, userId }: ExpensesTableProps) {
+export function ExpensesTable({ dateRange, userId, role }: ExpensesTableProps) {
   const [expenses, setExpenses] = useState<Expense[]>([])
   const [loading, setLoading] = useState(false)
+  const router = useRouter()
+
+  const isAdmin = role === 'ADMIN'
+  const isSelfView = !!userId || role === 'DELIVERY_MAN' || role === 'SUPERVISOR' // Supervisors might see all or just self, but user said "no need to show userId in expenses when deliveryman or supervisor is viewing"
 
   useEffect(() => {
     const fetchExpenses = async () => {
@@ -93,10 +100,10 @@ export function ExpensesTable({ dateRange, userId }: ExpensesTableProps) {
         <TableHeader className="bg-slate-50">
           <TableRow>
             <TableHead>Date</TableHead>
-            {!userId && <TableHead>User</TableHead>}
+            {isAdmin && <TableHead>User</TableHead>}
             <TableHead>Notes</TableHead>
             <TableHead className="text-right">Amount</TableHead>
-            <TableHead className="text-center">Proof</TableHead>
+            <TableHead className="text-center">Action</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -105,7 +112,7 @@ export function ExpensesTable({ dateRange, userId }: ExpensesTableProps) {
               <TableCell className="whitespace-nowrap">
                 {format(new Date(expense.createdAt), 'dd MMM yyyy, HH:mm')}
               </TableCell>
-              {!userId && (
+              {isAdmin && (
                 <TableCell>
                   <span className="font-medium text-slate-700">{expense.user?.name || expense.userId}</span>
                 </TableCell>
@@ -117,19 +124,17 @@ export function ExpensesTable({ dateRange, userId }: ExpensesTableProps) {
                 ₹{expense.amount.toFixed(2)}
               </TableCell>
               <TableCell className="text-center">
-                {expense.proofUrl ? (
-                  <a
-                    href={expense.proofUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center text-blue-600 hover:text-blue-800"
-                  >
-                    <Download className="w-4 h-4 mr-1" />
-                    <span className="text-xs">View</span>
-                  </a>
-                ) : (
-                  <span className="text-slate-400 text-xs">N/A</span>
-                )}
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => {
+                    const dashboardPath = role?.toLowerCase().replace('_', '')
+                    router.push(`/dashboard/${dashboardPath}/${role === 'DELIVERY_MAN' ? 'expenses' : 'transactions/expenses'}/${expense.id}`)
+                  }}
+                  className="text-blue-600 hover:text-blue-800 hover:bg-blue-50"
+                >
+                  View Details
+                </Button>
               </TableCell>
             </TableRow>
           ))}

@@ -1,12 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { cookies } from "next/headers";
+import { getValidToken } from "@/lib/auth";
 
 const BACKEND_URL = process.env.BACKEND_URL;
 
 export async function GET(request: NextRequest) {
-
-    const cookieStore = await cookies();
-    const token = cookieStore.get('token')?.value;
+    const token = await getValidToken();
     const { searchParams } = new URL(request.url);
     const date = searchParams.get('date');
 
@@ -21,33 +19,7 @@ export async function GET(request: NextRequest) {
             }
         })
 
-        if (!response.ok) {
-            const refreshToken = cookieStore.get('refreshToken')?.value;
-            if (!refreshToken) {
-                return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
-            }
-
-            // Try to refresh token
-            const refreshResponse = await fetch(`${BACKEND_URL}/auth/token?refreshToken=${refreshToken}`, {
-                method: 'GET',
-            });
-
-            const refreshData = await refreshResponse.json();
-
-            if (!refreshResponse.ok) {
-                return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
-            }
-
-            // Update cookies
-            cookieStore.set("token", refreshData.data.token, {
-                httpOnly: true,
-                secure: true,
-                sameSite: 'none',
-            });
-        }
-
         const data = await response.json();
-
         return NextResponse.json(data, { status: response.status });
     } catch (error) {
         if (error instanceof Error) {
@@ -58,8 +30,7 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-    const cookieStore = await cookies();
-    const token = cookieStore.get('token')?.value;
+    const token = await getValidToken();
 
     if (!token) {
         return NextResponse.json({ message: "Unauthorized" }, { status: 401 });

@@ -54,47 +54,74 @@ export async function proxy(request: NextRequest) {
 
 
   let payload: JWTUser
+  let newToken: string | undefined
+
   try {
-    const verified = await jose.jwtVerify<JWTUser>(token, jwtSecret, {
+    const verified = await jose.jwtVerify<JWTUser>(token || '', jwtSecret, {
       algorithms: ['HS256'],
     })
     payload = verified.payload
-  } catch {
-    return NextResponse.redirect(new URL('/login', request.url))
+  } catch (err) {
+    // Attempt to refresh if token is expired/invalid but refreshToken exists
+    if (refreshToken) {
+      try {
+        const res = await fetch(`${process.env.BACKEND_URL}/auth/token?refreshToken=${refreshToken}`)
+        const json = await res.json()
+        if (res.ok && json.success && json.data.token) {
+          newToken = json.data.token
+          const verified = await jose.jwtVerify<JWTUser>(newToken!, jwtSecret, {
+            algorithms: ['HS256'],
+          })
+          payload = verified.payload
+        } else {
+          return NextResponse.redirect(new URL('/login', request.url))
+        }
+      } catch {
+        return NextResponse.redirect(new URL('/login', request.url))
+      }
+    } else {
+      return NextResponse.redirect(new URL('/login', request.url))
+    }
   }
 
 
+  let response: NextResponse = NextResponse.next()
+  
   if (pathname === '/dashboard') {
-    return NextResponse.redirect(
+    response = NextResponse.redirect(
       new URL(roleDashboard(payload.role), request.url)
     )
-  }
-
-  if (pathname.startsWith('/dashboard/admin') && payload.role !== 'ADMIN') {
-    return NextResponse.redirect(
+  } else if (pathname.startsWith('/dashboard/admin') && payload.role !== 'ADMIN') {
+    response = NextResponse.redirect(
       new URL(roleDashboard(payload.role), request.url)
     )
-  }
-
-  if (
+  } else if (
     pathname.startsWith('/dashboard/supervisor') &&
     payload.role !== 'SUPERVISOR'
   ) {
-    return NextResponse.redirect(
+    response = NextResponse.redirect(
       new URL(roleDashboard(payload.role), request.url)
     )
-  }
-
-  if (
+  } else if (
     pathname.startsWith('/dashboard/deliveryman') &&
     payload.role !== 'DELIVERY_MAN'
   ) {
-    return NextResponse.redirect(
+    response = NextResponse.redirect(
       new URL(roleDashboard(payload.role), request.url)
     )
   }
 
-  return NextResponse.next()
+  if (newToken) {
+    response.cookies.set('token', newToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
+      path: '/',
+      maxAge: 60 * 60 * 12,
+    })
+  }
+
+  return response
 }
 
 export const config = {
