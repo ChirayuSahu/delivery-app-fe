@@ -8,7 +8,8 @@ import {
   Loader2,
   ArrowRight,
   ShieldCheck,
-  CheckCircle2
+  CheckCircle2,
+  Wallet
 } from "lucide-react";
 import { motion, Variants } from "framer-motion";
 import { toast } from 'sonner';
@@ -21,6 +22,7 @@ interface UserProfile {
   email: string;
   esId: string;
   phone: string;
+  wallet: number;
 }
 
 const containerVariants: Variants = {
@@ -136,6 +138,16 @@ export function UserInfoCard({ userId }: { userId: string }) {
             <div>
               <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest leading-none mb-1">Mobile Contact</p>
               <p className="text-sm font-bold text-gray-700">{user.phone}</p>
+            </div>
+          </motion.div>
+
+          <motion.div variants={itemVariants} className="flex items-center gap-4 group/item">
+            <div className="p-2.5 bg-gray-50 rounded-xl group-hover/item:bg-green-50 transition-colors">
+              <Wallet className="h-4 w-4 text-gray-400 group-hover/item:text-green-600" />
+            </div>
+            <div>
+              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest leading-none mb-1">Wallet Balance</p>
+              <p className="text-sm font-bold text-gray-700">₹{user.wallet?.toFixed(2) || '0.00'}</p>
             </div>
           </motion.div>
 
