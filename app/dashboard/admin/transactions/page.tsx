@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState } from "react"
-import { ArrowLeft } from "lucide-react"
+import { ArrowLeft, FileText, ArrowRightLeft } from "lucide-react"
 import Link from "next/link"
 import { DateRange } from "react-day-picker"
 
@@ -30,9 +30,20 @@ export default function AdminFinancePage() {
               <p className="text-slate-500 text-sm">Manage transactions and expenses</p>
             </div>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 md:gap-3 flex-wrap">
             <DatePickerWithRange date={date} setDate={setDate} />
-            <TransferFundsDialog />
+            <Link href="/dashboard/admin/reports/expenses">
+              <Button variant="outline" className="gap-2 border-slate-200">
+                <FileText className="h-4 w-4 text-blue-600" />
+                Reports
+              </Button>
+            </Link>
+            <TransferFundsDialog>
+               <Button variant="outline" className="hidden md:flex gap-2 border-slate-200">
+                <ArrowRightLeft className="h-4 w-4" />
+                Transfer
+              </Button>
+            </TransferFundsDialog>
           </div>
         </div>
       </header>
@@ -52,6 +63,16 @@ export default function AdminFinancePage() {
             <ExpensesTable dateRange={date} role="ADMIN" />
           </TabsContent>
         </Tabs>
+
+        {/* Floating Action Button for Mobile */}
+        <div className="fixed bottom-6 right-6 z-50 md:hidden">
+          <TransferFundsDialog>
+            <Button className="h-10 px-4 rounded-md shadow-lg bg-slate-900 hover:bg-slate-800 flex items-center justify-center gap-2">
+              <ArrowRightLeft className="h-4 w-4 text-white" />
+              <span className="text-white font-bold text-xs uppercase tracking-wide">Transfer</span>
+            </Button>
+          </TransferFundsDialog>
+        </div>
       </main>
     </div>
   )

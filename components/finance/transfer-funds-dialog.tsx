@@ -25,7 +25,11 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 
-export function TransferFundsDialog() {
+interface TransferFundsDialogProps {
+  children?: React.ReactNode
+}
+
+export function TransferFundsDialog({ children }: TransferFundsDialogProps) {
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   const [users, setUsers] = useState<any[]>([])
@@ -97,10 +101,12 @@ export function TransferFundsDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="gap-2 bg-slate-900 hover:bg-slate-800">
-          <ArrowRightLeft className="h-4 w-4" />
-          Transfer Funds
-        </Button>
+        {children ? children : (
+          <Button className="gap-2 bg-slate-900 hover:bg-slate-800">
+            <ArrowRightLeft className="h-4 w-4" />
+            Transfer Funds
+          </Button>
+        )}
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <form onSubmit={handleSubmit}>
