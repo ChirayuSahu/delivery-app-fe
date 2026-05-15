@@ -4,6 +4,9 @@ import { useRouter } from 'next/navigation';
 import { ArrowLeft, Home } from 'lucide-react';
 import AllDeliveriesCard from '@/components/admin/all-deliveries';
 
+import { BackButton } from '@/components/navigation/back-button';
+import { HomeButton } from '@/components/navigation/home-button';
+
 const AllDeliveries = () => {
 
     const router = useRouter();
@@ -16,12 +19,8 @@ const AllDeliveries = () => {
                 <div className="max-w-4xl mx-auto flex items-center justify-between">
                     <div className="flex items-center gap-4">
                         <div className="flex items-center gap-1">
-                            <button onClick={() => router.back()} className="p-2 hover:bg-slate-100 rounded-full transition-colors">
-                                <ArrowLeft className="w-5 h-5 text-slate-600" />
-                            </button>
-                            <button onClick={() => router.push('/dashboard')} className="p-2 hover:bg-slate-100 rounded-full transition-colors">
-                                <Home className="w-5 h-5 text-slate-600" />
-                            </button>
+                            <BackButton />
+                            <HomeButton />
                         </div>
                         <div>
                             <h1 className="text-lg font-bold text-slate-900 leading-none">All Deliveries</h1>

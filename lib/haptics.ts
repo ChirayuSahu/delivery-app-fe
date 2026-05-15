@@ -5,6 +5,9 @@ import { WebHaptics } from 'web-haptics';
  * Wraps the web-haptics library for consistent behavior.
  */
 
+// Device detection
+const isIPhone = typeof window !== 'undefined' && /iPhone/.test(navigator.userAgent);
+
 // Create a singleton instance safely for SSR
 const haptics = typeof window !== 'undefined' ? new WebHaptics() : null;
 
@@ -22,10 +25,11 @@ export type HapticPattern =
   | "buzz";
 
 /**
- * Triggers a haptic feedback if supported by the browser.
+ * Triggers a haptic feedback if supported by the browser and on an iPhone.
  */
 export const triggerHaptic = (pattern: HapticPattern = "medium") => {
-  if (!haptics) return;
+  // Only play haptics on iPhone as requested
+  if (!haptics || !isIPhone) return;
   
   try {
     // web-haptics uses .trigger() which accepts pattern names as strings
