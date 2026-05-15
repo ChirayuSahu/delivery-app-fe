@@ -1,6 +1,6 @@
 'use client';
 
-import { CheckCircle2 } from "lucide-react";
+import { CheckCircle2, Wallet } from "lucide-react";
 import DeliveryPersonnelChart from "@/components/admin/pie-chart";
 import FailedDeliveriesSection from "@/components/admin/failed-deliveries";
 import UsersCard from "@/components/admin/users";
@@ -26,7 +26,7 @@ export default function DashboardPage() {
                                 <span className="text-xs font-bold">All Deliveries</span>
                             </Link>
                         </Button>
-                        <Button variant="outline" className="bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100">
+                        <Button variant="outline" className="hidden md:flex bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100">
                             <Link href="/dashboard/admin/transactions" className="flex gap-2">
                                 <span className="text-xs font-bold">Finance</span>
                             </Link>
@@ -46,6 +46,16 @@ export default function DashboardPage() {
                     </div>
                 </div>
                 <FailedDeliveriesSection />
+            </div>
+
+            {/* Floating Action Button for Mobile */}
+            <div className="fixed bottom-6 right-6 z-50 md:hidden">
+                <Link href="/dashboard/admin/transactions">
+                    <Button className="h-10 px-4 rounded-md shadow-lg bg-slate-900 hover:bg-slate-800 flex items-center justify-center gap-2">
+                        <Wallet className="h-4 w-4 text-white" />
+                        <span className="text-white font-bold text-xs uppercase tracking-wide">Finance</span>
+                    </Button>
+                </Link>
             </div>
         </div>
     );
