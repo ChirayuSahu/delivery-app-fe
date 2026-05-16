@@ -81,6 +81,7 @@ export function TransferFundsDialog({ children }: TransferFundsDialogProps) {
           type,
           toUser,
         }),
+        credentials: 'include'
       })
       const json = await res.json()
 
@@ -126,13 +127,13 @@ export function TransferFundsDialog({ children }: TransferFundsDialogProps) {
                 <SelectContent>
                   {users.map((user) => (
                     <SelectItem key={user.id} value={user.id}>
-                      {user.name} ({user.role})
+                      {user.name}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
-            
+
             <div className="grid gap-2">
               <Label htmlFor="type">Transaction Type</Label>
               <Select value={type} onValueChange={setType} required>

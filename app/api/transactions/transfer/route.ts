@@ -12,7 +12,6 @@ export async function POST(request: NextRequest) {
 
     try {
         const body = await request.json();
-
         const response = await fetch(`${BACKEND_URL}/transactions/transfer`, {
             method: 'POST',
             headers: {
@@ -26,6 +25,7 @@ export async function POST(request: NextRequest) {
 
         return NextResponse.json(data, { status: response.status });
     } catch (error) {
+        console.log(error)
         if (error instanceof Error) {
             return NextResponse.json({ message: error.message }, { status: 500 });
         }
