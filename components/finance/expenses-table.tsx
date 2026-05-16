@@ -156,7 +156,6 @@ export function ExpensesTable({ dateRange, userId, role }: ExpensesTableProps) {
               {isAdmin && <TableHead>User</TableHead>}
               <TableHead>Notes</TableHead>
               <TableHead className="text-right">Amount</TableHead>
-              <TableHead className="text-center">Action</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -179,15 +178,6 @@ export function ExpensesTable({ dateRange, userId, role }: ExpensesTableProps) {
                 </TableCell>
                 <TableCell className="text-right font-semibold">
                   ₹{expense.amount.toFixed(2)}
-                </TableCell>
-                <TableCell className="text-center">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="text-blue-600 hover:text-blue-800 hover:bg-blue-50"
-                  >
-                    View Details
-                  </Button>
                 </TableCell>
               </TableRow>
             ))}

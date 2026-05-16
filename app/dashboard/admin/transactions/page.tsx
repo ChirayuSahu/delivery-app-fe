@@ -1,8 +1,9 @@
 "use client"
 
-import React, { useState } from "react"
+import React, { useState, Suspense } from "react"
 import { ArrowLeft, FileText, ArrowRightLeft } from "lucide-react"
 import Link from "next/link"
+import { useSearchParams, useRouter } from "next/navigation"
 import { DateRange } from "react-day-picker"
 
 import { Button } from "@/components/ui/button"
@@ -12,8 +13,18 @@ import { TransactionsTable } from "@/components/finance/transactions-table"
 import { ExpensesTable } from "@/components/finance/expenses-table"
 import { TransferFundsDialog } from "@/components/finance/transfer-funds-dialog"
 
-export default function AdminFinancePage() {
+function FinanceContent() {
   const [date, setDate] = useState<DateRange | undefined>()
+  const searchParams = useSearchParams()
+  const router = useRouter()
+  
+  const currentTab = searchParams.get('tab') || 'transactions'
+
+  const handleTabChange = (value: string) => {
+    const params = new URLSearchParams(searchParams.toString())
+    params.set('tab', value)
+    router.replace(`?${params.toString()}`, { scroll: false })
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -49,7 +60,7 @@ export default function AdminFinancePage() {
       </header>
 
       <main className="max-w-7xl mx-auto p-6 lg:p-10">
-        <Tabs defaultValue="transactions" className="space-y-6">
+        <Tabs value={currentTab} onValueChange={handleTabChange} className="space-y-6">
           <TabsList className="bg-white border rounded-lg p-1 space-x-1 w-full justify-start overflow-x-auto flex-nowrap scrollbar-hide">
             <TabsTrigger value="transactions" className="data-[state=active]:bg-slate-100">Transactions</TabsTrigger>
             <TabsTrigger value="expenses" className="data-[state=active]:bg-slate-100">Expenses</TabsTrigger>
@@ -75,5 +86,17 @@ export default function AdminFinancePage() {
         </div>
       </main>
     </div>
+  )
+}
+
+export default function AdminFinancePage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-slate-900"></div>
+      </div>
+    }>
+      <FinanceContent />
+    </Suspense>
   )
 }
