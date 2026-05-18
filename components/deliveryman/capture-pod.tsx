@@ -80,13 +80,20 @@ export default function CameraCapture({
         }
 
         const video = videoRef.current;
-
         const canvas = canvasRef.current;
 
-        canvas.width = video.videoWidth;
+        const MAX_WIDTH = 1280;
+
+        const scale =
+            video.videoWidth > MAX_WIDTH
+                ? MAX_WIDTH / video.videoWidth
+                : 1;
+
+        canvas.width =
+            video.videoWidth * scale;
 
         canvas.height =
-            video.videoHeight;
+            video.videoHeight * scale;
 
         const ctx =
             canvas.getContext('2d');
@@ -127,7 +134,7 @@ export default function CameraCapture({
                 stopCamera();
             },
             'image/jpeg',
-            0.9
+            0.7
         );
     }
 
