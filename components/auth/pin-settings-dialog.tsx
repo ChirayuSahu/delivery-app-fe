@@ -62,6 +62,7 @@ export function PinSettingsDialog({ children }: { children?: React.ReactNode }) 
 
       toast.success(json.message || "PIN updated successfully")
       setDialogStage("none")
+      setOpen(false)
       setTempPin("")
     } catch (error: any) {
       toast.error(error.message || "Failed to set PIN")

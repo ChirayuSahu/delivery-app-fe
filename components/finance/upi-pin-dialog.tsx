@@ -38,6 +38,14 @@ export function UpiPinDialog({
     }
   }, [open])
 
+  // Auto-submit when exactly 4 digits are entered
+  useEffect(() => {
+    if (open && pin.length === 4 && !loading) {
+      onSubmit(pin)
+      setPin("")
+    }
+  }, [open, pin, loading, onSubmit])
+
   const handleKeyPress = (val: string) => {
     if (loading) return
     if (pin.length < 4) {
