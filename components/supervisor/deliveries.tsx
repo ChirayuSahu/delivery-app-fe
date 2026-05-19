@@ -10,7 +10,10 @@ import {
   ArrowRight,
   CheckCircle2,
   AlertCircle,
-  Calendar as CalendarIcon
+  Calendar as CalendarIcon,
+  ArrowUpDown,
+  ArrowUp,
+  ArrowDown
 } from "lucide-react";
 import { motion } from "framer-motion";
 import Link from 'next/link';
@@ -45,10 +48,76 @@ const itemVariants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.2, ease: "easeOut" } }
 } as const;
 
+type SortField = 'deliveryNo' | 'startedAt' | 'isPaid' | 'status';
+type SortOrder = 'asc' | 'desc';
+
 export function UserDeliveriesCard({ userId }: { userId: string }) {
   const [deliveries, setDeliveries] = useState<Delivery[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [date, setDate] = useState<Date | undefined>(new Date());
+  const [sortField, setSortField] = useState<SortField | null>(null);
+  const [sortOrder, setSortOrder] = useState<SortOrder>('asc');
+
+  const handleSort = (field: SortField) => {
+    if (sortField === field) {
+      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortField(field);
+      setSortOrder('asc');
+    }
+  };
+
+  const sortedDeliveries = React.useMemo(() => {
+    if (!sortField) return deliveries;
+
+    return [...deliveries].sort((a, b) => {
+      let valA: any;
+      let valB: any;
+
+      switch (sortField) {
+        case 'deliveryNo': {
+          const numA = parseInt(a.deliveryNo, 10);
+          const numB = parseInt(b.deliveryNo, 10);
+          if (isNaN(numA) || isNaN(numB)) {
+            valA = a.deliveryNo.toLowerCase();
+            valB = b.deliveryNo.toLowerCase();
+          } else {
+            valA = numA;
+            valB = numB;
+          }
+          break;
+        }
+        case 'startedAt':
+          valA = a.startedAt ? new Date(a.startedAt).getTime() : 0;
+          valB = b.startedAt ? new Date(b.startedAt).getTime() : 0;
+          break;
+        case 'isPaid':
+          valA = a.isPaid ? 1 : 0;
+          valB = b.isPaid ? 1 : 0;
+          break;
+        case 'status': {
+          const getStatusVal = (d: Delivery) => {
+            const isActive = !d.endedAt;
+            const isFailed = d.failedDeliveries.length > 0;
+            const isCompleted = d.endedAt && !isFailed;
+            if (isFailed) return 0; // Issue
+            if (isActive) return 1; // Active
+            if (isCompleted) return 2; // Success
+            return -1;
+          };
+          valA = getStatusVal(a);
+          valB = getStatusVal(b);
+          break;
+        }
+        default:
+          return 0;
+      }
+
+      if (valA < valB) return sortOrder === 'asc' ? -1 : 1;
+      if (valA > valB) return sortOrder === 'asc' ? 1 : -1;
+      return 0;
+    });
+  }, [deliveries, sortField, sortOrder]);
 
   useEffect(() => {
     async function fetchDeliveriesData() {
@@ -119,11 +188,59 @@ export function UserDeliveriesCard({ userId }: { userId: string }) {
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="border-b border-slate-100 bg-slate-50/50 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-                  <th className="py-3 px-5 font-semibold">Trip No</th>
-                  <th className="py-3 px-5 font-semibold">Started At</th>
-                  <th className="py-3 px-5 font-semibold">Payment</th>
-                  <th className="py-3 px-5 font-semibold">Status</th>
+                <tr className="border-b border-slate-100 bg-slate-50/50 text-[10px] font-bold text-slate-400 uppercase tracking-wider select-none">
+                  <th 
+                    onClick={() => handleSort('deliveryNo')}
+                    className="py-3 px-5 font-semibold cursor-pointer hover:bg-slate-100/50 transition-colors"
+                  >
+                    <div className="flex items-center gap-1">
+                      Trip No
+                      {sortField === 'deliveryNo' ? (
+                        sortOrder === 'asc' ? <ArrowUp className="h-3 w-3 text-slate-600" /> : <ArrowDown className="h-3 w-3 text-slate-600" />
+                      ) : (
+                        <ArrowUpDown className="h-3 w-3 text-slate-400 opacity-50" />
+                      )}
+                    </div>
+                  </th>
+                  <th 
+                    onClick={() => handleSort('startedAt')}
+                    className="py-3 px-5 font-semibold cursor-pointer hover:bg-slate-100/50 transition-colors"
+                  >
+                    <div className="flex items-center gap-1">
+                      Started At
+                      {sortField === 'startedAt' ? (
+                        sortOrder === 'asc' ? <ArrowUp className="h-3 w-3 text-slate-600" /> : <ArrowDown className="h-3 w-3 text-slate-600" />
+                      ) : (
+                        <ArrowUpDown className="h-3 w-3 text-slate-400 opacity-50" />
+                      )}
+                    </div>
+                  </th>
+                  <th 
+                    onClick={() => handleSort('isPaid')}
+                    className="py-3 px-5 font-semibold cursor-pointer hover:bg-slate-100/50 transition-colors"
+                  >
+                    <div className="flex items-center gap-1">
+                      Payment
+                      {sortField === 'isPaid' ? (
+                        sortOrder === 'asc' ? <ArrowUp className="h-3 w-3 text-slate-600" /> : <ArrowDown className="h-3 w-3 text-slate-600" />
+                      ) : (
+                        <ArrowUpDown className="h-3 w-3 text-slate-400 opacity-50" />
+                      )}
+                    </div>
+                  </th>
+                  <th 
+                    onClick={() => handleSort('status')}
+                    className="py-3 px-5 font-semibold cursor-pointer hover:bg-slate-100/50 transition-colors"
+                  >
+                    <div className="flex items-center gap-1">
+                      Status
+                      {sortField === 'status' ? (
+                        sortOrder === 'asc' ? <ArrowUp className="h-3 w-3 text-slate-600" /> : <ArrowDown className="h-3 w-3 text-slate-600" />
+                      ) : (
+                        <ArrowUpDown className="h-3 w-3 text-slate-400 opacity-50" />
+                      )}
+                    </div>
+                  </th>
                   <th className="py-3 px-5 text-right font-semibold">Actions</th>
                 </tr>
               </thead>
@@ -133,7 +250,7 @@ export function UserDeliveriesCard({ userId }: { userId: string }) {
                 animate="visible"
                 className="divide-y divide-slate-100 text-slate-700 text-xs"
               >
-                {deliveries.map((delivery) => {
+                {sortedDeliveries.map((delivery) => {
                   const isActive = !delivery.endedAt;
                   const isFailed = delivery.failedDeliveries.length > 0;
                   const isCompleted = delivery.endedAt && !isFailed;
