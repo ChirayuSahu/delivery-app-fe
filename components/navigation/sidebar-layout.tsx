@@ -40,6 +40,8 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
   // User profile information loaded from current pathname / context
   const [userRole, setUserRole] = useState<"ADMIN" | "SUPERVISOR" | "DELIVERY_MAN">("ADMIN")
   const [userName, setUserName] = useState("User Profile")
+  const [wallet, setWallet] = useState<number | null>(null)
+  const [profileLoading, setProfileLoading] = useState(true)
 
   useEffect(() => {
     if (pathname.includes("/dashboard/admin")) {
@@ -53,6 +55,30 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
       setUserName("Delivery Executive")
     }
   }, [pathname])
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      setProfileLoading(true)
+      try {
+        const res = await fetch("/api/users/me")
+        if (res.ok) {
+          const json = await res.json()
+          if (json.success && json.data) {
+            setUserName(json.data.name)
+            setWallet(json.data.wallet)
+            if (json.data.role) {
+              setUserRole(json.data.role)
+            }
+          }
+        }
+      } catch (err) {
+        console.error("Failed to load user profile in sidebar:", err)
+      } finally {
+        setProfileLoading(false)
+      }
+    }
+    fetchProfile()
+  }, [])
 
   // Get active menu list
   const getNavItems = () => {
@@ -155,7 +181,7 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
       {/* DESKTOP SIDEBAR */}
       {/* ========================================================================= */}
       <aside 
-        className={`hidden lg:flex flex-col sticky top-0 h-screen transition-all duration-300 bg-white border-r border-slate-100 shadow-sm z-30 ${
+        className={`hidden lg:flex flex-col sticky top-0 h-screen transition-all duration-300 bg-white border-r border-slate-100 shadow-sm z-50 ${
           collapsed ? "w-20" : "w-64"
         }`}
       >
@@ -229,8 +255,25 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
             </div>
             {!collapsed && (
               <div className="flex-1 min-w-0">
-                <p className="text-xs font-bold text-slate-800 truncate">{userName}</p>
-                <p className="text-[10px] font-bold text-slate-400 tracking-wider uppercase truncate">{userRole}</p>
+                {profileLoading ? (
+                  <div className="space-y-2 py-0.5">
+                    <div className="h-3 w-28 bg-slate-200 rounded animate-pulse" />
+                    <div className="h-2 w-20 bg-slate-150 rounded animate-pulse" />
+                  </div>
+                ) : (
+                  <>
+                    <p className="text-xs font-bold text-slate-800 truncate">{userName}</p>
+                    <div className="flex items-center gap-1.5 mt-0.5">
+                      <span className="text-[10px] font-bold text-slate-400 tracking-wider uppercase">{userRole}</span>
+                      {wallet !== null && (
+                        <>
+                          <span className="text-slate-300 text-[10px]">•</span>
+                          <span className="text-[10px] font-extrabold text-green-600 bg-green-50 px-1.5 py-0.5 rounded">₹{wallet.toFixed(2)}</span>
+                        </>
+                      )}
+                    </div>
+                  </>
+                )}
               </div>
             )}
           </div>
@@ -288,7 +331,7 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
 
         {/* Mobile Drawer Overlay */}
         {mobileOpen && (
-          <div className="fixed inset-0 z-50 lg:hidden flex">
+          <div className="fixed inset-0 z-[9999] lg:hidden flex">
             {/* Backdrop */}
             <div 
               className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity duration-300"
@@ -348,8 +391,25 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
                     <User className="w-5 h-5" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-xs font-bold text-slate-800 truncate">{userName}</p>
-                    <p className="text-[10px] font-bold text-slate-400 tracking-wider uppercase truncate">{userRole}</p>
+                    {profileLoading ? (
+                      <div className="space-y-2 py-0.5">
+                        <div className="h-3 w-28 bg-slate-200 rounded animate-pulse" />
+                        <div className="h-2 w-20 bg-slate-150 rounded animate-pulse" />
+                      </div>
+                    ) : (
+                      <>
+                        <p className="text-xs font-bold text-slate-800 truncate">{userName}</p>
+                        <div className="flex items-center gap-1.5 mt-0.5">
+                          <span className="text-[10px] font-bold text-slate-400 tracking-wider uppercase">{userRole}</span>
+                          {wallet !== null && (
+                            <>
+                              <span className="text-slate-300 text-[10px]">•</span>
+                              <span className="text-[10px] font-extrabold text-green-600 bg-green-50 px-1.5 py-0.5 rounded">₹{wallet.toFixed(2)}</span>
+                            </>
+                          )}
+                        </div>
+                      </>
+                    )}
                   </div>
                 </div>
                 
