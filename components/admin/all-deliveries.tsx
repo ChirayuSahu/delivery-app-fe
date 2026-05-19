@@ -4,11 +4,12 @@ import React, { useEffect, useState, Suspense } from 'react';
 import {
     Loader2,
     Package,
-    Clock,
-    History,
+    Calendar as CalendarIcon,
     ArrowRight,
-    CheckCircle2,
-    Calendar as CalendarIcon
+    TrendingUp,
+    FileText,
+    Clock,
+    User
 } from "lucide-react";
 import { motion } from "framer-motion";
 import Link from 'next/link';
@@ -34,26 +35,21 @@ interface Delivery {
     deliveryMan: string;
 }
 
-/* ---------------- ANIMATION ---------------- */
-
 const containerVariants = {
     hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { staggerChildren: 0.08 } }
+    visible: { opacity: 1, transition: { staggerChildren: 0.03 } }
 };
 
 const itemVariants = {
-    hidden: { y: 10, opacity: 0 },
-    visible: { y: 0, opacity: 1, transition: { duration: 0.3 } }
-};
-
+    hidden: { opacity: 0, y: 4 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.2, ease: "easeOut" } }
+} as const;
 
 function DeliveriesSkeleton() {
     return (
-        <div className="w-full bg-white border border-gray-200 rounded-[24px] p-10 flex flex-col items-center justify-center shadow-sm max-h-full">
-            <Loader2 className="h-6 w-6 animate-spin text-green-600 mb-3" />
-            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
-                Loading Deliveries…
-            </p>
+        <div className="w-full bg-white border border-slate-100 rounded-xl p-12 flex flex-col items-center justify-center shadow-sm">
+            <Loader2 className="h-5 w-5 animate-spin text-green-600 mb-2" />
+            <span className="text-xs font-medium text-slate-400">Loading trips...</span>
         </div>
     );
 }
@@ -92,141 +88,162 @@ function AllDeliveriesCardInner() {
     }, [date]);
 
     return (
-        <div className="w-full bg-white border border-gray-200 rounded-[24px] overflow-hidden flex flex-col shadow-sm max-h-full">
-            <div className="bg-gray-50 p-6">
-                <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center gap-3">
-                        <div className="p-2 bg-green-600 rounded-xl shadow-lg shadow-green-100">
-                            <History className="h-5 w-5 text-white" />
-                        </div>
-                        <div>
-                            <h3 className="text-sm font-black text-slate-900 uppercase tracking-tight">
-                                Trip Logistics
-                            </h3>
-                            <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">
-                                Activity History
-                            </p>
-                        </div>
-                    </div>
-                    <div className="flex items-center justify-center bg-green-50 px-3 py-1 rounded-full border border-green-200">
-                        <span className="text-[10px] font-black text-green-600">
-                            {deliveries.length} Trips
-                        </span>
-                    </div>
+        <div className="w-full space-y-4">
+            {/* Minimal Toolbar */}
+            <div className="flex flex-row items-center justify-between gap-3 bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
+                <div className="flex items-center gap-2 shrink-0">
+                    <Popover>
+                        <PopoverTrigger asChild>
+                            <Button
+                                variant="outline"
+                                className={cn(
+                                    "justify-start text-left font-semibold text-xs rounded-lg h-9 border-slate-200 hover:bg-slate-50 hover:border-slate-300 bg-white min-w-[160px] sm:min-w-[200px] shadow-none",
+                                    !date && "text-muted-foreground"
+                                )}
+                            >
+                                <CalendarIcon className="mr-2 h-4 w-4 text-slate-500" />
+                                {date ? format(date, "PPP") : "Pick a date"}
+                            </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0 rounded-xl overflow-hidden shadow-lg border border-slate-100" align="start">
+                            <Calendar
+                                mode="single"
+                                selected={date}
+                                onSelect={(selectedDate) => {
+                                    if (!selectedDate) return;
+
+                                    setDate(selectedDate);
+                                    router.push(`?date=${format(selectedDate, "yyyy-MM-dd")}`, {
+                                        scroll: false,
+                                    });
+                                }}
+                                disabled={(d) => d > new Date()}
+                                initialFocus
+                                className="rounded-xl border-none"
+                            />
+                        </PopoverContent>
+                    </Popover>
                 </div>
-
-                <Popover>
-                    <PopoverTrigger asChild>
-                        <Button
-                            variant="outline"
-                            className={cn(
-                                "w-full justify-start text-left font-bold text-xs rounded-xl h-10 border-gray-200 hover:bg-white hover:border-green-500",
-                                !date && "text-muted-foreground"
-                            )}
-                        >
-                            <CalendarIcon className="mr-2 h-4 w-4 text-green-600" />
-                            {date ? format(date, "PPP") : "Pick a date"}
-                        </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0 rounded-2xl overflow-hidden" align="start">
-                        <Calendar
-                            mode="single"
-                            selected={date}
-                            onSelect={(selectedDate) => {
-                                if (!selectedDate) return;
-
-                                setDate(selectedDate);
-                                router.push(`?date=${format(selectedDate, "yyyy-MM-dd")}`, {
-                                    scroll: false,
-                                });
-                            }}
-                            initialFocus
-                            className="rounded-2xl border-none"
-                        />
-                    </PopoverContent>
-                </Popover>
+                
+                <div className="flex items-center gap-1.5 bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-100">
+                    <span className="h-1.5 w-1.5 bg-green-500 rounded-full" />
+                    <span className="text-[11px] font-semibold text-slate-600">
+                        {deliveries.length} active {deliveries.length === 1 ? 'trip' : 'trips'}
+                    </span>
+                </div>
             </div>
 
-            {/* LIST */}
-            <div className="flex-1 overflow-y-auto min-h-64">
+            {/* TABLE CONTAINER */}
+            <div className="bg-white border border-slate-100 rounded-xl shadow-sm overflow-hidden">
                 {loading ? (
-                    <div className="flex flex-col items-center justify-center h-64 gap-3">
-                        <Loader2 className="animate-spin h-6 w-6 text-blue-600" />
-                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
-                            Filtering Records…
-                        </p>
+                    <div className="flex flex-col items-center justify-center py-20 gap-2">
+                        <Loader2 className="animate-spin h-5 w-5 text-slate-400" />
+                        <span className="text-xs text-slate-400 font-medium">Filtering trips...</span>
                     </div>
                 ) : deliveries.length > 0 ? (
-                    <motion.div
-                        variants={containerVariants}
-                        initial="hidden"
-                        animate="visible"
-                        className="divide-y divide-gray-50"
-                    >
-                        {deliveries.map((delivery) => {
-                            const isCompleted = !!delivery.endedAt;
+                    <div className="overflow-x-auto">
+                        <table className="w-full text-left border-collapse">
+                            <thead>
+                                <tr className="border-b border-slate-100 bg-slate-50/50 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                                    <th className="py-3 px-5 font-semibold">Trip No</th>
+                                    <th className="py-3 px-5 font-semibold">Delivery Executive</th>
+                                    <th className="py-3 px-5 font-semibold">Started At</th>
+                                    <th className="py-3 px-5 font-semibold">Invoices</th>
+                                    <th className="py-3 px-5 font-semibold">Status</th>
+                                    <th className="py-3 px-5 text-right font-semibold">Actions</th>
+                                </tr>
+                            </thead>
+                            <motion.tbody
+                                variants={containerVariants}
+                                initial="hidden"
+                                animate="visible"
+                                className="divide-y divide-slate-100 text-slate-700 text-xs"
+                            >
+                                {deliveries.map((delivery) => {
+                                    const isCompleted = !!delivery.endedAt;
+                                    const isStarted = !!delivery.startedAt;
 
-                            return (
-                                <Link
-                                    href={`/dashboard/admin/deliveries/${delivery.id}`}
-                                    key={delivery.id}
-                                >
-                                    <motion.div
-                                        variants={itemVariants}
-                                        className="p-5 hover:bg-gray-50 transition-all group cursor-pointer border-l-4 border-transparent hover:border-blue-600"
-                                    >
-                                        <div className="flex items-start justify-between">
-                                            <div>
-                                                <div className="flex items-center gap-2 mb-1">
-                                                    <span className="text-xs font-black bg-gray-100 px-2 py-0.5 rounded">
-                                                        #{delivery.deliveryNo}
-                                                    </span>
-                                                    <span className="text-xs font-black bg-gray-100 px-2 py-0.5 rounded">
+                                    return (
+                                        <motion.tr
+                                            key={delivery.id}
+                                            variants={itemVariants}
+                                            className="hover:bg-slate-50/50 transition-colors group cursor-pointer"
+                                        >
+                                            <td className="py-3.5 px-5 font-semibold text-slate-900">
+                                                <Link href={`/dashboard/admin/deliveries/${delivery.id}`} className="block">
+                                                    #{delivery.deliveryNo}
+                                                </Link>
+                                            </td>
+                                            <td className="py-3.5 px-5 text-slate-600 font-medium">
+                                                <Link href={`/dashboard/admin/deliveries/${delivery.id}`} className="block">
+                                                    <div className="flex items-center gap-2">
+                                                        <div className="h-6 w-6 rounded bg-slate-100 flex items-center justify-center text-[10px] font-bold text-slate-600">
+                                                            {delivery.deliveryMan.charAt(0)}
+                                                        </div>
                                                         {delivery.deliveryMan}
-                                                    </span>
-                                                </div>
-                                                <div className="flex items-center gap-1.5 text-gray-400">
-                                                    <Clock className="h-3 w-3" />
-                                                    <span className="text-[10px] font-bold uppercase">
+                                                    </div>
+                                                </Link>
+                                            </td>
+                                            <td className="py-3.5 px-5 text-slate-500 font-medium">
+                                                <Link href={`/dashboard/admin/deliveries/${delivery.id}`} className="block">
+                                                    <div className="flex items-center gap-1">
+                                                        <Clock className="w-3.5 h-3.5 text-slate-400" />
                                                         {delivery.startedAt
                                                             ? format(new Date(delivery.startedAt), "hh:mm a")
                                                             : "Not Started"}
-                                                    </span>
-                                                </div>
-                                            </div>
-
-                                            {isCompleted && (
-                                                <div className="flex items-center gap-1 text-green-600">
-                                                    <CheckCircle2 className="h-4 w-4" />
-                                                    <span className="text-[10px] font-black uppercase">
-                                                        Success
-                                                    </span>
-                                                </div>
-                                            )}
-                                        </div>
-
-                                        <div className="mt-4 flex items-center justify-between">
-                                            <div className="flex-1 h-1 bg-gray-100 rounded-full overflow-hidden mr-6">
-                                                <div
-                                                    className={`h-full rounded-full ${isCompleted ? "bg-green-500 w-full" : "bg-blue-500 w-3/5"
-                                                        }`}
-                                                />
-                                            </div>
-                                            <ArrowRight className="h-4 w-4 text-gray-300 group-hover:text-blue-600 group-hover:translate-x-1 transition-all" />
-                                        </div>
-                                    </motion.div>
-                                </Link>
-                            );
-                        })}
-                    </motion.div>
+                                                    </div>
+                                                </Link>
+                                            </td>
+                                            <td className="py-3.5 px-5 text-slate-500 font-medium">
+                                                <Link href={`/dashboard/admin/deliveries/${delivery.id}`} className="block">
+                                                    <div className="flex items-center gap-1">
+                                                        <FileText className="w-3.5 h-3.5 text-slate-400" />
+                                                        {delivery.invoiceCount} {delivery.invoiceCount === 1 ? 'invoice' : 'invoices'}
+                                                    </div>
+                                                </Link>
+                                            </td>
+                                            <td className="py-3.5 px-5">
+                                                <Link href={`/dashboard/admin/deliveries/${delivery.id}`} className="block">
+                                                    {isCompleted ? (
+                                                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-semibold bg-green-50 text-green-700 border border-green-100">
+                                                            <span className="h-1 w-1 bg-green-500 rounded-full" />
+                                                            Completed
+                                                        </span>
+                                                    ) : isStarted ? (
+                                                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-semibold bg-amber-50 text-amber-700 border border-amber-100">
+                                                            <span className="h-1 w-1 bg-amber-500 rounded-full animate-pulse" />
+                                                            Active
+                                                        </span>
+                                                    ) : (
+                                                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-50 text-slate-500 border border-slate-100">
+                                                            <span className="h-1 w-1 bg-slate-400 rounded-full" />
+                                                            Pending
+                                                        </span>
+                                                    )}
+                                                </Link>
+                                            </td>
+                                            <td className="py-3.5 px-5 text-right">
+                                                <Link href={`/dashboard/admin/deliveries/${delivery.id}`} className="inline-flex items-center gap-1 text-slate-400 group-hover:text-slate-900 font-semibold transition-colors">
+                                                    <span>View</span>
+                                                    <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+                                                </Link>
+                                            </td>
+                                        </motion.tr>
+                                    );
+                                })}
+                            </motion.tbody>
+                        </table>
+                    </div>
                 ) : (
                     <div className="flex flex-col items-center justify-center py-20 text-center">
-                        <Package className="h-10 w-10 text-gray-300 mb-4" />
-                        <h4 className="text-gray-900 font-bold text-sm uppercase">
-                            No Records
+                        <div className="h-12 w-12 bg-slate-50 rounded-xl flex items-center justify-center text-slate-400 mb-3 border border-slate-100">
+                            <Package className="h-6 w-6" />
+                        </div>
+                        <h4 className="text-slate-900 font-semibold text-sm">
+                            No active trips
                         </h4>
-                        <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-1">
-                            Try another date
+                        <p className="text-xs text-slate-400 mt-0.5 max-w-xs">
+                            There are no recorded trips for this date.
                         </p>
                     </div>
                 )}
@@ -234,8 +251,6 @@ function AllDeliveriesCardInner() {
         </div>
     );
 }
-
-/* ---------------- DEFAULT EXPORT ---------------- */
 
 export default function AllDeliveriesCard() {
     return (

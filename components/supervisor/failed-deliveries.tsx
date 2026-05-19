@@ -1,9 +1,9 @@
 'use client';
 
-import { AlertCircle, CheckCircle2, Loader2, ArrowRight, ShieldAlert, History } from "lucide-react";
+import { AlertCircle, CheckCircle2, Loader2, ArrowRight, ShieldAlert, Clock } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { motion, Variants } from "motion/react";
+import { motion, Variants } from "framer-motion";
 
 interface FailedDelivery {
     id: string;
@@ -15,12 +15,12 @@ interface FailedDelivery {
 
 const containerVariants: Variants = {
     hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
+    visible: { opacity: 1, transition: { staggerChildren: 0.05 } }
 };
 
 const itemVariants: Variants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: { y: 0, opacity: 1, transition: { duration: 0.4, ease: "easeOut" } }
+    hidden: { opacity: 0, y: 6 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.2, ease: "easeOut" } }
 };
 
 function FailedDeliveriesSection() {
@@ -49,32 +49,24 @@ function FailedDeliveriesSection() {
 
     if (loading) {
         return (
-            <div className="w-full h-48 bg-white border border-gray-200 rounded-[24px] flex flex-col items-center justify-center gap-3">
-                <Loader2 className="animate-spin h-8 w-8 text-blue-600" />
-                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Scanning for issues...</p>
+            <div className="w-full bg-white border border-slate-100 rounded-xl p-12 flex flex-col items-center justify-center shadow-sm">
+                <Loader2 className="animate-spin h-5 w-5 text-slate-400 mb-2" />
+                <span className="text-xs text-slate-400 font-medium">Scanning exceptions...</span>
             </div>
         );
     }
 
     return (
-        <section className="space-y-6">
+        <section className="space-y-4">
             {/* Header Area */}
             <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                    <div className="p-2 bg-blue-600 rounded-xl shadow-lg shadow-blue-100 text-white">
-                        <ShieldAlert className="h-5 w-5" />
-                    </div>
-                    <div>
-                        <h2 className="text-xl font-black text-gray-900 tracking-tight uppercase">Delivery Exceptions</h2>
-                        <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Action Required Items</p>
-                    </div>
+                <div className="flex items-center gap-2">
+                    <ShieldAlert className="h-4 w-4 text-slate-500" />
+                    <h2 className="text-xs font-semibold text-slate-900">Delivery Exceptions</h2>
                 </div>
                 {deliveries.length > 0 && (
-                    <div className="bg-red-50 px-4 py-1.5 rounded-full border border-red-100 flex items-center gap-2">
-                        <div className="h-1.5 w-1.5 rounded-full bg-red-500 animate-pulse" />
-                        <span className="text-[10px] font-black text-red-600 uppercase tracking-widest">
-                            {deliveries.length} Critical
-                        </span>
+                    <div className="bg-red-50 px-2 py-0.5 rounded text-[10px] font-semibold text-red-700 border border-red-200/40">
+                        {deliveries.length} Critical
                     </div>
                 )}
             </div>
@@ -84,54 +76,42 @@ function FailedDeliveriesSection() {
                     variants={containerVariants}
                     initial="hidden"
                     animate="visible"
-                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"
+                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
                 >
                     {deliveries.map((delivery) => (
                         <Link 
                             href={`/dashboard/supervisor/invoice/${delivery.invType}${delivery.invNo}`} 
                             key={delivery.id}
+                            className="block"
                         >
                             <motion.div 
                                 variants={itemVariants}
-                                className="group relative bg-white border border-gray-200 rounded-[24px] p-5 shadow-sm hover:shadow-md hover:border-blue-600 transition-all cursor-pointer overflow-hidden"
+                                className="group relative bg-white border border-slate-100 rounded-xl p-4 hover:shadow-md hover:border-red-200/50 transition-all duration-300 cursor-pointer overflow-hidden shadow-sm flex flex-col justify-between min-h-[140px]"
                             >
-                                {/* Exception Tag */}
-                                <div className="absolute top-0 right-0">
-                                    <div className="bg-red-500 text-white text-[8px] font-black px-3 py-1 rounded-bl-xl uppercase tracking-widest">
-                                        Failed
+                                <div>
+                                    <div className="flex items-center justify-between gap-3 mb-2">
+                                        <span className="text-xs font-semibold text-slate-900">
+                                            {delivery.invType} / {delivery.invNo}
+                                        </span>
+                                        <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[9px] font-semibold bg-red-50 text-red-700 border border-red-100">
+                                            Failed
+                                        </span>
                                     </div>
+                                    <p className="text-xs text-slate-500 font-medium line-clamp-2">
+                                        {delivery.customerName}
+                                    </p>
                                 </div>
 
-                                <div className="flex flex-col h-full">
-                                    <div className="flex items-center gap-3 mb-4">
-                                        <div className="p-2.5 bg-gray-50 rounded-xl group-hover:bg-blue-50 transition-colors">
-                                            <AlertCircle className="h-5 w-5 text-red-500 group-hover:text-blue-600" />
-                                        </div>
-                                        <div>
-                                            <p className="text-xs font-black text-gray-900 tracking-tighter">
-                                                {delivery.invType} / {delivery.invNo}
-                                            </p>
-                                            <p className="text-[10px] text-gray-400 font-bold uppercase">Invoice Reference</p>
-                                        </div>
+                                <div className="pt-3 border-t border-slate-100 flex items-center justify-between mt-3">
+                                    <div className="flex items-center gap-1 text-[10px] text-slate-400 font-medium">
+                                        <Clock className="h-3.5 w-3.5" />
+                                        <span>
+                                            {new Date(delivery.updatedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                        </span>
                                     </div>
-
-                                    <div className="space-y-3 flex-1">
-                                        <div>
-                                            <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-1">Customer</p>
-                                            <p className="text-sm font-bold text-gray-700 truncate">{delivery.customerName}</p>
-                                        </div>
-                                        <div className="pt-3 border-t border-gray-50 flex items-center justify-between">
-                                            <div className="flex items-center gap-1.5">
-                                                <History className="h-3 w-3 text-gray-400" />
-                                                <p className="text-[9px] font-bold text-gray-500 uppercase">
-                                                    {new Date(delivery.updatedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                                                </p>
-                                            </div>
-                                            <div className="flex items-center gap-1 text-blue-600">
-                                                <span className="text-[10px] font-black uppercase tracking-tighter">Review</span>
-                                                <ArrowRight className="h-3 w-3 group-hover:translate-x-1 transition-transform" />
-                                            </div>
-                                        </div>
+                                    <div className="flex items-center gap-0.5 text-slate-400 group-hover:text-slate-900 font-semibold transition-colors text-[11px]">
+                                        <span>Review</span>
+                                        <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-0.5 transition-transform" />
                                     </div>
                                 </div>
                             </motion.div>
@@ -139,19 +119,17 @@ function FailedDeliveriesSection() {
                     ))}
                 </motion.div>
             ) : (
-                <motion.div 
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    className="flex flex-col items-center justify-center py-16 bg-green-50/30 border-2 border-dashed border-green-100 rounded-[32px] text-center"
-                >
-                    <div className="p-5 bg-green-100 rounded-full mb-4">
-                        <CheckCircle2 className="h-10 w-10 text-green-600" />
+                <div className="flex flex-col items-center justify-center py-12 bg-white border border-slate-100 rounded-xl text-center shadow-sm">
+                    <div className="h-12 w-12 bg-slate-50 rounded-xl flex items-center justify-center text-slate-400 mb-3 border border-slate-100">
+                        <CheckCircle2 className="h-6 w-6 text-green-500" />
                     </div>
-                    <h3 className="text-lg font-black text-gray-900 uppercase tracking-tight">Operation Clear</h3>
-                    <p className="text-[10px] text-green-600 font-bold uppercase tracking-widest mt-1">
-                        No delivery exceptions detected for this cycle.
+                    <h4 className="text-slate-900 font-semibold text-sm">
+                        No Exceptions
+                    </h4>
+                    <p className="text-xs text-slate-400 mt-0.5">
+                        All operations are running smoothly.
                     </p>
-                </motion.div>
+                </div>
             )}
         </section>
     );

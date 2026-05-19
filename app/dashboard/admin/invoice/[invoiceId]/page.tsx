@@ -9,14 +9,13 @@ import {
     Package
 } from "lucide-react"
 import Image from "next/image"
-import { motion, Variants, AnimatePresence } from "framer-motion"
+import { motion, Variants } from "framer-motion"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import Link from "next/link"
 import ReturnInvoice from "@/components/admin/return-invoice"
 
-// Types strictly following your provided InvoiceData
 type Track = {
     name: string
     scanDate: string
@@ -52,16 +51,13 @@ type InvoiceData = {
 
 const containerVariants: Variants = {
     hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
+    visible: { opacity: 1, transition: { staggerChildren: 0.05 } }
 };
 
 const itemVariants: Variants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: { y: 0, opacity: 1, transition: { duration: 0.4, ease: "easeOut" } }
+    hidden: { opacity: 0, y: 6 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.2, ease: "easeOut" } }
 };
-
-import { BackButton } from "@/components/navigation/back-button"
-import { HomeButton } from "@/components/navigation/home-button"
 
 const InvoicePage = () => {
     const params = useParams();
@@ -87,149 +83,142 @@ const InvoicePage = () => {
     }, [invoiceId]);
 
     if (loading) return (
-        <div className="min-h-screen flex flex-col items-center justify-center bg-slate-50">
-            <Loader2 className="w-12 h-12 text-green-600 animate-spin mb-4" />
-            <p className="text-slate-500 font-medium">Loading Invoice Details...</p>
+        <div className="min-h-[400px] flex flex-col items-center justify-center py-20 bg-white rounded-xl border border-slate-100 shadow-sm max-w-2xl mx-auto mt-20">
+            <Loader2 className="w-5 h-5 text-slate-400 animate-spin mb-2" />
+            <p className="text-slate-400 text-xs font-medium">Loading Invoice Details...</p>
         </div>
     );
 
     if (!data) return (
-        <div className="min-h-screen flex flex-col items-center justify-center p-6 text-center">
-            <CircleX className="w-16 h-16 text-red-500 mb-4" />
-            <h1 className="text-xl font-bold">Invoice Not Found</h1>
-            <Button onClick={() => router.back()} className="mt-4" variant="outline">Go Back</Button>
+        <div className="min-h-[400px] flex flex-col items-center justify-center py-20 bg-white rounded-xl border border-slate-100 shadow-sm max-w-2xl mx-auto mt-20 p-6 text-center">
+            <CircleX className="w-6 h-6 text-red-500 mb-4" />
+            <h1 className="text-sm font-semibold text-slate-900">Invoice Not Found</h1>
+            <Button onClick={() => router.back()} className="mt-4 text-xs h-9 rounded-lg" variant="outline">Go Back</Button>
         </div>
     );
 
     return (
-        <div className="min-h-screen bg-[#f8fafc] pb-12">
-            {/* Header */}
-            <header className="sticky top-0 z-30 border-b bg-white/80 backdrop-blur-md px-6 py-4">
-                <div className="max-w-4xl mx-auto flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                        <div className="flex items-center gap-1">
-                            <BackButton />
-                            <HomeButton />
-                        </div>
-                        <div>
-                            <h1 className="text-lg font-bold text-slate-900 leading-none">Invoice Details</h1>
-                            <p className="text-[10px] font-mono text-slate-400 mt-1 uppercase tracking-widest">#{data.invoice}</p>
-                        </div>
-                    </div>
-                    <Badge className={cn(
-                        "rounded-full px-4 py-1 text-[10px] font-bold uppercase border shadow-xs",
-                        data.status === 'DELIVERED' ? "bg-green-50 text-green-700 border-green-200" : "bg-amber-50 text-amber-700 border-amber-200"
-                    )}>
-                        {data.status.replace(/_/g, ' ')}
-                    </Badge>
-                </div>
-            </header>
-
+        <div className="min-h-screen bg-slate-50/50 pb-12">
             <motion.div
                 variants={containerVariants}
                 initial="hidden"
                 animate="visible"
-                className="max-w-4xl mx-auto space-y-6 p-4 md:p-8"
+                className="max-w-7xl mx-auto space-y-6 p-6 md:p-8"
             >
+                {/* Quiet inline nav */}
+                <div className="flex items-center justify-between gap-3 mb-4">
+                    <div className="flex items-center gap-2">
+                        <span className="text-xs text-slate-400 font-bold uppercase tracking-wider font-mono">
+                            Invoice #{data.invoice}
+                        </span>
+                    </div>
+                    <Badge className={cn(
+                        "rounded px-2 py-0.5 text-[9px] font-semibold uppercase shadow-none border",
+                        data.status === 'DELIVERED' ? "bg-green-50 text-green-700 border-green-200/40" : "bg-amber-50 text-amber-700 border-amber-200/40"
+                    )}>
+                        {data.status.replace(/_/g, ' ')}
+                    </Badge>
+                </div>
+
                 {/* Hero Section */}
-                <motion.div variants={itemVariants} className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-                    <div className="flex items-center gap-5">
-                        <div className="p-4 bg-white border rounded-[22px] shadow-xs">
-                            <Image alt='Logo' src='https://rajeshpharma.com/img/rp.svg' className='w-10 h-10' width={40} height={40} />
+                <motion.div variants={itemVariants} className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div className="flex items-center gap-4">
+                        <div className="p-2.5 bg-white border border-slate-100 rounded-xl shadow-sm">
+                            <Image alt='Logo' src='https://rajeshpharma.com/img/rp.svg' className='w-8 h-8' width={32} height={32} />
                         </div>
                         <div>
-                            <h1 className="text-3xl font-black text-slate-900 tracking-tight">{data.invoice}</h1>
-                            <div className="flex items-center gap-2 text-slate-500 mt-1">
-                                <Calendar className="w-4 h-4" />
-                                <span className="text-sm font-medium">{new Date(data.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
+                            <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">{data.invoice}</h1>
+                            <div className="flex items-center gap-1.5 text-slate-400 mt-1">
+                                <Calendar className="w-3.5 h-3.5" />
+                                <span className="text-xs font-medium">{new Date(data.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
                             </div>
                         </div>
                     </div>
-                    <div className="bg-white border border-green-100 p-4 rounded-xl shadow-xs flex items-center gap-3">
-                        <div className="bg-green-50 p-2 rounded-lg">
-                            <IndianRupee className="w-5 h-5 text-green-600" />
+                    <div className="bg-white border border-slate-100 p-4 rounded-xl shadow-sm flex items-center gap-3">
+                        <div className="bg-slate-50 p-2 rounded-lg border border-slate-100">
+                            <IndianRupee className="w-4 h-4 text-slate-500" />
                         </div>
                         <div>
-                            <p className="text-[10px] font-bold text-slate-400 uppercase leading-none mb-1">Invoice Amount</p>
-                            <p className="text-2xl font-black text-slate-900 leading-none">{data.amount.toLocaleString('en-IN')}</p>
+                            <p className="text-[9px] font-bold text-slate-400 uppercase leading-none mb-1">Invoice Amount</p>
+                            <p className="text-xl font-extrabold text-slate-900 leading-none">{data.amount.toLocaleString('en-IN')}</p>
                         </div>
                     </div>
                 </motion.div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     {/* Customer Info */}
-                    <motion.div variants={itemVariants} className="relative md:col-span-2 bg-white border border-slate-200 rounded-xl p-6 shadow-xs">
-                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4">Customer Information</p>
-                        <div className="space-y-4">
+                    <motion.div variants={itemVariants} className="relative md:col-span-2 bg-white border border-slate-100 rounded-xl p-5 shadow-sm">
+                        <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-3">Customer Information</span>
+                        <div className="space-y-3">
                             <div>
-                                <h3 className="text-xl font-bold text-slate-900">{data.name}</h3>
-                                <p className="text-sm font-medium text-slate-500">{data.email}</p>
+                                <h3 className="text-base font-semibold text-slate-900">{data.name}</h3>
+                                <p className="text-xs text-slate-400 font-medium">{data.email}</p>
                             </div>
-                            <div>
-                                <h3 className="text-sm font-bold text-slate-900">{data.customerAddress}</h3>
+                            <div className="pt-2 border-t border-slate-50">
+                                <span className="text-[9px] font-bold text-slate-400 uppercase block mb-1">Address</span>
+                                <h3 className="text-xs font-semibold text-slate-700 leading-normal">{data.customerAddress}</h3>
                             </div>
-                            <div>
-                                <h3 className="text-sm font-bold text-slate-900">{data.customerPhone}</h3>
+                            <div className="pt-2 border-t border-slate-50">
+                                <span className="text-[9px] font-bold text-slate-400 uppercase block mb-1">Phone</span>
+                                <h3 className="text-xs font-semibold text-slate-700 leading-normal">{data.customerPhone}</h3>
                             </div>
-                            {data.status === "DELIVERED" && (
-                                <Image alt='Logo' src='/delivered.png' className='top-0 right-0 w-50' width={1000} height={1000} draggable={false} />
-                            )}
                         </div>
                     </motion.div>
 
-                    {/* Delivery Stats */}
-                    <motion.div variants={itemVariants} className="bg-white border border-slate-200 rounded-xl p-6 shadow-xs flex flex-col justify-between">
+                    {/* Delivery Status Card */}
+                    <motion.div variants={itemVariants} className="bg-white border border-slate-100 rounded-xl p-5 shadow-sm flex flex-col justify-between">
                         <div>
-                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4">Delivery Status</p>
+                            <Button onClick={() => router.back()} variant="outline" className="w-full justify-start text-xs h-9 rounded-lg gap-2 border-slate-100 bg-white mb-5">
+                                <ArrowLeft className="w-3.5 h-3.5 text-slate-500" />
+                                Back to Dashboard
+                            </Button>
 
-                            {/* Main Status Badge */}
+                            <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-3">Delivery Status</span>
+
+                            {/* Main Status Link */}
                             <Link href={!!data.failedDeliveryId && data.status === 'FAILED' ? `/dashboard/admin/deliveries/${data.failedDeliveryId}` : `/dashboard/admin/deliveries/${data.deliveryId}`} className="block">
                                 <div className={cn(
-                                    "mb-6 p-4 rounded-2xl border flex items-center gap-3",
-                                    data.status === 'DELIVERED' ? "bg-green-50 border-green-100" :
-                                        data.status === 'FAILED' ? "bg-red-50 border-red-100" : "bg-blue-50 border-blue-100"
+                                    "mb-4 p-3 rounded-lg border flex items-center gap-2",
+                                    data.status === 'DELIVERED' ? "bg-green-50 border-green-200/40 text-green-700" :
+                                        data.status === 'FAILED' ? "bg-red-50 border-red-200/40 text-red-700" : "bg-slate-50 border-slate-200/40 text-slate-700"
                                 )}>
                                     <div className={cn(
-                                        "h-2 w-2 rounded-full animate-pulse",
+                                        "h-1.5 w-1.5 rounded-full animate-pulse",
                                         data.status === 'DELIVERED' ? "bg-green-600" :
-                                            data.status === 'FAILED' ? "bg-red-600" : "bg-blue-600"
+                                            data.status === 'FAILED' ? "bg-red-600" : "bg-slate-600"
                                     )} />
-                                    <span className={cn(
-                                        "text-sm font-black uppercase tracking-tight",
-                                        data.status === 'DELIVERED' ? "text-green-700" :
-                                            data.status === 'FAILED' ? "text-red-700" : "text-blue-700"
-                                    )}>
+                                    <span className="text-xs font-bold uppercase">
                                         {data.status.replace(/_/g, ' ')}
                                     </span>
                                 </div>
                             </Link>
 
-                            <div className="space-y-5">
+                            <div className="space-y-4">
                                 {data.status === 'FAILED' && (
                                     <ReturnInvoice invoiceId={String(invoiceId)} />
                                 )}
                                 {data.status !== 'FAILED' && (
-                                    <div className="flex items-center gap-4">
-                                        <div className="h-11 w-11 bg-slate-100 rounded-xl flex items-center justify-center shrink-0">
-                                            <Truck className="w-5 h-5 text-slate-600" />
+                                    <div className="flex items-center gap-3">
+                                        <div className="h-9 w-9 bg-slate-50 border border-slate-100 rounded-lg flex items-center justify-center shrink-0">
+                                            <Truck className="w-4 h-4 text-slate-500" />
                                         </div>
                                         <div>
-                                            <p className="text-[10px] text-slate-400 uppercase font-bold leading-none mb-1">Assigned Executive</p>
-                                            <p className="text-sm font-bold text-slate-900">{data.deliveryMan || "Awaiting Assignment"}</p>
+                                            <p className="text-[9px] text-slate-400 uppercase font-bold leading-none mb-1">Executive</p>
+                                            <p className="text-xs font-semibold text-slate-900">{data.deliveryMan || "Awaiting Assignment"}</p>
                                         </div>
                                     </div>
                                 )}
 
                                 {/* Time Info */}
-                                <div className="flex items-center gap-4">
-                                    <div className="h-11 w-11 bg-slate-100 rounded-xl flex items-center justify-center shrink-0">
-                                        <Clock className="w-5 h-5 text-slate-600" />
+                                <div className="flex items-center gap-3">
+                                    <div className="h-9 w-9 bg-slate-50 border border-slate-100 rounded-lg flex items-center justify-center shrink-0">
+                                        <Clock className="w-4 h-4 text-slate-500" />
                                     </div>
                                     <div>
-                                        <p className="text-[10px] text-slate-400 uppercase font-bold leading-none mb-1">
+                                        <p className="text-[9px] text-slate-400 uppercase font-bold leading-none mb-1">
                                             {data.status === 'DELIVERED' ? "Delivered At" : "Last Update"}
                                         </p>
-                                        <p className="text-sm font-bold text-slate-900">
+                                        <p className="text-xs font-semibold text-slate-900">
                                             {data.deliveredAt
                                                 ? new Date(data.deliveredAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })
                                                 : new Date(data.date).toLocaleDateString('en-GB')}
@@ -239,46 +228,46 @@ const InvoicePage = () => {
                             </div>
                         </div>
 
-                        {/* Call Action - only shows if delivery man is assigned */}
                         {data.deliveryMan && data.status !== 'DELIVERED' && (
-                            <Button variant="outline" className="mt-6 w-full py-6 rounded-xl border-green-200 text-green-700 hover:bg-green-50 hover:text-green-700 font-bold gap-2">
-                                <Phone className="w-4 h-4" />
+                            <Button variant="outline" className="mt-4 w-full py-2 text-xs rounded-lg border-slate-200 text-slate-700 hover:bg-slate-50 font-semibold gap-1.5 h-9">
+                                <Phone className="w-3.5 h-3.5" />
                                 Contact Executive
                             </Button>
                         )}
                     </motion.div>
                 </div>
 
-                {/* Delivery Remark Section */}
+                {/* Remark */}
                 {data.deliveryRemark && (
-                    <motion.div variants={itemVariants} className="bg-white border border-slate-200 rounded-[28px] overflow-hidden shadow-xs">
-                        <div className="bg-slate-50/50 px-8 py-4 border-b">
-                            <p className="text-xs font-bold text-slate-700 uppercase tracking-widest flex items-center gap-2">
-                                <Package className="w-4 h-4 text-green-600" />
+                    <motion.div variants={itemVariants} className="bg-white border border-slate-100 rounded-xl overflow-hidden shadow-sm">
+                        <div className="bg-slate-50/50 px-5 py-3 border-b border-slate-100">
+                            <span className="text-xs font-semibold text-slate-900 flex items-center gap-1.5">
+                                <Package className="w-3.5 h-3.5 text-slate-500" />
                                 Delivery Remark
-                            </p>
+                            </span>
                         </div>
-                        <div className="p-8 relative">
+                        <div className="p-5 text-xs text-slate-600 leading-relaxed">
                             {data.deliveryRemark}
                         </div>
                         {data.podUrl && (
-                            <Image alt='POD' draggable={false} src={data.podUrl} className='w-full h-auto mt-4' width={1000} height={1000} unoptimized />
+                            <div className="px-5 pb-5">
+                                <Image alt='POD' draggable={false} src={data.podUrl} className='max-w-xs w-full h-auto rounded-lg border border-slate-100 shadow-sm' width={300} height={300} unoptimized />
+                            </div>
                         )}
                     </motion.div>
                 )}
 
-                {/* Combined Tracking Journey */}
-                <motion.div variants={itemVariants} className="bg-white border border-slate-200 rounded-[28px] overflow-hidden shadow-xs">
-                    <div className="bg-slate-50/50 px-8 py-4 border-b">
-                        <p className="text-xs font-bold text-slate-700 uppercase tracking-widest flex items-center gap-2">
-                            <Clock className="w-4 h-4 text-green-600" />
+                {/* Activity Log */}
+                <motion.div variants={itemVariants} className="bg-white border border-slate-100 rounded-xl overflow-hidden shadow-sm">
+                    <div className="bg-slate-50/50 px-5 py-3 border-b border-slate-100">
+                        <span className="text-xs font-semibold text-slate-900 flex items-center gap-1.5">
+                            <Clock className="w-3.5 h-3.5 text-slate-500" />
                             Activity Log
-                        </p>
+                        </span>
                     </div>
-                    <div className="p-8 relative">
-                        {/* Line */}
-                        <div className="absolute left-10 top-12 bottom-12 w-0.5 bg-slate-100" />
-                        <div className="space-y-10">
+                    <div className="p-5 relative">
+                        <div className="absolute left-[33px] top-6 bottom-6 w-0.5 bg-slate-100" />
+                        <div className="space-y-6">
                             {data.trackingDetails.map((step, idx) => (
                                 <TimelineStep
                                     key={idx}
@@ -289,7 +278,6 @@ const InvoicePage = () => {
                                     isDone={true}
                                 />
                             ))}
-                            {/* Auto-append final status if not in tracking list */}
                             {data.status === 'DELIVERED' && (
                                 <TimelineStep
                                     title="Delivered Successfully"
@@ -298,42 +286,43 @@ const InvoicePage = () => {
                                     desc="Handed over to customer"
                                     isDone={true}
                                     isLast
-                                    icon={<CheckCircle2 className="w-5 h-5" />}
+                                    icon={<CheckCircle2 className="w-4 h-4" />}
                                 />
                             )}
                         </div>
                     </div>
                 </motion.div>
 
+                {/* Summary Table */}
                 {data.items && data.items.length > 0 && (
-                    <motion.div variants={itemVariants} className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-xs">
-                        <div className="bg-slate-50/50 px-8 py-4 border-b flex items-center justify-between">
-                            <div className="flex items-center gap-2">
-                                <ShoppingCart className="w-4 h-4 text-green-600" />
-                                <span className="text-xs font-bold text-slate-700 uppercase tracking-widest">Order Summary</span>
-                            </div>
-                            <Badge variant="outline" className="bg-white text-[10px] font-bold">{data.items.length} Items</Badge>
+                    <motion.div variants={itemVariants} className="bg-white border border-slate-100 rounded-xl overflow-hidden shadow-sm">
+                        <div className="bg-slate-50/50 px-5 py-3 border-b border-slate-100 flex items-center justify-between">
+                            <span className="text-xs font-semibold text-slate-900 flex items-center gap-1.5">
+                                <ShoppingCart className="w-3.5 h-3.5 text-slate-500" />
+                                Order Summary
+                            </span>
+                            <Badge variant="outline" className="bg-white text-[9px] font-semibold">{data.items.length} Items</Badge>
                         </div>
                         <div className="overflow-x-auto">
                             <table className="w-full text-left border-collapse">
                                 <thead>
-                                    <tr className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter border-b">
-                                        <th className="px-8 py-4">Item Name</th>
-                                        <th className="px-4 py-4 text-center">Batch</th>
-                                        <th className="px-4 py-4 text-center">Qty</th>
+                                    <tr className="text-[9px] font-bold text-slate-400 uppercase border-b border-slate-100 bg-slate-50/20">
+                                        <th className="px-5 py-2.5">Item Name</th>
+                                        <th className="px-4 py-2.5 text-center">Batch</th>
+                                        <th className="px-4 py-2.5 text-center">Qty</th>
                                     </tr>
                                 </thead>
-                                <tbody className="divide-y divide-slate-50">
+                                <tbody className="divide-y divide-slate-100">
                                     {data.items.map((item, idx) => (
-                                        <tr key={idx} className="group hover:bg-slate-50/50 transition-colors">
-                                            <td className="px-8 py-4">
-                                                <p className="text-sm font-bold text-slate-900 group-hover:text-green-700">{item.name}</p>
+                                        <tr key={idx} className="hover:bg-slate-50/20 transition-colors">
+                                            <td className="px-5 py-3">
+                                                <p className="text-xs font-semibold text-slate-900">{item.name}</p>
                                             </td>
-                                            <td className="px-4 py-4 text-center">
-                                                <Badge variant="secondary" className="text-[9px] font-mono font-bold bg-slate-100">{item.batch}</Badge>
+                                            <td className="px-4 py-3 text-center">
+                                                <Badge variant="secondary" className="text-[9px] font-mono bg-slate-100 border-none shadow-none">{item.batch}</Badge>
                                             </td>
-                                            <td className="px-4 py-4 text-center">
-                                                <span className="text-sm font-black text-slate-700">{item.quantity}</span>
+                                            <td className="px-4 py-3 text-center">
+                                                <span className="text-xs font-bold text-slate-700">{item.quantity}</span>
                                             </td>
                                         </tr>
                                     ))}
@@ -347,33 +336,30 @@ const InvoicePage = () => {
     )
 }
 
-const TimelineStep = ({ title, time, desc, isDone, isLast, icon, date }: any) => (
-    <div className="relative flex gap-8 group">
-        <div className={cn(
-            "relative z-10 w-10 h-10 rounded-2xl flex items-center justify-center border-4 border-white shadow-xs transition-all",
-            isDone ? "bg-green-600 text-white" : "bg-slate-100 text-slate-400"
-        )}>
+const TimelineStep = ({ title, time, desc, icon, date }: any) => (
+    <div className="relative flex gap-4 group">
+        <div className="relative z-10 w-7 h-7 rounded-lg flex items-center justify-center border border-slate-200 bg-white text-slate-500 shadow-sm">
             {icon || <GetStageIcon stage={title} />}
         </div>
-        <div className="flex-1 pt-1">
+        <div className="flex-1 pt-0.5">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
-                <h4 className="font-bold text-slate-900 group-hover:text-green-700 transition-colors">{title}</h4>
-                <Badge variant="outline" className="text-[10px] font-mono bg-slate-50 text-green-600 border-green-100 w-fit">
+                <h4 className="text-xs font-semibold text-slate-900">{title}</h4>
+                <span className="text-[9px] font-mono text-slate-400">
                     {new Date(date).toLocaleDateString('en-GB')} - {time}
-                </Badge>
+                </span>
             </div>
-            <p className="text-xs text-slate-500 font-medium mt-1">Processed by: <span className="text-slate-700 font-bold">{desc}</span></p>
+            <p className="text-[10px] text-slate-400 font-medium mt-0.5">Processed by: <span className="text-slate-600 font-semibold">{desc}</span></p>
         </div>
     </div>
 );
 
 const GetStageIcon = ({ stage }: { stage: string }) => {
     const s = stage.toLowerCase();
-    if (s.includes('print')) return <Printer className="w-5 h-5" />;
-    if (s.includes('processing')) return <Clock className="w-5 h-5" />;
-    if (s.includes('checking')) return <Search className="w-5 h-5" />;
-    if (s.includes('dispatched') || s.includes('delivery')) return <Truck className="w-5 h-5" />;
-    return <ClipboardCheck className="w-5 h-5" />;
+    if (s.includes('print')) return <Printer className="w-3.5 h-3.5" />;
+    if (s.includes('processing')) return <Clock className="w-3.5 h-3.5" />;
+    if (s.includes('checking')) return <Search className="w-3.5 h-3.5" />;
+    if (s.includes('dispatched') || s.includes('delivery')) return <Truck className="w-3.5 h-3.5" />;
+    return <ClipboardCheck className="w-3.5 h-3.5" />;
 };
 
 export default InvoicePage;

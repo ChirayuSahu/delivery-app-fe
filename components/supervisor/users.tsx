@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { motion, Variants } from "motion/react";
+import { motion, Variants } from "framer-motion";
 
 type User = {
   id: string;
@@ -25,12 +25,12 @@ type User = {
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { staggerChildren: 0.05 } }
+  visible: { opacity: 1, transition: { staggerChildren: 0.03 } }
 };
 
 const itemVariants: Variants = {
-  hidden: { x: -10, opacity: 0 },
-  visible: { x: 0, opacity: 1 }
+  hidden: { opacity: 0, y: 4 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.2, ease: "easeOut" } }
 };
 
 export function UsersCard() {
@@ -64,100 +64,88 @@ export function UsersCard() {
 
   if (loading) {
     return (
-      <div className="w-full h-120 bg-white border border-gray-200 rounded-[24px] flex flex-col items-center justify-center gap-3">
-        <Loader2 className="animate-spin h-8 w-8 text-green-600" />
-        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Loading Personnel...</p>
+      <div className="w-full bg-white border border-slate-100 rounded-xl p-12 flex flex-col items-center justify-center shadow-sm">
+        <Loader2 className="animate-spin h-5 w-5 text-slate-400 mb-2" />
+        <span className="text-xs text-slate-400 font-medium">Loading team...</span>
       </div>
     );
   }
 
   return (
-    <div className="w-full bg-white border border-gray-200 rounded-[24px] overflow-hidden flex flex-col shadow-sm h-full">
-      {/* Header - Matches your Profile/Trip UI */}
-      <div className="bg-gray-50 p-6">
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-white/20 rounded-xl backdrop-blur-md text-slate-500">
-              <Users className="h-5 w-5" />
-            </div>
-            <div>
-              <h3 className="text-sm font-black text-slate-900 uppercase tracking-tight">Delivery Team</h3>
-              <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">{users.length} Personnel</p>
-            </div>
-          </div>
-          <div className="h-8 w-8 rounded-full bg-green-400/20 border border-green-400/30 flex items-center justify-center shadow-sm">
-            <UserCheck className="h-4 w-4 text-green-600" />
-          </div>
+    <div className="w-full h-[450px] bg-white border border-slate-100 rounded-xl shadow-sm overflow-hidden flex flex-col">
+      {/* Header */}
+      <div className="border-b border-slate-100 bg-slate-50/50 py-3 px-5 flex items-center justify-between shrink-0">
+        <div className="flex items-center gap-2">
+          <Users className="h-4 w-4 text-slate-500" />
+          <span className="text-xs font-semibold text-slate-900">Delivery Team</span>
         </div>
-
-        {/* Search Input inside Header */}
-        {/* <div className="relative">
-          <input
-            type="text"
-            placeholder="Search by name or ID..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-white border border-slate-500/20 rounded-xl py-2 pl-9 pr-4 text-xs text-slate-900 placeholder:text-slate-400 outline-none focus:bg-white/20 transition-all font-medium"
-          />
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400" />
-        </div> */}
+        <div className="flex items-center gap-1.5 bg-slate-100 px-2.5 py-0.5 rounded text-[10px] font-semibold text-slate-600 border border-slate-200/25">
+          {users.length} {users.length === 1 ? 'member' : 'members'}
+        </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto max-h-150 scrollbar-hide">
+      <div className="flex-1 overflow-y-auto min-h-0 divide-y divide-slate-100">
         {filteredUsers.length > 0 ? (
           <motion.div
             variants={containerVariants}
             initial="hidden"
             animate="visible"
-            className="divide-y divide-gray-50"
           >
             {filteredUsers.map((user) => (
-              <Link key={user.id} href={`${pathname}/users/${user.id}`}>
+              <Link key={user.id} href={`${pathname}/users/${user.id}`} className="block">
                 <motion.div
                   variants={itemVariants}
-                  className="group flex items-center justify-between py-4 px-6 hover:bg-blue-50/50 transition-all cursor-pointer border-l-4 border-transparent hover:border-blue-600"
+                  className="group flex items-center justify-between py-3.5 px-5 hover:bg-slate-50/50 transition-colors cursor-pointer"
                 >
-                  <div className='flex flex-col gap-4'>
-                    <div className="flex items-center gap-4">
-                      <div className="h-10 w-10 rounded-xl bg-gray-100 flex items-center justify-center text-blue-600 font-black text-sm group-hover:bg-blue-600 group-hover:text-white transition-all duration-300">
-                        {user.name.charAt(0)}
-                      </div>
-                      <div>
-                        <p className="text-sm font-black text-gray-900 leading-tight">
-                          {user.name}
-                        </p>
-                        <div className="flex items-center gap-3 mt-1">
-                          <span className="flex items-center gap-1 text-[10px] text-gray-400 font-bold uppercase tracking-tighter">
-                            <Fingerprint className="h-3 w-3 text-green-500" /> #{user.esId}
-                          </span>
-                          <span className="flex items-center gap-1 text-[10px] text-gray-400 font-bold uppercase tracking-tighter">
-                            <Phone className="h-3 w-3 text-blue-500" /> {user.phone}
-                          </span>
-                        </div>
+                  <div className="flex items-center gap-3">
+                    <div className="h-8 w-8 rounded bg-slate-100 flex items-center justify-center text-slate-600 font-bold text-xs group-hover:bg-slate-200 transition-colors">
+                      {user.name.charAt(0)}
+                    </div>
+                    <div>
+                      <p className="text-xs font-semibold text-slate-900 leading-normal">
+                        {user.name}
+                      </p>
+                      <div className="flex items-center gap-2 mt-0.5 text-[10px] text-slate-400 font-medium">
+                        <span className="flex items-center gap-0.5">
+                          <Fingerprint className="h-3 w-3 text-slate-400" />
+                          #{user.esId}
+                        </span>
+                        <span className="h-1 w-1 bg-slate-200 rounded-full" />
+                        <span className="flex items-center gap-0.5">
+                          <Phone className="h-3 w-3 text-slate-400" />
+                          {user.phone}
+                        </span>
                       </div>
                     </div>
+                  </div>
+
+                  <div className="flex items-center gap-3">
                     {user.time.length > 0 && (
-                      <div className="flex items-center gap-2">
-                        {user.time.length > 0 && user.time.map((deltime, index) => (
-                          <div key={index} className="text-[10px] text-green-700 bg-green-50 px-3 py-1.5 border border-green-200 rounded-full font-bold tracking-wider">
-                            {Math.ceil((new Date().getTime() - new Date(deltime).getTime()) / 60000)} mins
-                          </div>
-                        ))}
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        {user.time.map((deltime, index) => {
+                          const mins = Math.ceil((new Date().getTime() - new Date(deltime).getTime()) / 60000);
+                          return (
+                            <span key={index} className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-semibold bg-green-50 text-green-700 border border-green-100">
+                              <span className="h-1 w-1 bg-green-500 rounded-full animate-pulse" />
+                              {mins}m ago
+                            </span>
+                          );
+                        })}
                       </div>
                     )}
+                    <ChevronRight className="h-4 w-4 text-slate-300 group-hover:text-slate-900 group-hover:translate-x-0.5 transition-all" />
                   </div>
-                  <ChevronRight className="h-4 w-4 text-gray-300 group-hover:text-blue-600 group-hover:translate-x-1 transition-all" />
                 </motion.div>
               </Link>
             ))}
           </motion.div>
         ) : (
-          <div className="flex flex-col items-center justify-center py-20 px-10 text-center">
-            <div className="p-6 bg-gray-50 rounded-full mb-4 border border-dashed border-gray-200">
-              <Search className="h-10 w-10 text-gray-300" />
+          <div className="flex flex-col items-center justify-center py-16 px-5 text-center">
+            <div className="h-12 w-12 bg-slate-50 rounded-xl flex items-center justify-center text-slate-400 mb-3 border border-slate-100">
+              <Users className="h-5 w-5" />
             </div>
-            <h4 className="text-gray-900 font-bold text-sm">No Members Found</h4>
-            <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-1">Try a different search term</p>
+            <h4 className="text-slate-900 font-semibold text-sm">No members found</h4>
+            <p className="text-xs text-slate-400 mt-0.5">Try adding a new member to your team.</p>
           </div>
         )}
       </div>

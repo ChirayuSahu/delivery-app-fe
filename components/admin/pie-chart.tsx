@@ -1,9 +1,9 @@
 'use client';
 
-import React, { useMemo, useEffect, useState, useRef } from 'react';
+import React, { useMemo, useEffect, useState } from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
-import { User2, Loader2, TrendingUp, PieChart as PieIcon, CalendarIcon } from "lucide-react";
-import { motion, Variants } from "framer-motion";
+import { User2, Loader2, TrendingUp, PieChart as PieIcon, CalendarIcon, ArrowRight } from "lucide-react";
+import { motion } from "framer-motion";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -19,7 +19,6 @@ interface Delivery {
   invoicesDelivered: number;
 }
 
-// Strictly Blue and Green palette
 const COLORS = [
   '#f59e0b', // Amber/Yellow
   '#ef4444', // Red
@@ -53,7 +52,7 @@ function DeliveryPersonnelChart() {
   useGetSuccessDeliveries<Delivery[]>(date, (data) => {
     toast.success('Delivery Chart updated');
     setDeliveries(data);
-  })
+  });
 
   useEffect(() => {
     fetchDeliveries();
@@ -72,141 +71,130 @@ function DeliveryPersonnelChart() {
 
   if (loading) {
     return (
-      <div className="w-full h-120 bg-white border border-gray-200 rounded-[24px] flex flex-col items-center justify-center gap-3">
-        <Loader2 className="animate-spin h-8 w-8 text-blue-600" />
-        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Generating Insights...</p>
+      <div className="w-full bg-white border border-slate-100 rounded-xl p-12 flex flex-col items-center justify-center shadow-sm">
+        <Loader2 className="animate-spin h-5 w-5 text-slate-400 mb-2" />
+        <span className="text-xs text-slate-400 font-medium">Generating distribution...</span>
       </div>
     );
   }
 
   return (
-    <motion.div
-      initial="hidden"
-      animate="visible"
-      className="w-full min-h-120 bg-white border border-gray-200 rounded-[24px] overflow-hidden flex flex-col shadow-sm"
-    >
+    <div className="w-full h-[450px] bg-white border border-slate-100 rounded-xl shadow-sm overflow-hidden flex flex-col">
       {/* Header Section */}
-      <div className="bg-gray-50 p-6 flex flex-col gap-4">
-        <div className='flex items-center justify-between'>
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-white/20 rounded-xl backdrop-blur-md">
-              <PieIcon className="h-5 w-5 text-slate-500" />
-            </div>
-            <div>
-              <h3 className="text-sm font-black text-slate-900 uppercase tracking-tight">Distribution</h3>
-              <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Today's Performance</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-2 bg-green-400/20 px-3 py-1 rounded-full border border-green-400/30 shadow-sm">
-            <TrendingUp className="h-3 w-3 text-green-600" />
-            <span className="text-[10px] font-black text-green-600 uppercase tracking-widest">Live</span>
-          </div>
+      <div className="border-b border-slate-100 bg-slate-50/50 py-3 px-5 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <PieIcon className="h-4 w-4 text-slate-500" />
+          <span className="text-xs font-semibold text-slate-900">Distribution</span>
         </div>
-        <div>
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button
-                variant={"outline"}
-                className={cn(
-                  "w-full justify-start text-left font-bold text-xs rounded-xl h-10 border-gray-200 hover:bg-white hover:border-green-500",
-                  !date && "text-muted-foreground"
-                )}
-              >
-                <CalendarIcon className="mr-2 h-4 w-4 text-green-600" />
-                {date ? format(date, "PPP") : <span>Pick a date</span>}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0 rounded-2xl overflow-hidden" align="start">
-              <Calendar
-                mode="single"
-                selected={date}
-                onSelect={setDate}
-                initialFocus
-                className="rounded-2xl border-none"
-              />
-            </PopoverContent>
-          </Popover>
+        <div className="flex items-center gap-1 bg-green-50 px-2 py-0.5 rounded text-[10px] font-semibold text-green-700 border border-green-200/40">
+          <span className="h-1 w-1 bg-green-500 rounded-full animate-pulse" />
+          Live Insights
         </div>
       </div>
 
-      <div className="p-6 relative h-100">
+      {/* Date Picker Row */}
+      <div className="p-4 border-b border-slate-100 bg-white">
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              variant={"outline"}
+              className={cn(
+                "w-full justify-start text-left font-semibold text-xs rounded-lg h-9 border-slate-200 hover:bg-slate-50 hover:border-slate-300 bg-white shadow-none",
+                !date && "text-muted-foreground"
+              )}
+            >
+              <CalendarIcon className="mr-2 h-4 w-4 text-slate-500" />
+              {date ? format(date, "PPP") : <span>Pick a date</span>}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-0 rounded-xl overflow-hidden shadow-lg border border-slate-100" align="start">
+            <Calendar
+              mode="single"
+              selected={date}
+              onSelect={setDate}
+              disabled={(d) => d > new Date()}
+              initialFocus
+              className="rounded-xl border-none"
+            />
+          </PopoverContent>
+        </Popover>
+      </div>
+
+      {/* Chart Section */}
+      <div className="flex-1 min-h-0 relative p-5 flex items-center justify-center">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
             <Tooltip
               contentStyle={{
                 backgroundColor: '#fff',
-                borderRadius: '16px',
-                border: '1px solid #e5e7eb',
+                borderRadius: '8px',
+                border: '1px solid #f1f5f9',
                 fontSize: '11px',
-                fontWeight: 'bold',
-                boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'
+                fontWeight: '600',
+                boxShadow: '0 1px 3px 0 rgb(0 0 0 / 0.05)'
               }}
-              itemStyle={{ color: '#111827' }}
+              itemStyle={{ color: '#0f172a' }}
             />
             <Pie
               data={chartData}
               dataKey="value"
               nameKey="name"
-              innerRadius={85}
-              outerRadius={110}
-              paddingAngle={6}
+              innerRadius={65}
+              outerRadius={85}
+              paddingAngle={4}
               stroke="none"
-              animationBegin={200}
-              animationDuration={1200}
+              animationBegin={100}
+              animationDuration={800}
               isAnimationActive={!loading}
             >
               {chartData.map((_, index) => (
                 <Cell
                   key={`cell-${index}`}
                   fill={COLORS[index % COLORS.length]}
-                  className="hover:opacity-80 transition-opacity outline-none"
+                  className="hover:opacity-85 transition-opacity outline-none"
                 />
               ))}
             </Pie>
             <Legend
               verticalAlign="bottom"
               align="center"
-              iconType="rect"
+              iconType="circle"
+              iconSize={6}
               formatter={(value) => (
-                <span className="text-[10px] font-bold text-gray-500 uppercase tracking-tighter mr-2">
+                <span className="text-[10px] font-semibold text-slate-500 mr-1.5 uppercase">
                   {value}
                 </span>
               )}
-              wrapperStyle={{ paddingTop: '20px' }}
+              wrapperStyle={{ paddingTop: '10px' }}
             />
           </PieChart>
         </ResponsiveContainer>
 
         {/* Center Text Stats */}
         <div className="absolute top-[44%] left-1/2 -translate-x-1/2 -translate-y-1/2 text-center pointer-events-none">
-          <motion.p
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-            className="text-5xl font-black text-gray-900 leading-none tracking-tighter"
-          >
+          <p className="text-3xl font-extrabold text-slate-900 leading-none tracking-tight">
             {totalDelivered}
-          </motion.p>
-          <p className="text-[10px] uppercase font-black text-green-600 mt-2 tracking-widest">
+          </p>
+          <p className="text-[9px] uppercase font-bold text-slate-400 mt-1 tracking-wider">
             Delivered
           </p>
-          <div className="mt-1 h-1 w-8 bg-blue-600 mx-auto rounded-full" />
         </div>
       </div>
 
       {/* Summary Footer */}
-      <div className="bg-gray-50 border-t border-gray-100 p-4 px-6 flex justify-between items-center">
-        <div className="flex items-center gap-2">
-          <User2 className="h-4 w-4 text-gray-400" />
-          <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
-            {chartData.length} Personnel Active
+      <div className="bg-slate-50/50 border-t border-slate-100 p-3 px-5 flex justify-between items-center text-xs">
+        <div className="flex items-center gap-1.5 text-slate-500 font-medium">
+          <User2 className="h-4 w-4 text-slate-400" />
+          <span>
+            {chartData.length} active {chartData.length === 1 ? 'member' : 'members'}
           </span>
         </div>
-        <Link href="/dashboard/admin/reports" className="text-[10px] font-black text-blue-600 uppercase hover:underline">
-          Full Report
+        <Link href="/dashboard/admin/reports" className="inline-flex items-center gap-0.5 text-slate-500 hover:text-slate-900 font-semibold transition-colors">
+          <span>Reports</span>
+          <ArrowRight className="w-3.5 h-3.5" />
         </Link>
       </div>
-    </motion.div>
+    </div>
   );
 }
 

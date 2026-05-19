@@ -17,7 +17,11 @@ import { UserPlus, Loader2, Fingerprint, Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from 'next/navigation';
 
-export default function CreateUserButton() {
+interface CreateUserButtonProps {
+    children?: React.ReactNode;
+}
+
+export default function CreateUserButton({ children }: CreateUserButtonProps) {
     const [open, setOpen] = useState(false);
     const [isCreating, setIsCreating] = useState(false);
     const [viewPassword, setViewPassword] = useState(false);
@@ -41,21 +45,24 @@ export default function CreateUserButton() {
         setIsCreating(true);
         
         try {
-            const response = await fetch('/api/users', {
+            const response = await fetch('/api/users/', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData),
+                body: JSON.stringify({ ...formData, type: 'DELIVERY_MAN' }),
+                credentials: 'include',
             });
 
             const json = await response.json();
+
             if (!response.ok) throw new Error(json.message || 'Failed to create user');
 
-            toast.success('User account created successfully');
+            toast.success(json.message || 'User created successfully');
             setOpen(false);
             setFormData({ name: '', email: '', password: '', phone: '', esId: '' });
             router.refresh();
-        } catch (error: any) {
-            toast.error(error.message || "Error creating user");
+        } catch (error) {
+            toast.error("Error creating user");
+            console.error(error);
         } finally {
             setIsCreating(false);
         }
@@ -68,10 +75,12 @@ export default function CreateUserButton() {
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button className="gap-2 bg-green-600 hover:bg-green-700 shadow-sm">
-                    <UserPlus className="w-4 h-4" />
-                    Add New User
-                </Button>
+                {children ? children : (
+                    <Button className="gap-2 bg-green-600 hover:bg-green-700 shadow-sm cursor-pointer">
+                        <UserPlus className="w-4 h-4" />
+                        Add New User
+                    </Button>
+                )}
             </DialogTrigger>
 
             <DialogContent className="sm:max-w-106.25 rounded-lg">

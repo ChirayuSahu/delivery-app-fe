@@ -61,6 +61,7 @@ export function DatePickerWithRange({
             selected={date}
             onSelect={setDate}
             numberOfMonths={isDesktop ? 2 : 1}
+            disabled={(date) => date > new Date()}
           />
         </PopoverContent>
       </Popover>

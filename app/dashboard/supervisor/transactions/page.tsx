@@ -30,34 +30,21 @@ function FinanceContent() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <header className="bg-white border-b px-8 py-6">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="flex items-center gap-4">
-            <Link href="/dashboard/supervisor">
-              <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full">
-                <ArrowLeft className="h-4 w-4" />
-              </Button>
-            </Link>
-            <div>
-              <h1 className="text-2xl font-bold text-slate-900">Finance</h1>
-              <p className="text-slate-500 text-sm">Manage transactions and expenses</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-2 md:gap-3 flex-wrap">
+      <main className="max-w-7xl mx-auto p-6 lg:p-10 space-y-6">
+        <div className="flex flex-row items-center justify-between gap-3 bg-white p-4 rounded-lg border border-slate-100 shadow-sm overflow-x-auto">
+          <div className="flex items-center gap-2 shrink-0">
             <DatePickerWithRange date={date} setDate={setDate} />
+          </div>
+          <div className="flex items-center gap-2 shrink-0">
             <AddExpenseDialog />
             <TransferFundsDialog>
-              <Button variant="outline" className="hidden md:flex gap-2 border-slate-200">
+               <Button className="hidden md:flex gap-2 bg-green-600 hover:bg-green-700 text-white font-bold rounded-lg shadow-sm">
                 <ArrowRightLeft className="h-4 w-4" />
                 Transfer
               </Button>
             </TransferFundsDialog>
-            <PinSettingsDialog />
           </div>
         </div>
-      </header>
-
-      <main className="max-w-7xl mx-auto p-6 lg:p-10">
         <Tabs value={currentTab} onValueChange={handleTabChange} className="space-y-6">
           <TabsList className="bg-white border rounded-lg p-1 space-x-1 w-full justify-start overflow-x-auto flex-nowrap scrollbar-hide">
             <TabsTrigger value="transactions" className="data-[state=active]:bg-slate-100">Transactions</TabsTrigger>
