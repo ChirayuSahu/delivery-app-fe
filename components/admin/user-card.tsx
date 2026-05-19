@@ -15,6 +15,7 @@ import { motion, Variants } from "framer-motion";
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import DeleteUserButton from "@/components/admin/delete-user";
+import { AdminPinSettings } from "@/components/admin/admin-pin-settings";
 
 interface UserProfile {
   id: string;
@@ -167,7 +168,8 @@ export function UserInfoCard({ userId }: { userId: string }) {
         </div>
 
         {/* Action Button - Green Theme */}
-        <motion.div variants={itemVariants} className="mt-8">
+        <motion.div variants={itemVariants} className="mt-8 flex gap-3">
+          <AdminPinSettings userId={user.id} userName={user.name} />
           <DeleteUserButton userId={user.id} userName={user.name} />
         </motion.div>
       </div>

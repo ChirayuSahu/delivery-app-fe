@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react"
 import { Loader2, ArrowRightLeft } from "lucide-react"
 import { toast } from "sonner"
+import { UpiPinDialog } from "@/components/finance/upi-pin-dialog"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -41,6 +42,9 @@ export function TransferFundsDialog({ children }: TransferFundsDialogProps) {
   const [type, setType] = useState("")
   const [toUser, setToUser] = useState("")
 
+  // UPI PIN Dialog State
+  const [showPinDialog, setShowPinDialog] = useState(false)
+
   useEffect(() => {
     if (open && users.length === 0) {
       const fetchUsers = async () => {
@@ -61,14 +65,20 @@ export function TransferFundsDialog({ children }: TransferFundsDialogProps) {
     }
   }, [open, users.length])
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
-    if (!toUser || !type) {
+    if (!toUser || !type || !amount) {
       toast.error("Please fill in all required fields.")
       return
     }
 
+    // First stage complete: Open PIN Dialog
+    setOpen(false)
+    setShowPinDialog(true)
+  }
+
+  const handlePinSubmit = async (enteredPin: string) => {
     setLoading(true)
 
     try {
@@ -80,6 +90,7 @@ export function TransferFundsDialog({ children }: TransferFundsDialogProps) {
           remark,
           type,
           toUser,
+          pin: enteredPin,
         }),
         credentials: 'include'
       })
@@ -90,10 +101,11 @@ export function TransferFundsDialog({ children }: TransferFundsDialogProps) {
       }
 
       toast.success("Funds transferred successfully")
-      setOpen(false)
+      setShowPinDialog(false)
       window.location.reload()
     } catch (error: any) {
       toast.error(error.message || "Failed to transfer funds")
+      // Keep PIN dialog open on error so they can correct it
     } finally {
       setLoading(false)
     }
@@ -179,12 +191,18 @@ export function TransferFundsDialog({ children }: TransferFundsDialogProps) {
               Cancel
             </Button>
             <Button type="submit" disabled={loading} className="bg-slate-900 hover:bg-slate-800">
-              {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Transfer
+              Continue
             </Button>
           </DialogFooter>
         </form>
       </DialogContent>
+
+      <UpiPinDialog
+        open={showPinDialog}
+        onOpenChange={setShowPinDialog}
+        onSubmit={handlePinSubmit}
+        loading={loading}
+      />
     </Dialog>
   )
 }

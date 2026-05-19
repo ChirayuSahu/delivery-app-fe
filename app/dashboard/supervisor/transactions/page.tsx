@@ -13,6 +13,7 @@ import { TransactionsTable } from "@/components/finance/transactions-table"
 import { ExpensesTable } from "@/components/finance/expenses-table"
 import { TransferFundsDialog } from "@/components/finance/transfer-funds-dialog"
 import { AddExpenseDialog } from "@/components/finance/add-expense-dialog"
+import { PinSettingsDialog } from "@/components/auth/pin-settings-dialog"
 
 function FinanceContent() {
   const [date, setDate] = useState<DateRange | undefined>()
@@ -51,6 +52,7 @@ function FinanceContent() {
                 Transfer
               </Button>
             </TransferFundsDialog>
+            <PinSettingsDialog />
           </div>
         </div>
       </header>
@@ -71,12 +73,13 @@ function FinanceContent() {
           </TabsContent>
         </Tabs>
 
-        {/* Floating Action Button for Mobile */}
-        <div className="fixed bottom-6 right-6 z-50 md:hidden">
+        {/* Sticky Full-Width Mobile Transfer Button */}
+        <div className="h-20 md:hidden" />
+        <div className="fixed bottom-0 left-0 right-0 p-4 bg-white/80 backdrop-blur-md border-t border-slate-100 z-50 md:hidden">
           <TransferFundsDialog>
-            <Button className="h-10 px-4 rounded-md shadow-lg bg-slate-900 hover:bg-slate-800 flex items-center justify-center gap-2">
-              <ArrowRightLeft className="h-4 w-4 text-white" />
-              <span className="text-white font-bold text-xs uppercase tracking-wide">Transfer</span>
+            <Button className="w-full h-12 rounded-lg bg-green-600 hover:bg-green-700 text-white font-bold flex items-center justify-center gap-2 shadow-md">
+              <ArrowRightLeft className="h-4 w-4" />
+              <span>Transfer Funds</span>
             </Button>
           </TransferFundsDialog>
         </div>
