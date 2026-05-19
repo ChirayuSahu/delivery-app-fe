@@ -170,7 +170,8 @@ export function TransactionsTable({ dateRange, userId }: TransactionsTableProps)
             <TableRow>
               <TableHead>Date</TableHead>
               <TableHead>Type</TableHead>
-              <TableHead>From / To</TableHead>
+              <TableHead>From</TableHead>
+              <TableHead>To</TableHead>
               <TableHead>Description</TableHead>
               <TableHead className="text-right">Amount</TableHead>
             </TableRow>
@@ -184,15 +185,11 @@ export function TransactionsTable({ dateRange, userId }: TransactionsTableProps)
                     {format(new Date(tx.createdAt), 'dd MMM yyyy, HH:mm')}
                   </TableCell>
                   <TableCell>{getTypeBadge(tx.type)}</TableCell>
-                  <TableCell>
-                    <div className="flex flex-col text-xs">
-                      {tx.fromUserId && (
-                        <span className="text-slate-500">From: <span className="font-medium text-slate-700">{tx.fromUser?.name || 'User'}</span></span>
-                      )}
-                      {tx.toUserId && (
-                        <span className="text-slate-500">To: <span className="font-medium text-slate-700">{tx.toUser?.name || 'User'}</span></span>
-                      )}
-                    </div>
+                  <TableCell className="font-medium text-slate-700">
+                    {tx.fromUser?.name || '-'}
+                  </TableCell>
+                  <TableCell className="font-medium text-slate-700">
+                    {tx.toUser?.name || '-'}
                   </TableCell>
                   <TableCell className="max-w-xs truncate" title={tx.description || ''}>
                     {tx.description || '-'}

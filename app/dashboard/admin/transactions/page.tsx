@@ -50,10 +50,22 @@ function FinanceContent() {
           </div>
         </div>
         <Tabs value={currentTab} onValueChange={handleTabChange} className="space-y-6">
-          <TabsList className="bg-white border rounded-lg p-1 space-x-1 w-full justify-start overflow-x-auto flex-nowrap scrollbar-hide">
-            <TabsTrigger value="transactions" className="data-[state=active]:bg-slate-100">Transactions</TabsTrigger>
-            <TabsTrigger value="expenses" className="data-[state=active]:bg-slate-100">Expenses</TabsTrigger>
-          </TabsList>
+          <div className="flex">
+            <TabsList className="bg-slate-100/70 p-1 rounded-lg inline-flex gap-1 border border-slate-200/30 h-auto">
+              <TabsTrigger 
+                value="transactions" 
+                className="px-4 py-1.5 text-xs font-semibold rounded-md text-slate-500 transition-all data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-sm cursor-pointer"
+              >
+                Transactions
+              </TabsTrigger>
+              <TabsTrigger 
+                value="expenses" 
+                className="px-4 py-1.5 text-xs font-semibold rounded-md text-slate-500 transition-all data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-sm cursor-pointer"
+              >
+                Expenses
+              </TabsTrigger>
+            </TabsList>
+          </div>
 
           <TabsContent value="transactions" className="mt-0">
             <TransactionsTable dateRange={date} />

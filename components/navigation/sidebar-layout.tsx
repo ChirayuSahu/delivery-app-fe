@@ -155,7 +155,7 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
       {/* DESKTOP SIDEBAR */}
       {/* ========================================================================= */}
       <aside 
-        className={`hidden md:flex flex-col sticky top-0 h-screen transition-all duration-300 bg-white border-r border-slate-100 shadow-sm z-30 ${
+        className={`hidden lg:flex flex-col sticky top-0 h-screen transition-all duration-300 bg-white border-r border-slate-100 shadow-sm z-30 ${
           collapsed ? "w-20" : "w-64"
         }`}
       >
@@ -259,7 +259,7 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
       {/* ========================================================================= */}
       <div className="flex-1 flex flex-col min-w-0 min-h-screen">
         {/* Mobile Header Bar */}
-        <header className="md:hidden h-16 bg-white border-b border-slate-100 flex items-center justify-between px-6 sticky top-0 z-40">
+        <header className="lg:hidden h-16 bg-white border-b border-slate-100 flex items-center justify-between px-6 sticky top-0 z-40">
           <div className="flex items-center gap-2">
             {pathname.split("/").length > 4 && (
               <button
@@ -288,7 +288,7 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
 
         {/* Mobile Drawer Overlay */}
         {mobileOpen && (
-          <div className="fixed inset-0 z-50 md:hidden flex">
+          <div className="fixed inset-0 z-50 lg:hidden flex">
             {/* Backdrop */}
             <div 
               className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity duration-300"
