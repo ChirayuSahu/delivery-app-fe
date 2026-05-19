@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react"
 import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import { 
   LayoutDashboard, 
   Truck, 
@@ -13,7 +13,8 @@ import {
   ChevronLeft, 
   ChevronRight,
   User,
-  Activity
+  Activity,
+  ArrowLeft
 } from "lucide-react"
 
 import { PinSettingsDialog } from "@/components/auth/pin-settings-dialog"
@@ -29,6 +30,7 @@ interface SidebarLayoutProps {
 
 export function SidebarLayout({ children }: SidebarLayoutProps) {
   const pathname = usePathname()
+  const router = useRouter()
 
   
   // Navigation Collapse State
@@ -235,15 +237,17 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
           
           {/* Action Row */}
           <div className={`mt-4 flex gap-2 border-t border-slate-100/80 pt-3 ${collapsed ? "flex-col items-center" : "justify-between"}`}>
-            <PinSettingsDialog>
-              <button 
-                title="PIN Settings"
-                className="p-2 rounded-lg hover:bg-slate-100 text-slate-500 hover:text-slate-800 transition-colors border border-slate-200/40 bg-white flex items-center justify-center gap-1 cursor-pointer"
-              >
-                <KeyRound className="w-4 h-4" />
-                {!collapsed && <span className="text-xs font-bold">PIN</span>}
-              </button>
-            </PinSettingsDialog>
+            {userRole === "ADMIN" && (
+              <PinSettingsDialog>
+                <button 
+                  title="PIN Settings"
+                  className="p-2 rounded-lg hover:bg-slate-100 text-slate-500 hover:text-slate-800 transition-colors border border-slate-200/40 bg-white flex items-center justify-center gap-1 cursor-pointer"
+                >
+                  <KeyRound className="w-4 h-4" />
+                  {!collapsed && <span className="text-xs font-bold">PIN</span>}
+                </button>
+              </PinSettingsDialog>
+            )}
             
             <LogoutButton />
           </div>
@@ -256,7 +260,16 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
       <div className="flex-1 flex flex-col min-w-0 min-h-screen">
         {/* Mobile Header Bar */}
         <header className="md:hidden h-16 bg-white border-b border-slate-100 flex items-center justify-between px-6 sticky top-0 z-40">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
+            {pathname.split("/").length > 4 && (
+              <button
+                onClick={() => router.back()}
+                className="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-500 hover:text-slate-850 active:scale-95 transition-all shadow-sm mr-1 cursor-pointer"
+                title="Back"
+              >
+                <ArrowLeft className="w-4 h-4" />
+              </button>
+            )}
             <div className="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center text-white font-black">
               <Activity className="w-4 h-4" />
             </div>

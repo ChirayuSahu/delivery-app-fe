@@ -168,11 +168,6 @@ const InvoicePage = () => {
                     {/* Delivery Status Card */}
                     <motion.div variants={itemVariants} className="bg-white border border-slate-100 rounded-xl p-5 shadow-sm flex flex-col justify-between">
                         <div>
-                            <Button onClick={() => router.back()} variant="outline" className="w-full justify-start text-xs h-9 rounded-lg gap-2 border-slate-100 bg-white mb-5">
-                                <ArrowLeft className="w-3.5 h-3.5 text-slate-500" />
-                                Back to Dashboard
-                            </Button>
-
                             <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-3">Delivery Status</span>
 
                             {/* Main Status Link */}

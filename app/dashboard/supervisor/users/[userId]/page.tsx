@@ -3,48 +3,31 @@
 import React from 'react';
 import UserInfoCard from '@/components/supervisor/user-card';
 import UserDeliveriesCard from '@/components/supervisor/deliveries';
-import {
-  LayoutDashboard,
-  ChevronRight,
-  Users,
-  Calendar,
-  Filter,
-  ArrowLeft,
-  Home
-} from "lucide-react";
-import { useParams, useRouter } from 'next/navigation';
-import Link from 'next/link';
+import { useParams } from 'next/navigation';
 
 export default function CombinedDeliveryDashboard() {
   const params = useParams();
-  const router = useRouter();
   const userId = params.userId as string;
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50">
-      <header className="sticky top-0 z-10 border-b bg-white/80 backdrop-blur-md px-6 py-4">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-1">
-              <button onClick={() => router.back()} className="p-2 hover:bg-slate-100 rounded-full transition-colors">
-                <ArrowLeft className="w-5 h-5 text-slate-600" />
-              </button>
-              <button onClick={() => router.push('/dashboard')} className="p-2 hover:bg-slate-100 rounded-full transition-colors">
-                <Home className="w-5 h-5 text-slate-600" />
-              </button>
-            </div>
-            <div>
-              <h1 className="text-xl font-bold text-slate-900">User Details</h1>
-            </div>
+    <div className="min-h-screen bg-slate-50/50 pb-12">
+      <div className="max-w-7xl mx-auto space-y-6 p-6 md:p-8">
+        {/* Quiet inline nav */}
+        <div className="flex items-center justify-between gap-3 mb-4">
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-slate-400 font-bold uppercase tracking-wider font-mono">
+              User Profile Details
+            </span>
           </div>
         </div>
-      </header>
-      <div className='max-w-7xl w-full grid grid-cols-1 lg:grid-cols-3 gap-0 lg:gap-6 mx-auto flex-1'>
-        <div className="col-span-1 p-6 overflow-y-auto">
-          <UserInfoCard userId={userId} />
-        </div>
-        <div className="col-span-2 overflow-y-auto p-6">
-          <UserDeliveriesCard userId={userId} />
+
+        <div className='grid grid-cols-1 lg:grid-cols-3 gap-6 items-start'>
+          <div className="col-span-1">
+            <UserInfoCard userId={userId} />
+          </div>
+          <div className="lg:col-span-2">
+            <UserDeliveriesCard userId={userId} />
+          </div>
         </div>
       </div>
     </div>

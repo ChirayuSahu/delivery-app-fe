@@ -6,9 +6,7 @@ import {
   Phone,
   Fingerprint,
   Loader2,
-  ArrowRight,
   ShieldCheck,
-  CheckCircle2,
   Wallet
 } from "lucide-react";
 import { motion, Variants } from "framer-motion";
@@ -27,16 +25,16 @@ interface UserProfile {
 }
 
 const containerVariants: Variants = {
-  hidden: { opacity: 0 },
+  hidden: { opacity: 1 },
   visible: {
     opacity: 1,
-    transition: { staggerChildren: 0.1 }
+    transition: { staggerChildren: 0.05 }
   }
 };
 
 const itemVariants: Variants = {
-  hidden: { y: 15, opacity: 0 },
-  visible: { y: 0, opacity: 1, transition: { duration: 0.4, ease: "easeOut" } }
+  hidden: { y: 0, opacity: 1 },
+  visible: { y: 0, opacity: 1, transition: { duration: 0.3, ease: "easeOut" } }
 };
 
 export function UserInfoCard({ userId }: { userId: string }) {
@@ -60,30 +58,11 @@ export function UserInfoCard({ userId }: { userId: string }) {
     fetchUserData();
   }, [userId]);
 
-  const handleDeleteUser = async () => {
-    try {
-      setLoading(true);
-      const response = await fetch(`/api/users/${userId}`, {
-        method: 'DELETE',
-      });
-      const json = await response.json();
-      if (!response.ok) throw new Error(json.message || 'Failed to delete user');
-
-      toast.success(json.message || 'User deleted successfully');
-      router.push('/dashboard');
-    } catch (error) {
-      console.error("Error deleting user:", error);
-      toast.error(error instanceof Error ? error.message : 'Error deleting user');
-    } finally {
-      setLoading(false);
-    }
-  }
-
   if (loading) {
     return (
-      <div className="w-full h-full bg-white border border-gray-200 rounded-[24px] flex flex-col items-center justify-center space-y-3">
-        <Loader2 className="animate-spin h-8 w-8 text-green-600" />
-        <p className="text-sm font-medium text-gray-400">Syncing Profile...</p>
+      <div className="w-full bg-white border border-slate-100 rounded-xl p-12 flex flex-col items-center justify-center space-y-3 shadow-sm min-h-[300px]">
+        <Loader2 className="animate-spin h-5 w-5 text-green-600" />
+        <p className="text-sm font-semibold text-slate-400">Syncing Profile...</p>
       </div>
     );
   }
@@ -95,84 +74,77 @@ export function UserInfoCard({ userId }: { userId: string }) {
       variants={containerVariants}
       initial="hidden"
       animate="visible"
-      className="w-full bg-white border border-gray-200 rounded-[24px] overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 h-full"
+      className="w-full bg-white border border-slate-100 rounded-xl p-6 shadow-sm space-y-6"
     >
-      {/* Header Bar - Solid green */}
-      <div className="h-20 bg-gray-50 px-6 relative">
-        <div className="absolute -bottom-8 left-6">
-          <div className="h-16 w-16 rounded-2xl bg-white border-4 border-white shadow-sm flex items-center justify-center overflow-hidden">
-            <div className="h-full w-full bg-green-50 flex items-center justify-center text-green-600 font-black text-2xl">
-              {user.name.charAt(0)}
-            </div>
+      {/* Header Bar */}
+      <div className="flex items-center justify-between pb-5 border-b border-slate-100">
+        <div className="flex items-center gap-4">
+          <div className="h-14 w-14 rounded-xl bg-green-50 flex items-center justify-center text-green-700 font-extrabold text-2xl border border-green-100/50">
+            {user.name.charAt(0)}
+          </div>
+          <div>
+            <h3 className="text-lg font-bold text-slate-900 leading-snug">{user.name}</h3>
+            <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mt-0.5">Delivery Executive</p>
           </div>
         </div>
-        <div className="absolute top-4 right-6">
-          <span className="bg-green-50 text-green-600 text-[10px] font-black px-3 py-1 rounded-full border border-green-200 uppercase tracking-widest flex items-center gap-1.5 backdrop-blur-md shadow-xs">
-            <div className="h-1 w-1 rounded-full bg-green-600 animate-pulse" />
-            Delivery Executive
-          </span>
-        </div>
+        
+        <span className="bg-green-50 text-green-700 text-[10px] font-bold px-2.5 py-1 rounded-lg border border-green-100/50 uppercase tracking-wider flex items-center gap-1.5">
+          <span className="h-1.5 w-1.5 rounded-full bg-green-600 animate-pulse" />
+          Active
+        </span>
       </div>
 
-      <div className="pt-12 px-6 pb-6">
-        {/* Name and Designation */}
-        <motion.div variants={itemVariants} className="mb-6">
-          <h3 className="text-xl font-black text-gray-900 tracking-tight">{user.name}</h3>
+      {/* Info Content */}
+      <div className="space-y-5">
+        <motion.div variants={itemVariants} className="flex items-center gap-3.5 group">
+          <div className="p-2.5 bg-slate-50 rounded-lg group-hover:bg-green-50 transition-colors">
+            <Mail className="h-4.5 w-4.5 text-slate-450 group-hover:text-green-600" />
+          </div>
+          <div>
+            <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Email Address</p>
+            <p className="text-sm font-semibold text-slate-800">{user.email}</p>
+          </div>
         </motion.div>
 
-        {/* Info Content */}
-        <div className="space-y-4">
-          <motion.div variants={itemVariants} className="flex items-center gap-4 group/item">
-            <div className="p-2.5 bg-gray-50 rounded-xl group-hover/item:bg-green-50 transition-colors">
-              <Mail className="h-4 w-4 text-gray-400 group-hover/item:text-green-600" />
+        <motion.div variants={itemVariants} className="flex items-center gap-3.5 group">
+          <div className="p-2.5 bg-slate-50 rounded-lg group-hover:bg-green-50 transition-colors">
+            <Phone className="h-4.5 w-4.5 text-slate-450 group-hover:text-green-600" />
+          </div>
+          <div>
+            <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Mobile Contact</p>
+            <p className="text-sm font-semibold text-slate-800">{user.phone}</p>
+          </div>
+        </motion.div>
+
+        <motion.div variants={itemVariants} className="flex items-center gap-3.5 group">
+          <div className="p-2.5 bg-slate-50 rounded-lg group-hover:bg-green-50 transition-colors">
+            <Wallet className="h-4.5 w-4.5 text-slate-450 group-hover:text-green-600" />
+          </div>
+          <div>
+            <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Wallet Balance</p>
+            <p className="text-sm font-semibold text-slate-800">₹{user.wallet?.toFixed(2) || '0.00'}</p>
+          </div>
+        </motion.div>
+
+        {/* System ID Section - Green Theme */}
+        <motion.div variants={itemVariants} className="p-4 bg-slate-50/50 border border-slate-100 rounded-xl flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="bg-white p-2 rounded-lg shadow-2xs border border-slate-100">
+              <Fingerprint className="h-5 w-5 text-slate-400" />
             </div>
             <div>
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest leading-none mb-1">Email Address</p>
-              <p className="text-sm font-bold text-gray-700">{user.email}</p>
+              <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">EasySol System ID</p>
+              <code className="text-sm font-mono font-bold text-slate-800 tracking-wider">#{user.esId}</code>
             </div>
-          </motion.div>
-
-          <motion.div variants={itemVariants} className="flex items-center gap-4 group/item">
-            <div className="p-2.5 bg-gray-50 rounded-xl group-hover/item:bg-green-50 transition-colors">
-              <Phone className="h-4 w-4 text-gray-400 group-hover/item:text-green-600" />
-            </div>
-            <div>
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest leading-none mb-1">Mobile Contact</p>
-              <p className="text-sm font-bold text-gray-700">{user.phone}</p>
-            </div>
-          </motion.div>
-
-          <motion.div variants={itemVariants} className="flex items-center gap-4 group/item">
-            <div className="p-2.5 bg-gray-50 rounded-xl group-hover/item:bg-green-50 transition-colors">
-              <Wallet className="h-4 w-4 text-gray-400 group-hover/item:text-green-600" />
-            </div>
-            <div>
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest leading-none mb-1">Wallet Balance</p>
-              <p className="text-sm font-bold text-gray-700">₹{user.wallet?.toFixed(2) || '0.00'}</p>
-            </div>
-          </motion.div>
-
-          {/* System ID Section - Green Theme */}
-          <motion.div variants={itemVariants} className="mt-6 p-4 bg-green-50/50 border border-green-100 rounded-2xl flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="bg-white p-2 rounded-lg shadow-sm border border-green-100">
-                <Fingerprint className="h-4 w-4 text-green-600" />
-              </div>
-              <div>
-                <p className="text-[10px] font-bold text-green-600 uppercase leading-none mb-1">EasySol System ID</p>
-                <code className="text-sm font-mono font-black text-gray-900 tracking-wider">#{user.esId}</code>
-              </div>
-            </div>
-            <ShieldCheck className="h-4 w-4 text-green-500" />
-          </motion.div>
-        </div>
-
-        {/* Action Button - Green Theme */}
-        <motion.div variants={itemVariants} className="mt-8 flex gap-3">
-          <AdminPinSettings userId={user.id} userName={user.name} />
-          <DeleteUserButton userId={user.id} userName={user.name} />
+          </div>
+          <ShieldCheck className="h-5 w-5 text-green-600" />
         </motion.div>
       </div>
+
+      {/* Action Button - Green Theme */}
+      <motion.div variants={itemVariants} className="pt-5 border-t border-slate-100 flex gap-3">
+        <AdminPinSettings userId={user.id} userName={user.name} />
+      </motion.div>
     </motion.div>
   );
 }

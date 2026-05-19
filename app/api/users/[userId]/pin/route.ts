@@ -1,7 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getValidToken } from "@/lib/auth";
+import * as jose from "jose";
 
 const BACKEND_URL = process.env.BACKEND_URL;
+const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET!);
+
+async function authorizeAdmin(token: string): Promise<boolean> {
+    try {
+        const { payload } = await jose.jwtVerify(token, JWT_SECRET, {
+            algorithms: ["HS256"],
+        });
+        return payload.role === "ADMIN";
+    } catch (err) {
+        console.error("JWT verification failed:", err);
+        return false;
+    }
+}
 
 export async function PATCH(request: NextRequest, { params }: { params: Promise<{ userId: string }> }) {
     const token = await getValidToken();
@@ -9,6 +23,11 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
 
     if (!token) {
         return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    }
+
+    const isAdmin = await authorizeAdmin(token);
+    if (!isAdmin) {
+        return NextResponse.json({ message: "Forbidden: Only admins are authorized to manage user PINs" }, { status: 403 });
     }
 
     try {
@@ -39,6 +58,11 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
 
     if (!token) {
         return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    }
+
+    const isAdmin = await authorizeAdmin(token);
+    if (!isAdmin) {
+        return NextResponse.json({ message: "Forbidden: Only admins are authorized to manage user PINs" }, { status: 403 });
     }
 
     try {

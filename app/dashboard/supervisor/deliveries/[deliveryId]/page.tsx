@@ -139,10 +139,6 @@ export default function ParticularDeliveryPage() {
                     {/* LEFT COLUMN: Actions & Info */}
                     {delivery && (
                         <aside className="lg:col-span-4 space-y-6">
-                            <Button onClick={() => router.back()} variant="outline" className="w-full justify-start text-xs h-9 rounded-lg gap-2 border-slate-100 bg-white">
-                                <ArrowLeft className="w-3.5 h-3.5 text-slate-500" />
-                                Back to Dashboard
-                            </Button>
                             
                             {/* Assigned Man */}
                             <div className="bg-white border border-slate-100 rounded-xl p-4 shadow-sm relative overflow-hidden">
