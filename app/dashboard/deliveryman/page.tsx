@@ -7,6 +7,7 @@ import { ArrowDownUp, PackageCheck, Plus, ExternalLink } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import CreateDeliveryButton from "@/components/deliveryman/create-delivery";
+import { AddExpenseDialog } from "@/components/finance/add-expense-dialog";
 
 
 
@@ -78,6 +79,7 @@ export default function DashboardPage() {
                   Order Status
                 </Button>
               </Link>
+              <AddExpenseDialog />
               <CreateDeliveryButton />
             </div>
           </div>
