@@ -23,7 +23,11 @@ const itemVariants: Variants = {
     visible: { opacity: 1, y: 0, transition: { duration: 0.2, ease: "easeOut" } }
 };
 
-function FailedDeliveriesSection() {
+interface Props {
+    onInitialLoad?: () => void;
+}
+
+function FailedDeliveriesSection({ onInitialLoad }: Props) {
     const [deliveries, setDeliveries] = useState<FailedDelivery[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
 
@@ -46,6 +50,14 @@ function FailedDeliveriesSection() {
         hasFetched.current = true;
         fetchFailedDeliveries();
     }, []);
+
+    const hasReportedLoad = useRef(false);
+    useEffect(() => {
+        if (!loading && !hasReportedLoad.current) {
+            hasReportedLoad.current = true;
+            onInitialLoad?.();
+        }
+    }, [loading, onInitialLoad]);
 
     if (loading) {
         return (

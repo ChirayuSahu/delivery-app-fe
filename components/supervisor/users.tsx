@@ -33,7 +33,13 @@ const itemVariants: Variants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.2, ease: "easeOut" } }
 };
 
-export function UsersCard() {
+import { useRef } from 'react';
+
+interface Props {
+  onInitialLoad?: () => void;
+}
+
+export function UsersCard({ onInitialLoad }: Props) {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [searchQuery, setSearchQuery] = useState("");
@@ -54,6 +60,14 @@ export function UsersCard() {
     }
     fetchUsers();
   }, []);
+
+  const hasReportedLoad = useRef(false);
+  useEffect(() => {
+    if (!loading && !hasReportedLoad.current) {
+      hasReportedLoad.current = true;
+      onInitialLoad?.();
+    }
+  }, [loading, onInitialLoad]);
 
   const filteredUsers = useMemo(() => {
     return users.filter(user =>

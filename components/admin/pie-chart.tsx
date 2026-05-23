@@ -30,7 +30,11 @@ const COLORS = [
   '#f97316'  // Orange
 ];
 
-function DeliveryPersonnelChart() {
+interface Props {
+  onInitialLoad?: () => void;
+}
+
+function DeliveryPersonnelChart({ onInitialLoad }: Props) {
   const [deliveries, setDeliveries] = useState<Delivery[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [date, setDate] = useState<Date | undefined>(new Date());
@@ -57,6 +61,14 @@ function DeliveryPersonnelChart() {
   useEffect(() => {
     fetchDeliveries();
   }, [date]);
+
+  const hasReportedLoad = React.useRef(false);
+  useEffect(() => {
+    if (!loading && !hasReportedLoad.current) {
+      hasReportedLoad.current = true;
+      onInitialLoad?.();
+    }
+  }, [loading, onInitialLoad]);
 
   const chartData = useMemo(() => {
     return deliveries.map(d => ({
