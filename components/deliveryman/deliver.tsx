@@ -149,12 +149,15 @@ export default function DeliverInvoiceButton({ deliveryId, invoiceId, onSuccess,
                 </DialogHeader>
 
                 <div className="py-4 space-y-2">
-                    <div className="flex items-center gap-2 text-xs font-bold text-slate-400 uppercase tracking-wider px-1">
-                        <MessageSquare className="w-3 h-3" />
-                        Delivery Remark
+                    <div className="flex items-center justify-between px-1">
+                        <div className="flex items-center gap-2 text-xs font-bold text-slate-400 uppercase tracking-wider">
+                            <MessageSquare className="w-3 h-3" />
+                            Delivery Remark
+                        </div>
+                        <span className="text-[10px] font-medium text-slate-400">Optional</span>
                     </div>
                     <Textarea
-                        placeholder="Recipient name, shop closed, or any other notes..."
+                        placeholder="(Optional) Recipient name, shop closed, or any other notes..."
                         className="resize-none border-slate-200 focus:ring-emerald-500 min-h-25"
                         value={remark}
                         onChange={(e) => setRemark(e.target.value)}
