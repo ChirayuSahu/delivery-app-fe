@@ -8,6 +8,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import CreateDeliveryButton from "@/components/deliveryman/create-delivery";
 import { AddExpenseDialog } from "@/components/finance/add-expense-dialog";
+import { LogoutButton } from "@/components/auth/logout-button";
 
 
 
@@ -116,6 +117,8 @@ export default function DashboardPage() {
                 </Button>
               </Link>
               <CreateDeliveryButton />
+              <div className="w-px h-8 bg-slate-200 mx-1 hidden md:block"></div>
+              <LogoutButton />
             </div>
           </div>
         </header>

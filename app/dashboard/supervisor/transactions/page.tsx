@@ -13,6 +13,7 @@ import { TransactionsTable } from "@/components/finance/transactions-table"
 import { ExpensesTable } from "@/components/finance/expenses-table"
 import { TodayExpensesCard } from "@/components/finance/today-expenses-card"
 import { TransferFundsDialog } from "@/components/finance/transfer-funds-dialog"
+import { AddExpenseDialog } from "@/components/finance/add-expense-dialog"
 import { PinSettingsDialog } from "@/components/auth/pin-settings-dialog"
 
 function FinanceContent() {
@@ -36,6 +37,7 @@ function FinanceContent() {
             <DatePickerWithRange date={date} setDate={setDate} />
           </div>
           <div className="flex items-center gap-2 shrink-0">
+            <AddExpenseDialog />
             <TransferFundsDialog>
                <Button className="hidden md:flex gap-2 bg-green-600 hover:bg-green-700 text-white font-bold rounded-lg shadow-sm">
                 <ArrowRightLeft className="h-4 w-4" />
