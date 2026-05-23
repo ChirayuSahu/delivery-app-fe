@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useEffect, useState } from "react";
-import { Loader2, Package } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { ArrowDownUp, PackageCheck, Plus, ExternalLink } from "lucide-react";
+import { ArrowDownUp, PackageCheck, ExternalLink } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import CreateDeliveryButton from "@/components/deliveryman/create-delivery";
@@ -19,12 +19,46 @@ type Delivery = {
   deliveryNo: string;
 }
 
+type DeliverymanProfile = {
+  name: string;
+  wallet: number | null;
+}
+
 export default function DashboardPage() {
 
   const [deliveries, setDeliveries] = useState<Delivery[]>([]);
   const [loading, setLoading] = useState(false);
+  const [profile, setProfile] = useState<DeliverymanProfile | null>(null);
 
   const pathname = usePathname();
+
+  useEffect(() => {
+
+    const fetchProfile = async () => {
+      try {
+        const res = await fetch("/api/users/me", {
+          method: "GET",
+          credentials: "include",
+        })
+
+        const json = await res.json();
+
+        if (!res.ok) {
+          throw new Error(json.message || "Failed to fetch user profile");
+        }
+
+        setProfile({
+          name: json.data?.name || "Delivery Executive",
+          wallet: typeof json.data?.wallet === "number" ? json.data.wallet : null,
+        })
+      } catch (error) {
+        console.error("Failed to fetch deliveryman profile:", error);
+      }
+    }
+
+    fetchProfile();
+
+  }, []);
 
   useEffect(() => {
 
@@ -70,15 +104,11 @@ export default function DashboardPage() {
           <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
               <h1 className="text-2xl font-bold text-slate-900">Deliveries</h1>
-              <p className="text-slate-500 text-sm">Manage and track your pharmaceutical shipments</p>
+              <p className="text-slate-500 text-sm">
+                {profile?.name || "Delivery Executive"} • Balance ₹{(profile?.wallet ?? 0).toFixed(2)}
+              </p>
             </div>
             <div className="flex items-center gap-2 md:gap-3 flex-wrap">
-              <Link href={`${pathname}/status`}>
-                <Button variant="outline" className="gap-2 bg-white">
-                  <ArrowDownUp className="h-4 w-4" />
-                  Order Status
-                </Button>
-              </Link>
               <AddExpenseDialog />
               <CreateDeliveryButton />
             </div>
