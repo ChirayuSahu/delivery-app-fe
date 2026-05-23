@@ -20,7 +20,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 
-export function AddExpenseDialog() {
+export function AddExpenseDialog({ className }: { className?: string }) {
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   const [file, setFile] = useState<File | null>(null)
@@ -63,9 +63,9 @@ export function AddExpenseDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="gap-2 bg-slate-900 hover:bg-slate-800">
-          <Plus className="h-4 w-4" />
-          Add Expense
+        <Button className={`gap-2 bg-slate-900 hover:bg-slate-800 ${className || ''}`}>
+          <Plus className="h-4 w-4 shrink-0" />
+          <span>Add Expense</span>
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">

@@ -109,7 +109,12 @@ export default function DashboardPage() {
               </p>
             </div>
             <div className="flex items-center gap-2 md:gap-3 flex-wrap">
-              <AddExpenseDialog />
+              <Link href="/dashboard/deliveryman/transactions">
+                <Button variant="outline" className="gap-2">
+                  <ArrowDownUp className="h-4 w-4" />
+                  <span>Transactions</span>
+                </Button>
+              </Link>
               <CreateDeliveryButton />
             </div>
           </div>

@@ -19,7 +19,7 @@ export default function DeliverymanExpenseDetailPage() {
               <button onClick={() => router.back()} className="p-2 hover:bg-slate-100 rounded-full transition-colors">
                 <ArrowLeft className="w-5 h-5 text-slate-600" />
               </button>
-              <button onClick={() => router.push('/dashboard')} className="p-2 hover:bg-slate-100 rounded-full transition-colors">
+              <button onClick={() => router.push('/dashboard/deliveryman')} className="p-2 hover:bg-slate-100 rounded-full transition-colors">
                 <Home className="w-5 h-5 text-slate-600" />
               </button>
             </div>
@@ -29,8 +29,8 @@ export default function DeliverymanExpenseDetailPage() {
           </div>
         </div>
       </header>
-      <main className="max-w-7xl w-full mx-auto p-6 flex-1">
-        <ExpenseDetail expenseId={id} backPath="/dashboard/deliveryman/expenses" />
+      <main className="max-w-7xl w-full mx-auto p-4 md:p-6 lg:p-10 flex-1">
+        <ExpenseDetail expenseId={id} backPath="/dashboard/deliveryman/transactions?tab=expenses" />
       </main>
     </div>
   )

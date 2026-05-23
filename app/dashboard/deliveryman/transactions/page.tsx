@@ -1,22 +1,17 @@
 "use client"
 
 import React, { useState, Suspense } from "react"
-import { ArrowLeft, FileText, ArrowRightLeft } from "lucide-react"
-import Link from "next/link"
 import { useSearchParams, useRouter } from "next/navigation"
 import { DateRange } from "react-day-picker"
 
-import { Button } from "@/components/ui/button"
+import { ArrowLeft, Home } from "lucide-react"
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { DatePickerWithRange } from "@/components/finance/date-range-picker"
 import { TransactionsTable } from "@/components/finance/transactions-table"
 import { ExpensesTable } from "@/components/finance/expenses-table"
 import { TodayExpensesCard } from "@/components/finance/today-expenses-card"
-import { TransferFundsDialog } from "@/components/finance/transfer-funds-dialog"
-import { PinSettingsDialog } from "@/components/auth/pin-settings-dialog"
 
 function FinanceContent() {
-  const [date, setDate] = useState<DateRange | undefined>()
   const searchParams = useSearchParams()
   const router = useRouter()
   
@@ -29,27 +24,28 @@ function FinanceContent() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <main className="max-w-7xl mx-auto p-6 lg:p-10 space-y-6">
-        <div className="flex flex-row items-center justify-between gap-3 bg-white p-4 rounded-lg border border-slate-100 shadow-sm overflow-x-auto">
-          <div className="flex items-center gap-2 shrink-0">
-            <DatePickerWithRange date={date} setDate={setDate} />
+    <div className="flex flex-col min-h-screen bg-gray-50">
+      {/* TOP HEADER BAR */}
+      <header className="sticky top-0 z-10 border-b bg-white/80 backdrop-blur-md px-6 py-4">
+          <div className="max-w-7xl mx-auto flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-1">
+                    <button onClick={() => router.back()} className="p-2 hover:bg-slate-100 rounded-full transition-colors">
+                        <ArrowLeft className="w-5 h-5 text-slate-600" />
+                    </button>
+                    <button onClick={() => router.push('/dashboard/deliveryman')} className="p-2 hover:bg-slate-100 rounded-full transition-colors">
+                        <Home className="w-5 h-5 text-slate-600" />
+                    </button>
+                  </div>
+                  <div>
+                      <h1 className="text-xl font-bold text-slate-900">Transactions & Expenses</h1>
+                      <p className="text-xs text-slate-500 font-mono uppercase">Manage your financials</p>
+                  </div>
+              </div>
           </div>
-          <div className="flex items-center gap-2 shrink-0">
-            <Link href="/dashboard/admin/reports/expenses">
-              <Button variant="outline" className="gap-2 border-slate-200">
-                <FileText className="h-4 w-4 text-green-600" />
-                <span>Reports</span>
-              </Button>
-            </Link>
-            <TransferFundsDialog>
-               <Button className="hidden md:flex gap-2 bg-green-600 hover:bg-green-700 text-white font-bold rounded-lg shadow-sm">
-                <ArrowRightLeft className="h-4 w-4" />
-                Transfer
-              </Button>
-            </TransferFundsDialog>
-          </div>
-        </div>
+      </header>
+
+      <main className="max-w-7xl w-full mx-auto p-4 md:p-6 lg:p-10 flex-1 space-y-6">
         <Tabs value={currentTab} onValueChange={handleTabChange} className="space-y-6">
           <div className="flex">
             <TabsList className="bg-slate-100/70 p-1 rounded-lg inline-flex gap-1 border border-slate-200/30 h-auto">
@@ -69,31 +65,20 @@ function FinanceContent() {
           </div>
 
           <TabsContent value="transactions" className="mt-0">
-            <TransactionsTable dateRange={date} />
+            <TransactionsTable dateRange={undefined} role="DELIVERY_MAN" />
           </TabsContent>
 
           <TabsContent value="expenses" className="mt-0 space-y-6">
             <TodayExpensesCard />
-            <ExpensesTable dateRange={date} role="ADMIN" />
+            <ExpensesTable dateRange={undefined} userId={undefined} role="DELIVERY_MAN" />
           </TabsContent>
         </Tabs>
-
-        {/* Sticky Full-Width Mobile Transfer Button */}
-        <div className="h-20 md:hidden" />
-        <div className="fixed bottom-0 left-0 right-0 p-4 bg-white/80 backdrop-blur-md border-t border-slate-100 z-50 md:hidden">
-          <TransferFundsDialog>
-            <Button className="w-full h-12 rounded-lg bg-green-600 hover:bg-green-700 text-white font-bold flex items-center justify-center gap-2 shadow-md">
-              <ArrowRightLeft className="h-4 w-4" />
-              <span>Transfer Funds</span>
-            </Button>
-          </TransferFundsDialog>
-        </div>
       </main>
     </div>
   )
 }
 
-export default function AdminFinancePage() {
+export default function DeliverymanFinancePage() {
   return (
     <Suspense fallback={
       <div className="min-h-screen flex items-center justify-center">

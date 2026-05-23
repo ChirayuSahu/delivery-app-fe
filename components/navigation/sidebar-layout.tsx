@@ -22,6 +22,7 @@ import { LogoutButton } from "@/components/auth/logout-button"
 import AdminCreateUserButton from "@/components/admin/create-user"
 import SupervisorCreateUserButton from "@/components/supervisor/create-user"
 import { UserPlus, Home } from "lucide-react"
+import { AddExpenseDialog } from "@/components/finance/add-expense-dialog"
 
 
 interface SidebarLayoutProps {
@@ -127,8 +128,8 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
             icon: Truck,
           },
           {
-            name: "Expenses",
-            href: "/dashboard/deliveryman/expenses",
+            name: "Transactions",
+            href: "/dashboard/deliveryman/transactions",
             icon: ArrowRightLeft,
           },
         ]
@@ -316,17 +317,19 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
             <div className="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center text-white font-black">
               <Activity className="w-4 h-4" />
             </div>
-            <span className="font-extrabold text-md text-slate-800 tracking-tight">
+            <span className="font-extrabold text-md text-slate-800 tracking-tight mr-auto pl-2">
               {getPageTitle()}
             </span>
           </div>
 
-          <button 
-            onClick={() => setMobileOpen(true)}
-            className="w-9 h-9 flex items-center justify-center rounded-lg border border-slate-100 hover:bg-slate-50 text-slate-600 transition-colors"
-          >
-            <Menu className="w-5 h-5" />
-          </button>
+          <div className="flex items-center gap-2">
+            <button 
+              onClick={() => setMobileOpen(true)}
+              className="w-9 h-9 flex items-center justify-center rounded-lg border border-slate-100 hover:bg-slate-50 text-slate-600 transition-colors"
+            >
+              <Menu className="w-5 h-5" />
+            </button>
+          </div>
         </header>
 
         {/* Mobile Drawer Overlay */}
@@ -432,7 +435,7 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
         )}
 
         {/* Content Wrapper */}
-        <main className="flex-grow min-w-0">
+        <main className="flex-grow min-w-0 relative pb-24 lg:pb-0">
           {children}
         </main>
       </div>

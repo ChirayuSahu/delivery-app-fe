@@ -31,18 +31,20 @@ interface Transaction {
 interface TransactionsTableProps {
   dateRange?: DateRange
   userId?: string
+  role?: string
 }
 
 type SortField = 'createdAt' | 'type' | 'fromUser' | 'toUser' | 'description' | 'amount';
 type SortOrder = 'asc' | 'desc';
 
-export function TransactionsTable({ dateRange, userId }: TransactionsTableProps) {
+export function TransactionsTable({ dateRange, userId, role }: TransactionsTableProps) {
   const [transactions, setTransactions] = useState<Transaction[]>([])
   const [loading, setLoading] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [typeFilter, setTypeFilter] = useState('ALL')
   const [sortField, setSortField] = useState<SortField | null>('createdAt')
   const [sortOrder, setSortOrder] = useState<SortOrder>('desc')
+  const isDeliveryMan = role === 'DELIVERY_MAN'
 
   useEffect(() => {
     const fetchTransactions = async () => {
@@ -193,62 +195,64 @@ export function TransactionsTable({ dateRange, userId }: TransactionsTableProps)
   return (
     <div className="space-y-4">
       {/* Minimal Toolbar */}
-      <div className="hidden md:flex flex-col gap-3 bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 w-full">
-          <div className="relative w-full sm:max-w-xs">
-            <Search className="absolute left-3 top-2.5 h-4 w-4 text-slate-400" />
-            <input
-              type="text"
-              placeholder="Search description or user..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-9 pr-4 py-2 w-full text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-green-500 transition-all font-semibold"
-            />
-            {searchQuery && (
-              <button
-                onClick={() => setSearchQuery('')}
-                className="absolute right-3 top-2.5 hover:text-slate-600 text-slate-400 transition-colors cursor-pointer"
-              >
-                <X className="h-4 w-4" />
-              </button>
-            )}
+      {!isDeliveryMan && (
+        <div className="hidden md:flex flex-col gap-3 bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 w-full">
+            <div className="relative w-full sm:max-w-xs">
+              <Search className="absolute left-3 top-2.5 h-4 w-4 text-slate-400" />
+              <input
+                type="text"
+                placeholder="Search description or user..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-9 pr-4 py-2 w-full text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-green-500 transition-all font-semibold"
+              />
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery('')}
+                  className="absolute right-3 top-2.5 hover:text-slate-600 text-slate-400 transition-colors cursor-pointer"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              )}
+            </div>
+            
+            <div className="flex items-center gap-1.5 bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-100 self-end sm:self-auto">
+              <span className="h-1.5 w-1.5 bg-green-500 rounded-full" />
+              <span className="text-[11px] font-semibold text-slate-600">
+                {filteredTransactions.length} {filteredTransactions.length === 1 ? 'transaction' : 'transactions'}
+              </span>
+            </div>
           </div>
-          
-          <div className="flex items-center gap-1.5 bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-100 self-end sm:self-auto">
-            <span className="h-1.5 w-1.5 bg-green-500 rounded-full" />
-            <span className="text-[11px] font-semibold text-slate-600">
-              {filteredTransactions.length} {filteredTransactions.length === 1 ? 'transaction' : 'transactions'}
-            </span>
-          </div>
-        </div>
 
-        {/* Quick Filter Pills */}
-        <div className="flex flex-row overflow-x-auto gap-1.5 pt-1 border-t border-slate-50 whitespace-nowrap [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
-          {[
-            { id: 'ALL', label: 'All' },
-            { id: 'PAYMENT', label: 'Payments' },
-            { id: 'PAYOUT', label: 'Payouts' },
-            { id: 'ASSIGNMENT', label: 'Assignments' },
-            { id: 'ADJUSTMENT', label: 'Adjustments' },
-            { id: 'REFUND', label: 'Refunds' }
-          ].map((pill) => {
-            const isActive = typeFilter === pill.id;
-            return (
-              <button
-                key={pill.id}
-                onClick={() => setTypeFilter(pill.id)}
-                className={`px-3 py-1 text-[10px] font-bold rounded-lg transition-all border cursor-pointer select-none shrink-0 ${
-                  isActive 
-                    ? 'bg-slate-900 text-white border-slate-900 shadow-sm' 
-                    : 'bg-slate-50 text-slate-500 border-slate-200/60 hover:bg-slate-100 hover:text-slate-800'
-                }`}
-              >
-                {pill.label}
-              </button>
-            );
-          })}
+          {/* Quick Filter Pills */}
+          <div className="flex flex-row overflow-x-auto gap-1.5 pt-1 border-t border-slate-50 whitespace-nowrap [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+            {[
+              { id: 'ALL', label: 'All' },
+              { id: 'PAYMENT', label: 'Payments' },
+              { id: 'PAYOUT', label: 'Payouts' },
+              { id: 'ASSIGNMENT', label: 'Assignments' },
+              { id: 'ADJUSTMENT', label: 'Adjustments' },
+              { id: 'REFUND', label: 'Refunds' }
+            ].map((pill) => {
+              const isActive = typeFilter === pill.id;
+              return (
+                <button
+                  key={pill.id}
+                  onClick={() => setTypeFilter(pill.id)}
+                  className={`px-3 py-1 text-[10px] font-bold rounded-lg transition-all border cursor-pointer select-none shrink-0 ${
+                    isActive 
+                      ? 'bg-slate-900 text-white border-slate-900 shadow-sm' 
+                      : 'bg-slate-50 text-slate-500 border-slate-200/60 hover:bg-slate-100 hover:text-slate-800'
+                  }`}
+                >
+                  {pill.label}
+                </button>
+              );
+            })}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Mobile Card View */}
       <div className="grid grid-cols-1 gap-4 md:hidden">

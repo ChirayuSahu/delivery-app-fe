@@ -64,9 +64,14 @@ export default function CameraCapture({
     }
 
     function stopCamera() {
-        stream?.getTracks().forEach(
-            (track) => track.stop()
-        );
+        if (stream) {
+            stream.getTracks().forEach((track) => track.stop());
+        }
+        if (videoRef.current && videoRef.current.srcObject) {
+            const currentStream = videoRef.current.srcObject as MediaStream;
+            currentStream.getTracks().forEach((track) => track.stop());
+            videoRef.current.srcObject = null;
+        }
 
         setStream(null);
     }
