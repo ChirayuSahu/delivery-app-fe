@@ -50,7 +50,7 @@ export function TransferFundsDialog({ children }: TransferFundsDialogProps) {
       const fetchUsers = async () => {
         setFetchingUsers(true)
         try {
-          const res = await fetch("/api/users")
+          const res = await fetch("/api/transactions/users")
           const json = await res.json()
           if (res.ok) {
             setUsers(json.data || [])

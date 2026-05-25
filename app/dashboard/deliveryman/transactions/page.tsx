@@ -10,6 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { TransactionsTable } from "@/components/finance/transactions-table"
 import { ExpensesTable } from "@/components/finance/expenses-table"
 import { TodayExpensesCard } from "@/components/finance/today-expenses-card"
+import { TransferFundsDialog } from "@/components/finance/transfer-funds-dialog"
 
 function FinanceContent() {
   const searchParams = useSearchParams()
@@ -42,6 +43,7 @@ function FinanceContent() {
                       <p className="text-xs text-slate-500 font-mono uppercase">Manage your financials</p>
                   </div>
               </div>
+              <TransferFundsDialog />
           </div>
       </header>
 
