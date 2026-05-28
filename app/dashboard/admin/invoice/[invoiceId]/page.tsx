@@ -50,6 +50,7 @@ type InvoiceData = {
     podUrl?: string
     expenseAmount?: number
     expenses?: any[]
+    cases?: number
 };
 
 const containerVariants: Variants = {
@@ -283,6 +284,7 @@ const InvoicePage = () => {
                             expenseAmount={data.expenseAmount || 0}
                             expenses={data.expenses}
                             endedAt={data.status === 'DELIVERED' || data.status === 'FAILED' || data.status === 'RETURNED' ? new Date().toISOString() : null}
+                            defaultCases={data.cases}
                             onUpdate={handleUpdate}
                         />
                     </motion.div>

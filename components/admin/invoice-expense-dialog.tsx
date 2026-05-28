@@ -28,21 +28,49 @@ interface InvoiceExpenseDialogProps {
     expenseAmount: number;
     expenses?: ExpenseData[];
     endedAt: string | null;
+    defaultCases?: number;
     onUpdate: () => void;
 }
 
-export default function InvoiceExpenseDialog({ deliveryId, invType, invNo, expenseAmount, expenses, endedAt, onUpdate }: InvoiceExpenseDialogProps) {
+export default function InvoiceExpenseDialog({ deliveryId, invType, invNo, expenseAmount, expenses, endedAt, defaultCases, onUpdate }: InvoiceExpenseDialogProps) {
+    let initialCases = defaultCases ? defaultCases.toString() : '1';
+    let initialAmount = expenseAmount.toString();
+    let initialNotes = expenses && expenses.length > 0 ? expenses[0].notes : '';
+
+    if (initialNotes) {
+        const match = initialNotes.match(/^(\d+)\s+cases?(?:\s*-\s*(.*))?$/i);
+        if (match) {
+            initialCases = match[1];
+            initialNotes = match[2] || '';
+            const c = parseInt(initialCases, 10);
+            if (c > 0) {
+                initialAmount = (expenseAmount / c).toString();
+            }
+        }
+    }
+
     const [open, setOpen] = useState(false);
-    const [amount, setAmount] = useState(expenseAmount.toString());
-    const [notes, setNotes] = useState(expenses && expenses.length > 0 ? expenses[0].notes : '');
+    const [amountPerCase, setAmountPerCase] = useState(initialAmount);
+    const [cases, setCases] = useState(initialCases);
+    const [notes, setNotes] = useState(initialNotes);
     const [loading, setLoading] = useState(false);
 
     async function handleSave() {
-        const parsedAmount = parseFloat(amount);
+        const parsedAmount = parseFloat(amountPerCase);
+        const parsedCases = parseInt(cases, 10);
+        
         if (isNaN(parsedAmount) || parsedAmount < 0) {
             toast.error('Please enter a valid positive amount.');
             return;
         }
+        if (isNaN(parsedCases) || parsedCases <= 0) {
+            toast.error('Please enter a valid number of cases.');
+            return;
+        }
+
+        const totalAmount = parsedAmount * parsedCases;
+        const caseWord = parsedCases === 1 ? 'Case' : 'Cases';
+        const finalNotes = `${parsedCases} ${caseWord}${notes ? ' - ' + notes : ''}`;
 
         setLoading(true);
         try {
@@ -51,7 +79,7 @@ export default function InvoiceExpenseDialog({ deliveryId, invType, invNo, expen
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ amount: parsedAmount, notes })
+                body: JSON.stringify({ amount: totalAmount, notes: finalNotes })
             });
 
             const json = await res.json();
@@ -99,16 +127,28 @@ export default function InvoiceExpenseDialog({ deliveryId, invType, invNo, expen
 
                 <div className="space-y-4 py-4">
                     <div>
-                        <label className="text-xs font-bold text-slate-700 uppercase">Amount (₹)</label>
+                        <label className="text-xs font-bold text-slate-700 uppercase">Amount per Case (₹)</label>
                         <Input 
                             type="number" 
                             step="0.01" 
                             min="0"
-                            value={amount} 
-                            onChange={(e) => setAmount(e.target.value)}
+                            value={amountPerCase} 
+                            onChange={(e) => setAmountPerCase(e.target.value)}
                             className="mt-1"
                             placeholder="0.00"
                             disabled={!!endedAt}
+                        />
+                    </div>
+                    <div>
+                        <label className="text-xs font-bold text-slate-700 uppercase">Number of Cases</label>
+                        <Input 
+                            type="number" 
+                            min="1"
+                            value={cases} 
+                            onChange={(e) => setCases(e.target.value)}
+                            className="mt-1 bg-slate-50 cursor-not-allowed text-slate-500 font-bold"
+                            placeholder="1"
+                            disabled={true}
                         />
                     </div>
                     <div>
