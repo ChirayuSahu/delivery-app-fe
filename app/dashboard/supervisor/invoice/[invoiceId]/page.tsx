@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import Link from "next/link"
 import ReturnInvoice from "@/components/supervisor/return-invoice"
+import InvoiceExpenseDialog from "@/components/admin/invoice-expense-dialog"
 
 type Track = {
     name: string
@@ -36,7 +37,7 @@ type InvoiceData = {
     invoice: string
     date: string
     trackingDetails: Track[]
-    status: 'PENDING' | 'OUT_FOR_DELIVERY' | 'DELIVERED' | 'FAILED' | 'ASSIGNED'
+    status: 'PENDING' | 'OUT_FOR_DELIVERY' | 'DELIVERED' | 'FAILED' | 'ASSIGNED' | 'RETURNED'
     deliveryMan?: string
     deliveredAt?: string
     items?: Item[]
@@ -47,6 +48,8 @@ type InvoiceData = {
     deliveryId?: string
     deliveryRemark?: string
     podUrl?: string
+    expenseAmount?: number
+    expenses?: any[]
 };
 
 const containerVariants: Variants = {
@@ -79,8 +82,19 @@ const InvoicePage = () => {
                 setLoading(false);
             }
         };
+        
         if (invoiceId) fetchInvoice();
     }, [invoiceId]);
+
+    const handleUpdate = async () => {
+        try {
+            const res = await fetch(`/api/orders/invoice/${invoiceId}`);
+            const json = await res.json();
+            if (json.success) setData(json.data);
+        } catch (error) {
+            console.error("Failed to fetch invoice", error);
+        }
+    };
 
     if (loading) return (
         <div className="min-h-[400px] flex flex-col items-center justify-center py-20 bg-white rounded-xl border border-slate-100 shadow-sm max-w-2xl mx-auto mt-20">
@@ -249,6 +263,28 @@ const InvoicePage = () => {
                                 <Image alt='POD' draggable={false} src={data.podUrl} className='max-w-xs w-full h-auto rounded-lg border border-slate-100 shadow-sm' width={300} height={300} unoptimized />
                             </div>
                         )}
+                    </motion.div>
+                )}
+
+                {/* Delivery Expense */}
+                {data.deliveryId && (
+                    <motion.div variants={itemVariants} className="bg-white border border-slate-100 rounded-xl overflow-hidden shadow-sm p-5 flex items-center justify-between">
+                        <div>
+                            <span className="text-xs font-semibold text-slate-900 flex items-center gap-1.5 mb-1">
+                                <IndianRupee className="w-3.5 h-3.5 text-slate-500" />
+                                Delivery Expense
+                            </span>
+                            <p className="text-xl font-extrabold text-slate-900 leading-none">₹{data.expenseAmount || 0}</p>
+                        </div>
+                        <InvoiceExpenseDialog 
+                            deliveryId={data.deliveryId}
+                            invType={String(invoiceId).slice(0, 2)}
+                            invNo={String(invoiceId).slice(2)}
+                            expenseAmount={data.expenseAmount || 0}
+                            expenses={data.expenses}
+                            endedAt={data.status === 'DELIVERED' || data.status === 'FAILED' || data.status === 'RETURNED' ? new Date().toISOString() : null}
+                            onUpdate={handleUpdate}
+                        />
                     </motion.div>
                 )}
 

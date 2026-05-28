@@ -3,7 +3,8 @@
 import React, { useState, useEffect } from "react"
 import { Loader2, ArrowLeft, Download, Calendar, User, IndianRupee, FileText } from "lucide-react"
 import { format } from "date-fns"
-import { useRouter } from "next/navigation"
+import { useRouter, usePathname } from "next/navigation"
+import Link from "next/link"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -19,6 +20,14 @@ interface Expense {
   user?: {
     name: string
   }
+  invoice?: {
+    invType: string
+    invNo: string
+  }
+  delivery?: {
+    id: string
+    deliveryNo: string
+  }
 }
 
 interface ExpenseDetailProps {
@@ -31,6 +40,11 @@ export function ExpenseDetail({ expenseId, backPath }: ExpenseDetailProps) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const router = useRouter()
+  const pathname = usePathname()
+  
+  const basePath = pathname.startsWith('/dashboard/admin') 
+    ? '/dashboard/admin' 
+    : '/dashboard/supervisor'
 
   useEffect(() => {
     const fetchExpense = async () => {
@@ -112,6 +126,34 @@ export function ExpenseDetail({ expenseId, backPath }: ExpenseDetailProps) {
                   ₹{expense.amount.toFixed(2)}
                 </p>
               </div>
+
+              {expense.invoice && (
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2 text-slate-500 text-xs font-bold uppercase tracking-wider">
+                    <FileText className="h-3 w-3" />
+                    Linked Invoice
+                  </div>
+                  <Link href={`${basePath}/invoice/${expense.invoice.invType}${expense.invoice.invNo}`}>
+                    <Badge variant="outline" className="font-mono bg-slate-50 hover:bg-slate-100 cursor-pointer transition-colors">
+                      {expense.invoice.invType}{expense.invoice.invNo}
+                    </Badge>
+                  </Link>
+                </div>
+              )}
+
+              {expense.delivery && (
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2 text-slate-500 text-xs font-bold uppercase tracking-wider">
+                    <FileText className="h-3 w-3" />
+                    Linked Delivery
+                  </div>
+                  <Link href={`${basePath}/deliveries/${expense.delivery.id}`}>
+                    <Badge variant="outline" className="font-mono bg-slate-50 hover:bg-slate-100 cursor-pointer transition-colors">
+                      {expense.delivery.deliveryNo}
+                    </Badge>
+                  </Link>
+                </div>
+              )}
 
               <div className="space-y-2">
                 <div className="flex items-center gap-2 text-slate-500 text-xs font-bold uppercase tracking-wider">

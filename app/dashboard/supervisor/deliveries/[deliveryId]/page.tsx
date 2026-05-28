@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import DeliveryMap from '@/components/supervisor/delivery-map';
 import DeliveryStats from '@/components/supervisor/delivery-stats';
-import DeliveryExpense from '@/components/admin/delivery-expense';
+
 
 export type Invoice = {
     invType: string;
@@ -20,6 +20,13 @@ export type Invoice = {
     status: string;
     location?: string;
     deliveredAt: string;
+    expenseAmount?: number;
+    expenses?: Array<{
+        id: string;
+        amount: number;
+        notes: string;
+        createdAt: string;
+    }>;
 };
 
 type DeliveryResponse = {
@@ -271,15 +278,6 @@ export default function ParticularDeliveryPage() {
                             )}
 
                             <DeliveryStats delivery={delivery} />
-                            
-                            {/* Delivery Expense Manager */}
-                            <DeliveryExpense 
-                                deliveryId={delivery.id} 
-                                expenseAmount={delivery.expenseAmount || 0} 
-                                endedAt={delivery.endedAt}
-                                expenses={delivery.expenses}
-                                onUpdate={fetchDelivery} 
-                            />
 
                         </aside>
                     )}

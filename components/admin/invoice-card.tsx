@@ -11,6 +11,8 @@ type Invoice = {
   invNo: string;
   customerName: string;
   status: string;
+  expenseAmount?: number;
+  expenses?: any[];
 };
 
 function InvoiceCard({

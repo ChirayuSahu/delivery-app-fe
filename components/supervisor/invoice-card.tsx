@@ -11,6 +11,8 @@ type Invoice = {
   invNo: string;
   customerName: string;
   status: string;
+  expenseAmount?: number;
+  expenses?: any[];
 };
 
 function InvoiceCard({
@@ -72,7 +74,7 @@ function InvoiceCard({
           </div>
         </Link>
 
-        {/* Footer with Delete and View Link */}
+          {/* Footer with Delete and View Link */}
         <div className="flex justify-between items-center pt-3 border-t border-gray-50">
           <div className="flex gap-2">
             {showDeleteInvoice && (
