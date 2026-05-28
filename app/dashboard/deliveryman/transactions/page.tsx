@@ -1,8 +1,7 @@
 "use client"
 
-import React, { useState, Suspense } from "react"
+import React, { Suspense } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
-import { DateRange } from "react-day-picker"
 
 import { ArrowLeft, Home } from "lucide-react"
 

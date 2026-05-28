@@ -47,19 +47,15 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
   useEffect(() => {
     if (pathname.includes("/dashboard/admin")) {
       setUserRole("ADMIN")
-      setUserName("System Admin")
     } else if (pathname.includes("/dashboard/supervisor")) {
       setUserRole("SUPERVISOR")
-      setUserName("Supervisor")
     } else if (pathname.includes("/dashboard/deliveryman")) {
       setUserRole("DELIVERY_MAN")
-      setUserName("Delivery Executive")
     }
   }, [pathname])
 
   useEffect(() => {
     const fetchProfile = async () => {
-      setProfileLoading(true)
       try {
         const res = await fetch("/api/users/me")
         if (res.ok) {
@@ -79,7 +75,7 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
       }
     }
     fetchProfile()
-  }, [])
+  }, [pathname])
 
   // Get active menu list
   const getNavItems = () => {

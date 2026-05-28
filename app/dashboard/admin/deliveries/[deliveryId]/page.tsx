@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import DeliveryMap from '@/components/admin/delivery-map';
 import DeliveryStats from '@/components/admin/delivery-stats';
+import DeliveryExpense from '@/components/admin/delivery-expense';
 
 export type Invoice = {
     invType: string;
@@ -36,6 +37,13 @@ type DeliveryResponse = {
         invoices: Invoice[];
         failedDeliveries: string[];
         failedInvoices: Invoice[];
+        expenseAmount: number;
+        expenses?: Array<{
+            id: string;
+            amount: number;
+            notes: string;
+            createdAt: string;
+        }>;
     };
 };
 
@@ -263,6 +271,14 @@ export default function ParticularDeliveryPage() {
                             )}
 
                             <DeliveryStats delivery={delivery} />
+
+                            <DeliveryExpense 
+                                deliveryId={delivery.id} 
+                                expenseAmount={delivery.expenseAmount} 
+                                expenses={delivery.expenses}
+                                endedAt={delivery.endedAt}
+                                onUpdate={fetchDelivery}
+                            />
 
                         </aside>
                     )}
