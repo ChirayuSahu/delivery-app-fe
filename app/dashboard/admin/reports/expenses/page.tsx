@@ -10,7 +10,8 @@ import {
   ArrowLeft,
   CalendarDays,
   Home,
-  Wallet
+  Wallet,
+  FileText
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
@@ -81,6 +82,48 @@ export default function ExpensesReportPage() {
       toast.success('Report downloaded successfully');
     } catch (error: any) {
       toast.error(error.message || 'Failed to download report');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const downloadPdfReport = async () => {
+    if (!from || !to) {
+      toast.error('Please select both From and To dates');
+      return;
+    }
+
+    if (from > to) {
+      toast.error('Start date cannot be after End date');
+      return;
+    }
+
+    setLoading(true);
+    const fromStr = format(from, 'yyyy-MM-dd');
+    const toStr = format(to, 'yyyy-MM-dd');
+    const url = `/api/reports/expenses-pdf?from=${fromStr}&to=${toStr}`;
+
+    try {
+      const res = await fetch(url);
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.message || "Failed to download PDF report");
+      }
+
+      const blob = await res.blob();
+      const downloadUrl = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = downloadUrl;
+      const displayDate = fromStr === toStr ? fromStr : `${fromStr}-to-${toStr}`;
+      a.download = `expense-report-${displayDate}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(downloadUrl);
+      
+      toast.success('PDF Report downloaded successfully');
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to download PDF report');
     } finally {
       setLoading(false);
     }
@@ -206,29 +249,55 @@ export default function ExpensesReportPage() {
               </div>
             </div>
 
-            <button
-              onClick={downloadReport}
-              disabled={loading}
-              className={`
-                w-full py-4 rounded-xl flex items-center justify-center gap-2 font-bold transition-all relative overflow-hidden
-                ${loading
-                  ? 'bg-slate-100 text-slate-400 cursor-not-allowed border border-slate-200'
-                  : 'bg-slate-900 text-white hover:bg-slate-800 shadow-lg shadow-slate-200'
-                }
-              `}
-            >
-              {loading ? (
-                <>
-                  <Loader2 className="w-5 h-5 animate-spin" />
-                  <span>Processing Report...</span>
-                </>
-              ) : (
-                <>
-                  <Download className="w-5 h-5" />
-                  <span>Download Expenses Sheet</span>
-                </>
-              )}
-            </button>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <button
+                onClick={downloadReport}
+                disabled={loading}
+                className={`
+                  w-full py-4 rounded-xl flex items-center justify-center gap-2 font-bold transition-all relative overflow-hidden
+                  ${loading
+                    ? 'bg-slate-100 text-slate-400 cursor-not-allowed border border-slate-200'
+                    : 'bg-slate-900 text-white hover:bg-slate-800 shadow-lg shadow-slate-200'
+                  }
+                `}
+              >
+                {loading ? (
+                  <>
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                    <span>Processing...</span>
+                  </>
+                ) : (
+                  <>
+                    <Download className="w-5 h-5" />
+                    <span>Download Excel</span>
+                  </>
+                )}
+              </button>
+
+              <button
+                onClick={downloadPdfReport}
+                disabled={loading}
+                className={`
+                  w-full py-4 rounded-xl flex items-center justify-center gap-2 font-bold transition-all relative overflow-hidden
+                  ${loading
+                    ? 'bg-red-50 text-red-200 cursor-not-allowed border border-red-100'
+                    : 'bg-red-600 text-white hover:bg-red-700 shadow-lg shadow-red-200'
+                  }
+                `}
+              >
+                {loading ? (
+                  <>
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                    <span>Processing...</span>
+                  </>
+                ) : (
+                  <>
+                    <FileText className="w-5 h-5" />
+                    <span>Download PDF</span>
+                  </>
+                )}
+              </button>
+            </div>
           </div>
         </motion.div>
 

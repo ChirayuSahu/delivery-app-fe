@@ -69,7 +69,7 @@ function FinanceContent() {
           </TabsContent>
 
           <TabsContent value="expenses" className="mt-0 space-y-6">
-            <TodayExpensesCard />
+            <TodayExpensesCard dateRange={date} />
             <ExpensesTable dateRange={date} role="SUPERVISOR" />
           </TabsContent>
         </Tabs>
