@@ -37,6 +37,13 @@ type DeliveryResponse = {
         invoices: Invoice[];
         failedDeliveries: string[];
         failedInvoices: Invoice[];
+        expenseAmount: number;
+        expenses?: Array<{
+            id: string;
+            amount: number;
+            notes: string;
+            createdAt: string;
+        }>;
     };
 };
 
@@ -266,7 +273,13 @@ export default function ParticularDeliveryPage() {
                             <DeliveryStats delivery={delivery} />
                             
                             {/* Delivery Expense Manager */}
-                            <DeliveryExpense delivery={delivery} onExpenseUpdated={fetchDelivery} />
+                            <DeliveryExpense 
+                                deliveryId={delivery.id} 
+                                expenseAmount={delivery.expenseAmount || 0} 
+                                endedAt={delivery.endedAt}
+                                expenses={delivery.expenses}
+                                onUpdate={fetchDelivery} 
+                            />
 
                         </aside>
                     )}
