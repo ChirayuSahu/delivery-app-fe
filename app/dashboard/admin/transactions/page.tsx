@@ -5,6 +5,7 @@ import { ArrowLeft, FileText, ArrowRightLeft } from "lucide-react"
 import Link from "next/link"
 import { useSearchParams, useRouter } from "next/navigation"
 import { DateRange } from "react-day-picker"
+import { format } from "date-fns"
 
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -16,9 +17,38 @@ import { TransferFundsDialog } from "@/components/finance/transfer-funds-dialog"
 import { PinSettingsDialog } from "@/components/auth/pin-settings-dialog"
 
 function FinanceContent() {
-  const [date, setDate] = useState<DateRange | undefined>()
   const searchParams = useSearchParams()
   const router = useRouter()
+  
+  const [date, setDate] = useState<DateRange | undefined>(() => {
+    const from = searchParams.get('from')
+    const to = searchParams.get('to')
+    if (from) {
+      return {
+        from: new Date(from),
+        to: to ? new Date(to) : new Date(from)
+      }
+    }
+    return undefined
+  })
+
+  React.useEffect(() => {
+    const params = new URLSearchParams(searchParams.toString())
+    if (date?.from) {
+      params.set('from', format(date.from, 'yyyy-MM-dd'))
+    } else {
+      params.delete('from')
+    }
+    if (date?.to) {
+      params.set('to', format(date.to, 'yyyy-MM-dd'))
+    } else {
+      params.delete('to')
+    }
+    
+    if (params.toString() !== searchParams.toString()) {
+      router.replace(`?${params.toString()}`, { scroll: false })
+    }
+  }, [date, searchParams, router])
   
   const currentTab = searchParams.get('tab') || 'transactions'
 
@@ -73,7 +103,7 @@ function FinanceContent() {
           </TabsContent>
 
           <TabsContent value="expenses" className="mt-0 space-y-6">
-            <TodayExpensesCard />
+            <TodayExpensesCard dateRange={date} />
             <ExpensesTable dateRange={date} role="ADMIN" />
           </TabsContent>
         </Tabs>

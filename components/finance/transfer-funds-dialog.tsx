@@ -153,11 +153,11 @@ export function TransferFundsDialog({ children }: TransferFundsDialogProps) {
                   <SelectValue placeholder="Select type" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="INVOICE_PAYMENT">Invoice Payment</SelectItem>
-                  <SelectItem value="ADJUSTMENT">Adjustment</SelectItem>
-                  <SelectItem value="PARTNER_PAYOUT">Partner Payout</SelectItem>
-                  <SelectItem value="REFUND">Refund</SelectItem>
+                  <SelectItem value="EXPENSE_BUDGET">Expense Budget</SelectItem>
                   <SelectItem value="DELIVERY_ASSIGNMENT">Delivery Assignment</SelectItem>
+                  <SelectItem value="CASH_DEPOSIT">Cash Deposit</SelectItem>
+                  <SelectItem value="ADJUSTMENT">Adjustment</SelectItem>
+                  <SelectItem value="REFUND">Refund</SelectItem>
                 </SelectContent>
               </Select>
             </div>

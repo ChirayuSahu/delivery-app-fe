@@ -98,11 +98,11 @@ export function TransactionsTable({ dateRange, userId, role }: TransactionsTable
       const searchMatch = descMatch || fromMatch || toMatch;
 
       const typeMatch = typeFilter === 'ALL' || 
-                        (typeFilter === 'PAYMENT' && tx.type === 'INVOICE_PAYMENT') ||
-                        (typeFilter === 'PAYOUT' && tx.type === 'PARTNER_PAYOUT') ||
+                        (typeFilter === 'BUDGET' && tx.type === 'EXPENSE_BUDGET') ||
                         (typeFilter === 'ASSIGNMENT' && tx.type === 'DELIVERY_ASSIGNMENT') ||
                         (typeFilter === 'ADJUSTMENT' && tx.type === 'ADJUSTMENT') ||
-                        (typeFilter === 'REFUND' && tx.type === 'REFUND');
+                        (typeFilter === 'REFUND' && tx.type === 'REFUND') ||
+                        (typeFilter === 'DEPOSIT' && tx.type === 'CASH_DEPOSIT');
 
       return searchMatch && typeMatch;
     });
@@ -177,16 +177,16 @@ export function TransactionsTable({ dateRange, userId, role }: TransactionsTable
 
   const getTypeBadge = (type: string) => {
     switch (type) {
-      case 'INVOICE_PAYMENT':
-        return <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-bold bg-green-50 text-green-700 border border-green-100 uppercase">Payment</span>
+      case 'EXPENSE_BUDGET':
+        return <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-bold bg-green-50 text-green-700 border border-green-100 uppercase">Budget</span>
+      case 'CASH_DEPOSIT':
+        return <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-bold bg-blue-50 text-blue-700 border border-blue-100 uppercase">Deposit</span>
       case 'ADJUSTMENT':
         return <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-bold bg-yellow-50 text-yellow-700 border border-yellow-100 uppercase">Adjustment</span>
       case 'REFUND':
         return <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-bold bg-blue-50 text-blue-700 border border-blue-100 uppercase">Refund</span>
       case 'DELIVERY_ASSIGNMENT':
         return <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-bold bg-purple-50 text-purple-700 border border-purple-100 uppercase">Assignment</span>
-      case 'PARTNER_PAYOUT':
-        return <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-bold bg-orange-50 text-orange-700 border border-orange-100 uppercase">Payout</span>
       default:
         return <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-bold bg-slate-50 text-slate-500 border border-slate-100 uppercase">{type}</span>
     }
@@ -229,8 +229,8 @@ export function TransactionsTable({ dateRange, userId, role }: TransactionsTable
           <div className="flex flex-row overflow-x-auto gap-1.5 pt-1 border-t border-slate-50 whitespace-nowrap [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
             {[
               { id: 'ALL', label: 'All' },
-              { id: 'PAYMENT', label: 'Payments' },
-              { id: 'PAYOUT', label: 'Payouts' },
+              { id: 'BUDGET', label: 'Budgets' },
+              { id: 'DEPOSIT', label: 'Deposits' },
               { id: 'ASSIGNMENT', label: 'Assignments' },
               { id: 'ADJUSTMENT', label: 'Adjustments' },
               { id: 'REFUND', label: 'Refunds' }
