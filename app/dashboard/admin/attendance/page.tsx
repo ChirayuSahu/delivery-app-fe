@@ -14,6 +14,7 @@ import {
     ArrowUp,
     ArrowDown,
     ChevronRight,
+    CalendarDays,
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -146,18 +147,27 @@ export default function AttendancePage() {
                 <div
                     className="bg-white border border-green-100 rounded-2xl p-6 shadow-sm shadow-green-100/50"
                 >
-                    <div className="flex items-center gap-5">
-                        <div className="h-14 w-14 bg-green-600 rounded-2xl flex items-center justify-center shrink-0 shadow-lg shadow-green-200">
-                            <ScanFace className="w-7 h-7 text-white" />
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div className="flex items-center gap-5">
+                            <div className="h-14 w-14 bg-green-600 rounded-2xl flex items-center justify-center shrink-0 shadow-lg shadow-green-200">
+                                <ScanFace className="w-7 h-7 text-white" />
+                            </div>
+                            <div>
+                                <h1 className="text-xl font-black text-slate-900 tracking-tight">
+                                    Staff Attendance
+                                </h1>
+                                <p className="text-sm font-medium text-slate-500 mt-1">
+                                    View all registered staff members from HikConnect.
+                                </p>
+                            </div>
                         </div>
-                        <div>
-                            <h1 className="text-xl font-black text-slate-900 tracking-tight">
-                                Staff Attendance
-                            </h1>
-                            <p className="text-sm font-medium text-slate-500 mt-1">
-                                View all registered staff members from HikConnect.
-                            </p>
-                        </div>
+                        <Link 
+                            href="/dashboard/admin/attendance/today"
+                            className="inline-flex items-center justify-center bg-green-600 hover:bg-green-700 text-white font-semibold rounded-xl h-11 px-5 shadow-sm shadow-green-200 w-full sm:w-auto transition-colors"
+                        >
+                            <CalendarDays className="w-4 h-4 mr-2" />
+                            View Today's Attendance
+                        </Link>
                     </div>
                 </div>
 
