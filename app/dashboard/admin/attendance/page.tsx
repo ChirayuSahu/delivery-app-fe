@@ -14,7 +14,9 @@ import {
     ArrowUpDown,
     ArrowUp,
     ArrowDown,
+    ChevronRight,
 } from 'lucide-react';
+import Link from 'next/link';
 
 interface PersonInfo {
     personId: string;
@@ -263,7 +265,8 @@ export default function AttendancePage() {
                                             <motion.tr
                                                 key={personInfo.personId}
                                                 variants={itemVariants}
-                                                className="hover:bg-slate-50/50 transition-colors group"
+                                                className="hover:bg-slate-50/50 transition-colors group cursor-pointer"
+                                                onClick={() => window.location.href = `/dashboard/admin/attendance/${personInfo.personCode}`}
                                             >
                                                 {/* Person */}
                                                 <td className="py-3.5 px-5">
@@ -327,17 +330,20 @@ export default function AttendancePage() {
 
                                                 {/* Status */}
                                                 <td className="py-3.5 px-5">
-                                                    {isActive ? (
-                                                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-semibold bg-green-50 text-green-700 border border-green-100">
-                                                            <span className="h-1 w-1 bg-green-500 rounded-full animate-pulse" />
-                                                            Active
-                                                        </span>
-                                                    ) : (
-                                                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-50 text-slate-500 border border-slate-100">
-                                                            <span className="h-1 w-1 bg-slate-400 rounded-full" />
-                                                            Inactive
-                                                        </span>
-                                                    )}
+                                                    <div className="flex items-center justify-between">
+                                                        {isActive ? (
+                                                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-semibold bg-green-50 text-green-700 border border-green-100">
+                                                                <span className="h-1 w-1 bg-green-500 rounded-full animate-pulse" />
+                                                                Active
+                                                            </span>
+                                                        ) : (
+                                                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-50 text-slate-500 border border-slate-100">
+                                                                <span className="h-1 w-1 bg-slate-400 rounded-full" />
+                                                                Inactive
+                                                            </span>
+                                                        )}
+                                                        <ChevronRight className="h-4 w-4 text-slate-300 group-hover:text-slate-900 group-hover:translate-x-0.5 transition-all" />
+                                                    </div>
                                                 </td>
                                             </motion.tr>
                                         );
