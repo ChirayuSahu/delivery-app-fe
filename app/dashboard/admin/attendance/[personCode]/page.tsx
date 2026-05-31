@@ -3,7 +3,7 @@
 import { useEffect, useState, useMemo } from 'react';
 import { useParams } from 'next/navigation';
 import { motion, Variants } from 'framer-motion';
-import { format, startOfMonth, endOfMonth, parse } from 'date-fns';
+import { format, startOfMonth, endOfMonth, parse, eachDayOfInterval, startOfWeek, endOfWeek, isSameMonth, isToday } from 'date-fns';
 import {
     Loader2,
     Clock,
@@ -20,6 +20,8 @@ import {
     TrendingUp,
     UserCircle,
     IndianRupee,
+    LayoutGrid,
+    List,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -28,6 +30,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
     Popover,
     PopoverContent,
@@ -85,15 +88,23 @@ const WEEKDAY_NAMES = ['', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 type SortField = 'date' | 'workDuration' | 'attendanceStatus';
 type SortOrder = 'asc' | 'desc';
 
-function parseDuration(duration: string): number {
-    const [h, m] = duration.split(':').map(Number);
-    return (h || 0) * 60 + (m || 0);
+function parseDuration(duration: string | number): number {
+    if (!duration) return 0;
+    if (typeof duration === 'number') return duration;
+    const str = String(duration).trim();
+    if (!str.includes(':')) {
+        return parseInt(str, 10) || 0;
+    }
+    const parts = str.split(':');
+    const h = parseInt(parts[0], 10) || 0;
+    const m = parseInt(parts[1], 10) || 0;
+    return (h * 60) + m;
 }
 
 function formatDurationMinutes(totalMinutes: number): string {
+    if (isNaN(totalMinutes) || totalMinutes < 0) return "0h 0m";
     const h = Math.floor(totalMinutes / 60);
     const m = totalMinutes % 60;
-    if (h === 0) return `${m}m`;
     return `${h}h ${m}m`;
 }
 
@@ -252,6 +263,12 @@ export default function PersonAttendancePage() {
         };
     }, [records]);
 
+    const calendarDays = useMemo(() => {
+        const start = startOfWeek(fromDate, { weekStartsOn: 1 }); // Monday
+        const end = endOfWeek(toDate, { weekStartsOn: 1 });
+        return eachDayOfInterval({ start, end });
+    }, [fromDate, toDate]);
+
     return (
         <div className="min-h-screen bg-gray-50">
             <div className="max-w-7xl mx-auto space-y-6 p-4 md:p-8 lg:p-10">
@@ -361,7 +378,7 @@ export default function PersonAttendancePage() {
                         initial={{ opacity: 0, y: 12 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.4, delay: 0.15 }}
-                        className="grid grid-cols-2 md:grid-cols-4 gap-3"
+                        className="grid grid-cols-2 md:grid-cols-5 gap-3"
                     >
                         <div className="bg-white border border-slate-100 rounded-xl p-4 shadow-sm">
                             <div className="flex items-center gap-2 mb-2">
@@ -406,6 +423,16 @@ export default function PersonAttendancePage() {
                             </div>
                             <p className="text-lg font-black text-slate-900">{formatDurationMinutes(stats.totalOvertimeMinutes)}</p>
                         </div>
+
+                        <div className="bg-white border border-slate-100 rounded-xl p-4 shadow-sm">
+                            <div className="flex items-center gap-2 mb-2">
+                                <div className="h-8 w-8 bg-orange-50 rounded-lg flex items-center justify-center">
+                                    <AlertCircle className="h-4 w-4 text-orange-500" />
+                                </div>
+                                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Total Late</span>
+                            </div>
+                            <p className="text-lg font-black text-slate-900">{formatDurationMinutes(stats.totalLateMinutes)}</p>
+                        </div>
                     </motion.div>
                 )}
 
@@ -416,7 +443,7 @@ export default function PersonAttendancePage() {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.4, delay: 0.18 }}
                     >
-                        <Card className="py-0 gap-0 overflow-hidden">
+                        <Card className="py-0 gap-0 overflow-hidden shadow-sm border-slate-100">
                             <CardContent className="p-5">
                                 <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
                                     <div className="flex items-center gap-3 shrink-0">
@@ -424,55 +451,56 @@ export default function PersonAttendancePage() {
                                             <IndianRupee className="h-5 w-5 text-emerald-600" />
                                         </div>
                                         <div>
-                                            <Label className="text-xs font-bold text-slate-800">Salary Calculator</Label>
-                                            <p className="text-[10px] text-muted-foreground font-medium mt-0.5">Enter daily rate to estimate salary</p>
+                                            <h3 className="font-semibold text-slate-800 text-sm">Salary Calculator</h3>
+                                            <p className="text-[10px] text-slate-500 font-medium">Estimated payout for this period</p>
                                         </div>
                                     </div>
 
-                                    <div className="flex flex-1 flex-col sm:flex-row items-stretch sm:items-center gap-3">
-                                        <div className="relative flex-1 max-w-[200px]">
-                                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-xs font-bold z-10">₹</span>
+                                    <div className="w-px h-10 bg-slate-100 hidden sm:block mx-2" />
+
+                                    <div className="flex flex-1 items-center gap-3 flex-wrap">
+                                        <div className="relative flex items-center">
+                                            <IndianRupee className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400 z-10" />
                                             <Input
-                                                type="number"
-                                                placeholder="0"
-                                                min={0}
+                                                id="salary"
+                                                type="text"
+                                                inputMode="decimal"
                                                 value={salaryPerDay}
-                                                onChange={(e) => setSalaryPerDay(e.target.value)}
-                                                className="pl-7 pr-16 font-bold text-sm"
+                                                onChange={(e) => {
+                                                    const val = e.target.value;
+                                                    if (val === '' || /^\d*\.?\d*$/.test(val)) {
+                                                        setSalaryPerDay(val);
+                                                    }
+                                                }}
+                                                className="w-32 pl-8 pr-10 h-9 text-sm font-semibold shadow-none border-slate-200 focus-visible:ring-emerald-500"
+                                                placeholder="0.00"
                                             />
-                                            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-semibold text-muted-foreground">/day</span>
+                                            <span className="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs font-semibold text-slate-400 pointer-events-none">/day</span>
                                         </div>
 
                                         <span className="hidden sm:flex items-center text-muted-foreground text-sm font-bold">×</span>
-
-                                        <Badge variant="outline" className="gap-1.5 px-3 py-1.5 rounded-lg bg-green-50 text-green-700 border-green-100 font-bold text-xs">
-                                            <CheckCircle2 className="h-3.5 w-3.5" />
-                                            {stats.presentDays} days present
+                                        
+                                        <Badge variant="outline" className="h-9 px-3 gap-1.5 text-slate-600 border-slate-200 bg-slate-50 hover:bg-slate-50">
+                                            <span className="font-bold text-slate-900">{stats.presentDays}</span> 
+                                            <span className="text-[10px] uppercase tracking-wider font-semibold">Days Present</span>
                                         </Badge>
 
                                         <span className="hidden sm:flex items-center text-muted-foreground text-sm font-bold">=</span>
 
-                                        <Card className={cn(
-                                            'py-0 gap-0 shrink-0 transition-all shadow-none',
-                                            salaryPerDay && parseFloat(salaryPerDay) > 0
-                                                ? 'bg-emerald-50 border-emerald-200'
-                                                : 'bg-muted border-border'
-                                        )}>
-                                            <CardContent className="flex items-center gap-2 px-4 py-2.5">
-                                                <IndianRupee className={cn(
-                                                    'h-4 w-4',
-                                                    salaryPerDay && parseFloat(salaryPerDay) > 0 ? 'text-emerald-600' : 'text-muted-foreground'
-                                                )} />
-                                                <span className={cn(
-                                                    'text-lg font-black tracking-tight',
-                                                    salaryPerDay && parseFloat(salaryPerDay) > 0 ? 'text-emerald-700' : 'text-muted-foreground'
-                                                )}>
-                                                    {salaryPerDay && parseFloat(salaryPerDay) > 0
-                                                        ? (parseFloat(salaryPerDay) * stats.presentDays).toLocaleString('en-IN')
-                                                        : '0'}
-                                                </span>
-                                            </CardContent>
-                                        </Card>
+                                        <div className="flex items-center gap-1.5 px-2">
+                                            <IndianRupee className={cn(
+                                                'h-5 w-5',
+                                                salaryPerDay && parseFloat(salaryPerDay) > 0 ? 'text-emerald-600' : 'text-slate-400'
+                                            )} />
+                                            <span className={cn(
+                                                'text-xl font-black tracking-tight',
+                                                salaryPerDay && parseFloat(salaryPerDay) > 0 ? 'text-emerald-700' : 'text-slate-600'
+                                            )}>
+                                                {salaryPerDay && parseFloat(salaryPerDay) > 0
+                                                    ? (parseFloat(salaryPerDay) * stats.presentDays).toLocaleString('en-IN')
+                                                    : '0'}
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
                             </CardContent>
@@ -480,21 +508,117 @@ export default function PersonAttendancePage() {
                     </motion.div>
                 )}
 
-                {/* Attendance Table */}
-                <motion.div
-                    initial={{ opacity: 0, y: 12 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.4, delay: 0.2 }}
-                    className="bg-white border border-slate-100 rounded-xl shadow-sm overflow-hidden"
-                >
-                    {loading ? (
-                        <div className="flex flex-col items-center justify-center py-24 gap-3">
-                            <Loader2 className="h-6 w-6 animate-spin text-green-600" />
-                            <span className="text-xs font-medium text-slate-400">
-                                Loading attendance records...
-                            </span>
-                        </div>
-                    ) : sortedRecords.length > 0 ? (
+                {/* Main Content Area */}
+                <Tabs defaultValue="list" className="space-y-4">
+                    <div className="flex items-center justify-between">
+                        <TabsList className="bg-white border border-slate-100 shadow-sm">
+                            <TabsTrigger value="calendar" className="gap-2 text-xs font-semibold data-[state=active]:bg-emerald-50 data-[state=active]:text-emerald-700 data-[state=active]:shadow-none">
+                                <LayoutGrid className="w-4 h-4" />
+                                Calendar
+                            </TabsTrigger>
+                            <TabsTrigger value="list" className="gap-2 text-xs font-semibold data-[state=active]:bg-emerald-50 data-[state=active]:text-emerald-700 data-[state=active]:shadow-none">
+                                <List className="w-4 h-4" />
+                                List
+                            </TabsTrigger>
+                        </TabsList>
+                    </div>
+
+                    <TabsContent value="calendar" className="outline-none">
+                        <motion.div
+                            initial={{ opacity: 0, y: 12 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.4, delay: 0.2 }}
+                            className="bg-white border border-slate-100 rounded-xl shadow-sm overflow-hidden"
+                        >
+                            {loading ? (
+                                <div className="flex flex-col items-center justify-center py-32 gap-3">
+                                    <Loader2 className="h-6 w-6 animate-spin text-emerald-600" />
+                                    <span className="text-xs font-medium text-slate-400">Loading calendar...</span>
+                                </div>
+                            ) : (
+                                <div className="grid grid-cols-7 w-full border-b border-slate-100">
+                                    {/* Weekday Headers */}
+                                    {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map(d => (
+                                        <div key={d} className="bg-slate-50/80 border-r last:border-r-0 border-slate-100 py-3 text-center text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                                            {d}
+                                        </div>
+                                    ))}
+                                    
+                                    {/* Calendar Days */}
+                                    {calendarDays.map((day, idx) => {
+                                        const dateStr = format(day, 'dd/MM/yyyy');
+                                        const record = records.find(r => r.date === dateStr);
+                                        const isCurrentMonth = isSameMonth(day, fromDate);
+                                        
+                                        return (
+                                            <div 
+                                                key={day.toISOString()} 
+                                                className={cn(
+                                                    "min-h-[120px] p-2 border-r border-b border-slate-100 transition-colors hover:bg-slate-50/50",
+                                                    (idx + 1) % 7 === 0 && "border-r-0",
+                                                    !isCurrentMonth && "bg-slate-50/30 opacity-60 grayscale"
+                                                )}
+                                            >
+                                                <div className="flex items-center justify-between mb-2">
+                                                    {record ? (
+                                                        <span className={cn(
+                                                            "h-1.5 w-1.5 rounded-full",
+                                                            statusColorMap[getStatusInfo(record.attendanceStatus).color]?.dot || "bg-slate-300"
+                                                        )} />
+                                                    ) : (
+                                                        <span className="h-1.5 w-1.5" />
+                                                    )}
+                                                    <span className={cn(
+                                                        "text-xs font-bold",
+                                                        isToday(day) ? "bg-emerald-500 text-white h-6 w-6 flex items-center justify-center rounded-full shadow-md shadow-emerald-200" : "text-slate-400"
+                                                    )}>
+                                                        {format(day, 'd')}
+                                                    </span>
+                                                </div>
+
+                                                {record && (
+                                                    <div className="space-y-1.5 mt-2">
+                                                        <div className="flex flex-col gap-0.5">
+                                                            <div className="flex items-center gap-1 text-[10px] text-slate-500 font-medium">
+                                                                <Clock className="w-3 h-3 text-emerald-500" />
+                                                                {record.clockInTime || '—'}
+                                                            </div>
+                                                            <div className="flex items-center gap-1 text-[10px] text-slate-500 font-medium">
+                                                                <Clock className="w-3 h-3 text-rose-400" />
+                                                                {record.clockOutTime || '—'}
+                                                            </div>
+                                                        </div>
+
+                                                        {parseDuration(record.workDuration) > 0 && (
+                                                            <div className="bg-emerald-50 text-emerald-700 text-[10px] font-bold px-1.5 py-0.5 rounded border border-emerald-100 w-fit">
+                                                                {record.workDuration}
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                )}
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            )}
+                        </motion.div>
+                    </TabsContent>
+
+                    <TabsContent value="list" className="outline-none">
+                        <motion.div
+                            initial={{ opacity: 0, y: 12 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.4, delay: 0.2 }}
+                            className="bg-white border border-slate-100 rounded-xl shadow-sm overflow-hidden"
+                        >
+                            {loading ? (
+                                <div className="flex flex-col items-center justify-center py-24 gap-3">
+                                    <Loader2 className="h-6 w-6 animate-spin text-green-600" />
+                                    <span className="text-xs font-medium text-slate-400">
+                                        Loading attendance records...
+                                    </span>
+                                </div>
+                            ) : sortedRecords.length > 0 ? (
                         <div className="overflow-x-auto">
                             <table className="w-full text-left border-collapse">
                                 <thead>
@@ -661,8 +785,10 @@ export default function PersonAttendancePage() {
                                 No attendance data found for this date range. Try selecting a different period.
                             </p>
                         </div>
-                    )}
-                </motion.div>
+                            )}
+                        </motion.div>
+                    </TabsContent>
+                </Tabs>
 
                 <p className="text-center text-slate-400 text-xs font-medium mt-4">
                     Data synced from HikConnect access control system.
