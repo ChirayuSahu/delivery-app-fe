@@ -21,7 +21,7 @@ import { PinSettingsDialog } from "@/components/auth/pin-settings-dialog"
 import { LogoutButton } from "@/components/auth/logout-button"
 import AdminCreateUserButton from "@/components/admin/create-user"
 import SupervisorCreateUserButton from "@/components/supervisor/create-user"
-import { UserPlus, Home } from "lucide-react"
+import { UserPlus, Home, ScanFace } from "lucide-react"
 import { AddExpenseDialog } from "@/components/finance/add-expense-dialog"
 
 
@@ -96,6 +96,11 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
             name: "Finance",
             href: "/dashboard/admin/transactions",
             icon: ArrowRightLeft,
+          },
+          {
+            name: "Attendance",
+            href: "/dashboard/admin/attendance",
+            icon: ScanFace,
           },
         ]
       case "SUPERVISOR":
