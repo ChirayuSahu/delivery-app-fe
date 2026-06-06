@@ -88,6 +88,17 @@ const WEEKDAY_NAMES = ['', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 type SortField = 'date' | 'workDuration' | 'attendanceStatus';
 type SortOrder = 'asc' | 'desc';
 
+function formatTime(timeStr?: string | null) {
+    if (!timeStr || timeStr === '') return '—';
+    const [h, m] = timeStr.split(':');
+    if (!h || !m) return timeStr;
+    let hour = parseInt(h, 10);
+    const ampm = hour >= 12 ? 'PM' : 'AM';
+    hour = hour % 12;
+    if (hour === 0) hour = 12;
+    return `${hour}:${m} ${ampm}`;
+}
+
 function parseDuration(duration: string | number): number {
     if (!duration) return 0;
     if (typeof duration === 'number') return duration;
@@ -581,11 +592,11 @@ export default function PersonAttendancePage() {
                                                         <div className="flex flex-col gap-0.5">
                                                             <div className="flex items-center gap-1 text-[10px] text-slate-500 font-medium">
                                                                 <Clock className="w-3 h-3 text-emerald-500" />
-                                                                {record.clockInTime || '—'}
+                                                                {formatTime(record.clockInTime)}
                                                             </div>
                                                             <div className="flex items-center gap-1 text-[10px] text-slate-500 font-medium">
                                                                 <Clock className="w-3 h-3 text-rose-400" />
-                                                                {record.clockOutTime || '—'}
+                                                                {formatTime(record.clockOutTime)}
                                                             </div>
                                                         </div>
 
@@ -696,7 +707,7 @@ export default function PersonAttendancePage() {
                                                     {hasClockIn ? (
                                                         <span className="inline-flex items-center gap-1 text-slate-700 font-semibold">
                                                             <Clock className="h-3.5 w-3.5 text-green-500" />
-                                                            {record.clockInTime}
+                                                            {formatTime(record.clockInTime)}
                                                         </span>
                                                     ) : (
                                                         <span className="text-slate-300 italic font-medium">—</span>
@@ -708,7 +719,7 @@ export default function PersonAttendancePage() {
                                                     {hasClockOut ? (
                                                         <span className="inline-flex items-center gap-1 text-slate-700 font-semibold">
                                                             <Clock className="h-3.5 w-3.5 text-red-400" />
-                                                            {record.clockOutTime}
+                                                            {formatTime(record.clockOutTime)}
                                                         </span>
                                                     ) : (
                                                         <span className="text-slate-300 italic font-medium">—</span>

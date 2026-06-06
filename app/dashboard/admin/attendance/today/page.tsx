@@ -24,12 +24,25 @@ export interface AttendanceRecord {
     personCode: string;
     status: "Present" | "Absent";
     image?: string;
+    checkIn?: string | null;
+    checkOut?: string | null;
 }
 
-type SortField = 'personName' | 'personCode' | 'status';
+type SortField = 'personName' | 'personCode' | 'status' | 'checkIn' | 'checkOut';
 type SortOrder = 'asc' | 'desc';
 
 import { Suspense } from 'react';
+
+function formatTime(timeStr?: string | null) {
+    if (!timeStr) return '--:--';
+    const [h, m] = timeStr.split(':');
+    if (!h || !m) return timeStr;
+    let hour = parseInt(h, 10);
+    const ampm = hour >= 12 ? 'PM' : 'AM';
+    hour = hour % 12;
+    if (hour === 0) hour = 12;
+    return `${hour}:${m} ${ampm}`;
+}
 
 function TodayAttendanceContent() {
     const router = useRouter();
@@ -38,7 +51,8 @@ function TodayAttendanceContent() {
     const [records, setRecords] = useState<AttendanceRecord[]>([]);
     const [loading, setLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState('');
-    const [sortField, setSortField] = useState<SortField | null>('personName');
+    const [filterStatus, setFilterStatus] = useState<'All' | 'Present' | 'Absent'>('All');
+    const [sortField, setSortField] = useState<SortField | null>('checkIn');
     const [sortOrder, setSortOrder] = useState<SortOrder>('asc');
     
     // Initialize date from URL if present
@@ -142,6 +156,7 @@ function TodayAttendanceContent() {
 
     const filteredAndSortedRecords = useMemo(() => {
         let result = records.filter((r) => {
+            if (filterStatus !== 'All' && r.status !== filterStatus) return false;
             const name = (r.personName || '').toLowerCase();
             const query = searchQuery.toLowerCase();
             return name.includes(query) || (r.personCode || '').includes(query);
@@ -152,6 +167,12 @@ function TodayAttendanceContent() {
                 let valA = String(a[sortField] || '').toLowerCase();
                 let valB = String(b[sortField] || '').toLowerCase();
 
+                // Push empty values (absent records) to the bottom regardless of sort order
+                if ((sortField === 'checkIn' || sortField === 'checkOut') && valA !== valB) {
+                    if (!valA) return 1;
+                    if (!valB) return -1;
+                }
+
                 if (valA < valB) return sortOrder === 'asc' ? -1 : 1;
                 if (valA > valB) return sortOrder === 'asc' ? 1 : -1;
                 return 0;
@@ -159,7 +180,7 @@ function TodayAttendanceContent() {
         }
 
         return result;
-    }, [records, searchQuery, sortField, sortOrder]);
+    }, [records, searchQuery, filterStatus, sortField, sortOrder]);
 
     const activeCount = records.filter(r => r.status === 'Present').length;
 
@@ -201,6 +222,19 @@ function TodayAttendanceContent() {
                     </div>
                     
                     <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto mt-2 sm:mt-0">
+                        {/* Filter Tabs */}
+                        <div className="flex bg-slate-100 p-1 rounded-lg shrink-0 overflow-x-auto">
+                            {['All', 'Present', 'Absent'].map(status => (
+                                <button
+                                    key={status}
+                                    onClick={() => setFilterStatus(status as any)}
+                                    className={`px-4 py-2 sm:py-1.5 text-xs font-bold rounded-md transition-all flex-1 sm:flex-none text-center ${filterStatus === status ? 'bg-white text-slate-900 shadow-sm border border-slate-200/60' : 'text-slate-500 hover:text-slate-700'}`}
+                                >
+                                    {status}
+                                </button>
+                            ))}
+                        </div>
+
                         <Popover>
                             <PopoverTrigger asChild>
                                 <Button
@@ -293,6 +327,24 @@ function TodayAttendanceContent() {
                                                     <SortIcon field="status" />
                                                 </div>
                                             </th>
+                                            <th
+                                                onClick={() => handleSort('checkIn')}
+                                                className="py-3 px-5 font-semibold cursor-pointer hover:bg-slate-100/50 transition-colors"
+                                            >
+                                                <div className="flex items-center gap-1">
+                                                    Check In
+                                                    <SortIcon field="checkIn" />
+                                                </div>
+                                            </th>
+                                            <th
+                                                onClick={() => handleSort('checkOut')}
+                                                className="py-3 px-5 font-semibold cursor-pointer hover:bg-slate-100/50 transition-colors"
+                                            >
+                                                <div className="flex items-center gap-1">
+                                                    Check Out
+                                                    <SortIcon field="checkOut" />
+                                                </div>
+                                            </th>
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-slate-100 text-slate-700 text-xs">
@@ -351,6 +403,20 @@ function TodayAttendanceContent() {
                                                             </span>
                                                         )}
                                                     </td>
+
+                                                    {/* Check In */}
+                                                    <td className="py-3.5 px-5">
+                                                        <span className="text-xs font-medium text-slate-600">
+                                                            {formatTime(record.checkIn)}
+                                                        </span>
+                                                    </td>
+
+                                                    {/* Check Out */}
+                                                    <td className="py-3.5 px-5">
+                                                        <span className="text-xs font-medium text-slate-600">
+                                                            {formatTime(record.checkOut)}
+                                                        </span>
+                                                    </td>
                                                 </tr>
                                             );
                                         })}
@@ -396,16 +462,27 @@ function TodayAttendanceContent() {
                                                     </div>
                                                 </div>
                                                 {isPresent ? (
-                                                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-semibold bg-green-50 text-green-700 border border-green-100">
+                                                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-semibold bg-green-50 text-green-700 border border-green-100 h-fit">
                                                         <span className="h-1 w-1 bg-green-500 rounded-full animate-pulse" />
                                                         Present
                                                     </span>
                                                 ) : (
-                                                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-semibold bg-red-50 text-red-700 border border-red-100">
+                                                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-semibold bg-red-50 text-red-700 border border-red-100 h-fit">
                                                         <span className="h-1 w-1 bg-red-500 rounded-full" />
                                                         Absent
                                                     </span>
                                                 )}
+                                            </div>
+
+                                            <div className="flex items-center gap-4 mt-1 pt-3 border-t border-slate-50">
+                                                <div className="flex flex-col">
+                                                    <span className="text-[10px] uppercase font-bold text-slate-400 mb-0.5">Check In</span>
+                                                    <span className="text-xs font-semibold text-slate-700">{formatTime(record.checkIn)}</span>
+                                                </div>
+                                                <div className="flex flex-col">
+                                                    <span className="text-[10px] uppercase font-bold text-slate-400 mb-0.5">Check Out</span>
+                                                    <span className="text-xs font-semibold text-slate-700">{formatTime(record.checkOut)}</span>
+                                                </div>
                                             </div>
                                         </div>
                                     );
