@@ -2,7 +2,6 @@
 
 import { useEffect, useState, useMemo } from 'react';
 import { useParams } from 'next/navigation';
-import { motion, Variants } from 'framer-motion';
 import { format, startOfMonth, endOfMonth, parse, eachDayOfInterval, startOfWeek, endOfWeek, isSameMonth, isToday } from 'date-fns';
 import {
     Loader2,
@@ -73,15 +72,7 @@ interface AttendanceRecord {
     leaveTypes: string;
 }
 
-const containerVariants: Variants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { staggerChildren: 0.03 } },
-};
 
-const itemVariants: Variants = {
-    hidden: { opacity: 0, y: 4 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.2, ease: 'easeOut' } },
-};
 
 const WEEKDAY_NAMES = ['', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
@@ -284,10 +275,7 @@ export default function PersonAttendancePage() {
         <div className="min-h-screen bg-gray-50">
             <div className="max-w-7xl mx-auto space-y-6 p-4 md:p-8 lg:p-10">
                 {/* Header */}
-                <motion.div
-                    initial={{ opacity: 0, y: 16 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.4 }}
+                <div
                     className="bg-white border border-green-100 rounded-2xl p-6 shadow-sm shadow-green-100/50"
                 >
                     <div className="flex items-center gap-5">
@@ -303,13 +291,10 @@ export default function PersonAttendancePage() {
                             </p>
                         </div>
                     </div>
-                </motion.div>
+                </div>
 
                 {/* Date Range Picker */}
-                <motion.div
-                    initial={{ opacity: 0, y: 12 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.4, delay: 0.1 }}
+                <div
                     className="bg-white border border-slate-100 rounded-xl shadow-sm p-4"
                 >
                     <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
@@ -381,15 +366,12 @@ export default function PersonAttendancePage() {
                             </span>
                         </div>
                     </div>
-                </motion.div>
+                </div>
 
                 {/* Stats Cards */}
                 {!loading && records.length > 0 && (
-                    <motion.div
-                        initial={{ opacity: 0, y: 12 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.4, delay: 0.15 }}
-                        className="grid grid-cols-2 md:grid-cols-5 gap-3"
+                    <div
+                    className="grid grid-cols-2 md:grid-cols-5 gap-3"
                     >
                         <div className="bg-white border border-slate-100 rounded-xl p-4 shadow-sm">
                             <div className="flex items-center gap-2 mb-2">
@@ -444,15 +426,12 @@ export default function PersonAttendancePage() {
                             </div>
                             <p className="text-lg font-black text-slate-900">{formatDurationMinutes(stats.totalLateMinutes)}</p>
                         </div>
-                    </motion.div>
+                    </div>
                 )}
 
                 {/* Salary Calculator */}
                 {!loading && records.length > 0 && (
-                    <motion.div
-                        initial={{ opacity: 0, y: 12 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.4, delay: 0.18 }}
+                    <div
                     >
                         <Card className="py-0 gap-0 overflow-hidden shadow-sm border-slate-100">
                             <CardContent className="p-5">
@@ -516,7 +495,7 @@ export default function PersonAttendancePage() {
                                 </div>
                             </CardContent>
                         </Card>
-                    </motion.div>
+                    </div>
                 )}
 
                 {/* Main Content Area */}
@@ -535,11 +514,8 @@ export default function PersonAttendancePage() {
                     </div>
 
                     <TabsContent value="calendar" className="outline-none">
-                        <motion.div
-                            initial={{ opacity: 0, y: 12 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.4, delay: 0.2 }}
-                            className="bg-white border border-slate-100 rounded-xl shadow-sm overflow-hidden"
+                        <div
+                    className="bg-white border border-slate-100 rounded-xl shadow-sm overflow-hidden"
                         >
                             {loading ? (
                                 <div className="flex flex-col items-center justify-center py-32 gap-3">
@@ -612,15 +588,12 @@ export default function PersonAttendancePage() {
                                     })}
                                 </div>
                             )}
-                        </motion.div>
+                        </div>
                     </TabsContent>
 
                     <TabsContent value="list" className="outline-none">
-                        <motion.div
-                            initial={{ opacity: 0, y: 12 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.4, delay: 0.2 }}
-                            className="bg-white border border-slate-100 rounded-xl shadow-sm overflow-hidden"
+                        <div
+                    className="bg-white border border-slate-100 rounded-xl shadow-sm overflow-hidden"
                         >
                             {loading ? (
                                 <div className="flex flex-col items-center justify-center py-24 gap-3">
@@ -669,10 +642,10 @@ export default function PersonAttendancePage() {
                                         </th>
                                     </tr>
                                 </thead>
-                                <motion.tbody
-                                    variants={containerVariants}
-                                    initial="hidden"
-                                    animate="visible"
+                                <tbody
+                                   
+                                   
+                                   
                                     className="divide-y divide-slate-100 text-slate-700 text-xs"
                                 >
                                     {sortedRecords.map((record, index) => {
@@ -684,9 +657,9 @@ export default function PersonAttendancePage() {
                                         const workMinutes = parseDuration(record.workDuration);
 
                                         return (
-                                            <motion.tr
+                                            <tr
                                                 key={`${record.date}-${index}`}
-                                                variants={itemVariants}
+                                               
                                                 className="hover:bg-slate-50/50 transition-colors"
                                             >
                                                 {/* Date */}
@@ -778,10 +751,10 @@ export default function PersonAttendancePage() {
                                                         {statusInfo.label}
                                                     </span>
                                                 </td>
-                                            </motion.tr>
+                                            </tr>
                                         );
                                     })}
-                                </motion.tbody>
+                                </tbody>
                             </table>
                         </div>
                     ) : (
@@ -797,7 +770,7 @@ export default function PersonAttendancePage() {
                             </p>
                         </div>
                             )}
-                        </motion.div>
+                        </div>
                     </TabsContent>
                 </Tabs>
 

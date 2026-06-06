@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { motion, AnimatePresence, Variants } from 'framer-motion';
 import { format } from 'date-fns';
 import {
   Calendar as CalendarIcon,
@@ -27,15 +26,6 @@ import {
 import { toast } from 'sonner';
 
 // Animation variants
-const containerVariants: Variants = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
-};
-
-const itemVariants: Variants = {
-  hidden: { y: 20, opacity: 0 },
-  visible: { y: 0, opacity: 1, transition: { duration: 0.4, ease: "easeOut" } }
-};
 
 export default function ReportsPage() {
   const router = useRouter();
@@ -84,14 +74,14 @@ export default function ReportsPage() {
     <div className="min-h-screen pb-12 font-sans">
 
 
-      <motion.div
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
+      <div
+       
+       
+       
         className="max-w-4xl mx-auto space-y-6 p-4 md:p-8"
       >
         {/* Hero / Context Card */}
-        <motion.div variants={itemVariants} className="bg-white border border-green-100 rounded-2xl p-6 shadow-sm shadow-green-100/50 mb-6">
+        <div className="bg-white border border-green-100 rounded-2xl p-6 shadow-sm shadow-green-100/50 mb-6">
           <div className="flex items-center gap-5">
             {/* THEME CHANGE: Icon background is now Green */}
             <div className="h-14 w-14 bg-green-600 rounded-2xl flex items-center justify-center shrink-0 shadow-lg shadow-green-200">
@@ -104,10 +94,10 @@ export default function ReportsPage() {
               </p>
             </div>
           </div>
-        </motion.div>
+        </div>
 
         {/* Form Card */}
-        <motion.div variants={itemVariants} className="bg-white border border-green-100 rounded-2xl overflow-hidden shadow-sm shadow-green-100/50">
+        <div className="bg-white border border-green-100 rounded-2xl overflow-hidden shadow-sm shadow-green-100/50">
           <div className="px-6 py-4 border-b border-green-100">
             <p className="text-xs font-bold text-slate-800 uppercase tracking-widest flex items-center gap-2">
               <CalendarDays className="w-4 h-4 text-green-600" />
@@ -210,12 +200,12 @@ export default function ReportsPage() {
               )}
             </button>
           </div>
-        </motion.div>
+        </div>
 
         <p className="text-center text-slate-400 text-xs font-medium mt-6">
           Securely generated from system records.
         </p>
-      </motion.div>
+      </div>
     </div>
   );
 }

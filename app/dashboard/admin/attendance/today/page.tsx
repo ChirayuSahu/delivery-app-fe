@@ -22,7 +22,7 @@ import { toast } from 'sonner';
 export interface AttendanceRecord {
     personName: string;
     personCode: string;
-    status: "Present" | "Absent";
+    status: string;
     image?: string;
     checkIn?: string | null;
     checkOut?: string | null;
@@ -42,6 +42,39 @@ function formatTime(timeStr?: string | null) {
     hour = hour % 12;
     if (hour === 0) hour = 12;
     return `${hour}:${m} ${ampm}`;
+}
+
+function StatusBadge({ status }: { status: string }) {
+    if (status === 'Present') {
+        return (
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-semibold bg-green-50 text-green-700 border border-green-100 h-fit whitespace-nowrap">
+                <span className="h-1 w-1 bg-green-500 rounded-full animate-pulse" />
+                {status}
+            </span>
+        );
+    }
+    if (status === 'Absent') {
+        return (
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-semibold bg-red-50 text-red-700 border border-red-100 h-fit whitespace-nowrap">
+                <span className="h-1 w-1 bg-red-500 rounded-full" />
+                {status}
+            </span>
+        );
+    }
+    if (status === 'Present - CO only' || status === 'Present - CI only') {
+        return (
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-semibold bg-orange-50 text-orange-700 border border-orange-100 h-fit whitespace-nowrap">
+                <span className="h-1 w-1 bg-orange-500 rounded-full" />
+                {status}
+            </span>
+        );
+    }
+    return (
+        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-50 text-slate-700 border border-slate-200 h-fit whitespace-nowrap">
+            <span className="h-1 w-1 bg-slate-500 rounded-full" />
+            {status}
+        </span>
+    );
 }
 
 function TodayAttendanceContent() {
@@ -156,7 +189,10 @@ function TodayAttendanceContent() {
 
     const filteredAndSortedRecords = useMemo(() => {
         let result = records.filter((r) => {
-            if (filterStatus !== 'All' && r.status !== filterStatus) return false;
+            if (filterStatus !== 'All') {
+                if (filterStatus === 'Present' && !r.status?.startsWith('Present')) return false;
+                if (filterStatus === 'Absent' && r.status !== 'Absent') return false;
+            }
             const name = (r.personName || '').toLowerCase();
             const query = searchQuery.toLowerCase();
             return name.includes(query) || (r.personCode || '').includes(query);
@@ -182,7 +218,7 @@ function TodayAttendanceContent() {
         return result;
     }, [records, searchQuery, filterStatus, sortField, sortOrder]);
 
-    const activeCount = records.filter(r => r.status === 'Present').length;
+    const activeCount = records.filter(r => r.status?.startsWith('Present')).length;
 
     return (
         <div className="min-h-screen bg-gray-50">
@@ -349,7 +385,6 @@ function TodayAttendanceContent() {
                                     </thead>
                                     <tbody className="divide-y divide-slate-100 text-slate-700 text-xs">
                                         {filteredAndSortedRecords.map((record, index) => {
-                                            const isPresent = record.status === 'Present';
                                             return (
                                                 <tr
                                                     key={`${record.personCode}-${index}`}
@@ -391,17 +426,7 @@ function TodayAttendanceContent() {
 
                                                     {/* Status */}
                                                     <td className="py-3.5 px-5">
-                                                        {isPresent ? (
-                                                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-semibold bg-green-50 text-green-700 border border-green-100">
-                                                                <span className="h-1 w-1 bg-green-500 rounded-full animate-pulse" />
-                                                                Present
-                                                            </span>
-                                                        ) : (
-                                                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-semibold bg-red-50 text-red-700 border border-red-100">
-                                                                <span className="h-1 w-1 bg-red-500 rounded-full" />
-                                                                Absent
-                                                            </span>
-                                                        )}
+                                                        <StatusBadge status={record.status || 'Unknown'} />
                                                     </td>
 
                                                     {/* Check In */}
@@ -427,7 +452,6 @@ function TodayAttendanceContent() {
                             {/* Mobile Cards View */}
                             <div className="md:hidden flex flex-col gap-3 p-3 bg-slate-50/50">
                                 {filteredAndSortedRecords.map((record, index) => {
-                                    const isPresent = record.status === 'Present';
                                     return (
                                         <div
                                             key={`${record.personCode}-${index}`}
@@ -461,17 +485,7 @@ function TodayAttendanceContent() {
                                                         </p>
                                                     </div>
                                                 </div>
-                                                {isPresent ? (
-                                                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-semibold bg-green-50 text-green-700 border border-green-100 h-fit">
-                                                        <span className="h-1 w-1 bg-green-500 rounded-full animate-pulse" />
-                                                        Present
-                                                    </span>
-                                                ) : (
-                                                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-semibold bg-red-50 text-red-700 border border-red-100 h-fit">
-                                                        <span className="h-1 w-1 bg-red-500 rounded-full" />
-                                                        Absent
-                                                    </span>
-                                                )}
+                                                <StatusBadge status={record.status || 'Unknown'} />
                                             </div>
 
                                             <div className="flex items-center gap-4 mt-1 pt-3 border-t border-slate-50">

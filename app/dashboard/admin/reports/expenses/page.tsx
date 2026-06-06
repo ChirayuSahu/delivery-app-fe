@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { motion, Variants } from 'framer-motion';
 import { format } from 'date-fns';
 import {
   Calendar as CalendarIcon,
@@ -26,15 +25,6 @@ import {
 import { toast } from 'sonner';
 
 // Animation variants
-const containerVariants: Variants = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
-};
-
-const itemVariants: Variants = {
-  hidden: { y: 20, opacity: 0 },
-  visible: { y: 0, opacity: 1, transition: { duration: 0.4, ease: "easeOut" } }
-};
 
 export default function ExpensesReportPage() {
   const router = useRouter();
@@ -150,14 +140,14 @@ export default function ExpensesReportPage() {
         </div>
       </header>
 
-      <motion.div
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
+      <div
+       
+       
+       
         className="max-w-4xl mx-auto space-y-6 p-4 md:p-8"
       >
         {/* Hero Card */}
-        <motion.div variants={itemVariants} className="bg-white border border-blue-100 rounded-2xl p-6 shadow-sm shadow-blue-100/50 mb-6">
+        <div className="bg-white border border-blue-100 rounded-2xl p-6 shadow-sm shadow-blue-100/50 mb-6">
           <div className="flex items-center gap-5">
             <div className="h-14 w-14 bg-blue-600 rounded-2xl flex items-center justify-center shrink-0 shadow-lg shadow-blue-200">
               <Wallet className="w-7 h-7 text-white" />
@@ -169,10 +159,10 @@ export default function ExpensesReportPage() {
               </p>
             </div>
           </div>
-        </motion.div>
+        </div>
 
         {/* Form Card */}
-        <motion.div variants={itemVariants} className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
+        <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
           <div className="px-6 py-4 border-b border-slate-100">
             <p className="text-xs font-bold text-slate-800 uppercase tracking-widest flex items-center gap-2">
               <CalendarDays className="w-4 h-4 text-blue-600" />
@@ -299,12 +289,12 @@ export default function ExpensesReportPage() {
               </button>
             </div>
           </div>
-        </motion.div>
+        </div>
 
         <p className="text-center text-slate-400 text-xs font-medium mt-6">
           Admin-only report generation.
         </p>
-      </motion.div>
+      </div>
     </div>
   );
 }
