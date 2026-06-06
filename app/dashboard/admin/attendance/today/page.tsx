@@ -11,6 +11,7 @@ import {
     ArrowDown,
     Fingerprint,
     Download,
+    FileText,
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { Button } from '@/components/ui/button';
@@ -100,11 +101,13 @@ function TodayAttendanceContent() {
 
     const [downloadingReport, setDownloadingReport] = useState(false);
 
-    const downloadReport = async () => {
+    const downloadReport = async (type: 'pdf' | 'excel') => {
         setDownloadingReport(true);
         try {
             const dateStr = format(selectedDate, 'yyyy-MM-dd');
-            const url = `/api/hik/attendance/report?date=${dateStr}`;
+            const url = type === 'pdf' 
+                ? `/api/reports/attendance-pdf?from=${dateStr}&to=${dateStr}`
+                : `/api/reports/attendance?from=${dateStr}&to=${dateStr}`;
             
             const res = await fetch(url);
             if (!res.ok) throw new Error("Failed to generate report");
@@ -116,7 +119,8 @@ function TodayAttendanceContent() {
             
             // Try to parse filename from content-disposition header if available
             const disposition = res.headers.get('content-disposition');
-            let filename = `attendance-report-${dateStr}.xlsx`;
+            const ext = type === 'pdf' ? 'pdf' : 'xlsx';
+            let filename = `attendance-report-${dateStr}.${ext}`;
             if (disposition && disposition.indexOf('filename=') !== -1) {
                 const matches = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/.exec(disposition);
                 if (matches != null && matches[1]) { 
@@ -299,18 +303,39 @@ function TodayAttendanceContent() {
                         </Popover>
 
                         {/* Generate Report Button */}
-                        <Button
-                            onClick={downloadReport}
-                            disabled={downloadingReport}
-                            className="w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white font-semibold h-[42px] px-4 rounded-lg shadow-sm"
-                        >
-                            {downloadingReport ? (
-                                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                            ) : (
-                                <Download className="w-4 h-4 mr-2" />
-                            )}
-                            Generate Report
-                        </Button>
+                        <Popover>
+                            <PopoverTrigger asChild>
+                                <Button
+                                    disabled={downloadingReport}
+                                    className="w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white font-semibold h-[42px] px-4 rounded-lg shadow-sm"
+                                >
+                                    {downloadingReport ? (
+                                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                    ) : (
+                                        <Download className="w-4 h-4 mr-2" />
+                                    )}
+                                    Generate Report
+                                </Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-48 p-2" align="end">
+                                <div className="flex flex-col gap-1">
+                                    <button
+                                        onClick={() => downloadReport('pdf')}
+                                        className="w-full text-left px-3 py-2 text-sm hover:bg-slate-100 rounded-md transition-colors flex items-center gap-2 text-slate-700 font-medium"
+                                    >
+                                        <FileText className="w-4 h-4 text-red-500" />
+                                        Download PDF
+                                    </button>
+                                    <button
+                                        onClick={() => downloadReport('excel')}
+                                        className="w-full text-left px-3 py-2 text-sm hover:bg-slate-100 rounded-md transition-colors flex items-center gap-2 text-slate-700 font-medium"
+                                    >
+                                        <Download className="w-4 h-4 text-green-600" />
+                                        Download Excel
+                                    </button>
+                                </div>
+                            </PopoverContent>
+                        </Popover>
 
                         {/* Count Badge */}
                         <div className="flex items-center gap-1.5 bg-slate-50 px-3 h-[42px] rounded-lg border border-slate-100 shrink-0 hidden sm:flex">

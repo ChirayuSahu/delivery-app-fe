@@ -2,10 +2,11 @@
 
 import React, { useState, useEffect } from "react"
 import { format } from "date-fns"
-import { IndianRupee, Loader2, FileText } from "lucide-react"
+import { IndianRupee, Loader2, FileText, Download } from "lucide-react"
 import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { DateRange } from "react-day-picker"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 
 interface TodayExpensesCardProps {
   dateRange?: DateRange
@@ -46,18 +47,20 @@ export function TodayExpensesCard({ dateRange }: TodayExpensesCardProps) {
     fetchTodayExpenses()
   }, [dateRange])
 
-  const downloadPdfReport = async () => {
+  const downloadReport = async (type: 'pdf' | 'excel') => {
     setDownloading(true)
     const fromDate = dateRange?.from ? format(dateRange.from, 'yyyy-MM-dd') : format(new Date(), 'yyyy-MM-dd')
     const toDate = dateRange?.to ? format(dateRange.to, 'yyyy-MM-dd') : format(dateRange?.from || new Date(), 'yyyy-MM-dd')
     
-    const url = `/api/reports/expenses-pdf?from=${fromDate}&to=${toDate}`
+    const url = type === 'pdf' 
+      ? `/api/reports/expenses-pdf?from=${fromDate}&to=${toDate}`
+      : `/api/reports/expenses?from=${fromDate}&to=${toDate}`
 
     try {
       const res = await fetch(url)
       if (!res.ok) {
-        const error = await res.json()
-        throw new Error(error.message || "Failed to download PDF report")
+        const error = await res.json().catch(() => ({}))
+        throw new Error(error.message || "Failed to download report")
       }
 
       const blob = await res.blob()
@@ -65,15 +68,16 @@ export function TodayExpensesCard({ dateRange }: TodayExpensesCardProps) {
       const a = document.createElement('a')
       a.href = downloadUrl
       const displayDate = fromDate === toDate ? fromDate : `${fromDate}-to-${toDate}`
-      a.download = `expense-report-${displayDate}.pdf`
+      const ext = type === 'pdf' ? 'pdf' : 'xlsx'
+      a.download = `expense-report-${displayDate}.${ext}`
       document.body.appendChild(a)
       a.click()
       a.remove()
       window.URL.revokeObjectURL(downloadUrl)
       
-      toast.success('PDF Report downloaded successfully')
+      toast.success('Report downloaded successfully')
     } catch (error: any) {
-      toast.error(error.message || 'Failed to download PDF report')
+      toast.error(error.message || 'Failed to download report')
     } finally {
       setDownloading(false)
     }
@@ -98,21 +102,41 @@ export function TodayExpensesCard({ dateRange }: TodayExpensesCardProps) {
         </div>
       </div>
       <div className="flex items-center gap-4 w-full md:w-auto mt-4 md:mt-0">
-        <Button
-          onClick={downloadPdfReport}
-          disabled={downloading || loading}
-          variant="outline"
-          className="w-full md:w-auto h-12 flex-1 border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700 bg-white"
-        >
-          {downloading ? (
-            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-          ) : (
-            <FileText className="w-4 h-4 mr-2" />
-          )}
-          Download Report
-        </Button>
-        <div className="h-12 w-12 bg-red-50 rounded-xl flex items-center justify-center text-red-600 border border-red-100 shrink-0 hidden md:flex">
-          <IndianRupee className="h-6 w-6" />
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              disabled={downloading || loading}
+              className="w-full md:w-auto bg-green-600 hover:bg-green-700 text-white font-semibold h-[42px] px-4 rounded-lg shadow-sm"
+            >
+              {downloading ? (
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+              ) : (
+                <Download className="w-4 h-4 mr-2" />
+              )}
+              Download Report
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-48 p-2" align="end">
+            <div className="flex flex-col gap-1">
+              <button
+                  onClick={() => downloadReport('pdf')}
+                  className="w-full text-left px-3 py-2 text-sm hover:bg-slate-100 rounded-md transition-colors flex items-center gap-2 text-slate-700 font-medium"
+              >
+                  <FileText className="w-4 h-4 text-red-500" />
+                  Download PDF
+              </button>
+              <button
+                  onClick={() => downloadReport('excel')}
+                  className="w-full text-left px-3 py-2 text-sm hover:bg-slate-100 rounded-md transition-colors flex items-center gap-2 text-slate-700 font-medium"
+              >
+                  <Download className="w-4 h-4 text-green-600" />
+                  Download Excel
+              </button>
+            </div>
+          </PopoverContent>
+        </Popover>
+        <div className="h-[42px] w-[42px] bg-green-50 rounded-lg flex items-center justify-center text-green-600 border border-green-100 shrink-0 hidden md:flex shadow-sm">
+          <IndianRupee className="h-5 w-5" />
         </div>
       </div>
     </div>

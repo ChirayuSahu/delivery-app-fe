@@ -29,8 +29,8 @@ import { toast } from 'sonner';
 export default function ExpensesReportPage() {
   const router = useRouter();
 
-  const [from, setFrom] = useState<Date>();
-  const [to, setTo] = useState<Date>();
+  const [from, setFrom] = useState<Date | undefined>(new Date());
+  const [to, setTo] = useState<Date | undefined>(new Date());
 
   const [loading, setLoading] = useState(false);
 
@@ -239,54 +239,40 @@ export default function ExpensesReportPage() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <button
-                onClick={downloadReport}
-                disabled={loading}
-                className={`
-                  w-full py-4 rounded-xl flex items-center justify-center gap-2 font-bold transition-all relative overflow-hidden
-                  ${loading
-                    ? 'bg-slate-100 text-slate-400 cursor-not-allowed border border-slate-200'
-                    : 'bg-slate-900 text-white hover:bg-slate-800 shadow-lg shadow-slate-200'
-                  }
-                `}
-              >
-                {loading ? (
-                  <>
-                    <Loader2 className="w-5 h-5 animate-spin" />
-                    <span>Processing...</span>
-                  </>
-                ) : (
-                  <>
-                    <Download className="w-5 h-5" />
-                    <span>Download Excel</span>
-                  </>
-                )}
-              </button>
-
-              <button
-                onClick={downloadPdfReport}
-                disabled={loading}
-                className={`
-                  w-full py-4 rounded-xl flex items-center justify-center gap-2 font-bold transition-all relative overflow-hidden
-                  ${loading
-                    ? 'bg-red-50 text-red-200 cursor-not-allowed border border-red-100'
-                    : 'bg-red-600 text-white hover:bg-red-700 shadow-lg shadow-red-200'
-                  }
-                `}
-              >
-                {loading ? (
-                  <>
-                    <Loader2 className="w-5 h-5 animate-spin" />
-                    <span>Processing...</span>
-                  </>
-                ) : (
-                  <>
-                    <FileText className="w-5 h-5" />
-                    <span>Download PDF</span>
-                  </>
-                )}
-              </button>
+            <div className="flex justify-end mt-4">
+              <Popover>
+                  <PopoverTrigger asChild>
+                      <Button
+                          disabled={loading}
+                          className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white font-semibold h-[50px] px-6 rounded-xl shadow-lg shadow-blue-200 transition-all"
+                      >
+                          {loading ? (
+                              <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                          ) : (
+                              <Download className="w-5 h-5 mr-2" />
+                          )}
+                          Generate Report
+                      </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-48 p-2" align="end">
+                      <div className="flex flex-col gap-1">
+                          <button
+                              onClick={downloadPdfReport}
+                              className="w-full text-left px-3 py-2 text-sm hover:bg-slate-100 rounded-md transition-colors flex items-center gap-2 text-slate-700 font-medium"
+                          >
+                              <FileText className="w-4 h-4 text-red-500" />
+                              Download PDF
+                          </button>
+                          <button
+                              onClick={downloadReport}
+                              className="w-full text-left px-3 py-2 text-sm hover:bg-slate-100 rounded-md transition-colors flex items-center gap-2 text-slate-700 font-medium"
+                          >
+                              <Download className="w-4 h-4 text-green-600" />
+                              Download Excel
+                          </button>
+                      </div>
+                  </PopoverContent>
+              </Popover>
             </div>
           </div>
         </div>

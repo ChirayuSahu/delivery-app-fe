@@ -41,7 +41,7 @@ export async function GET(request: NextRequest) {
         if (contentDisposition) headers.set('Content-Disposition', contentDisposition);
         else {
             const displayDate = date || 'today';
-            headers.set('Content-Disposition', `attachment; filename="attendance-report-${displayDate}.xlsx"`);
+            headers.set('Content-Disposition', `attachment; filename="attendance-report-${displayDate}.pdf"`);
         }
         
         return new NextResponse(backendRes.body, {

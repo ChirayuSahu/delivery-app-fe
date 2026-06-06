@@ -30,8 +30,8 @@ import { toast } from 'sonner';
 export default function ReportsPage() {
   const router = useRouter();
 
-  const [from, setFrom] = useState<Date>();
-  const [to, setTo] = useState<Date>();
+  const [from, setFrom] = useState<Date | undefined>(new Date());
+  const [to, setTo] = useState<Date | undefined>(new Date());
 
   const [loading, setLoading] = useState(false);
 
