@@ -3,14 +3,14 @@
 import React, { useState, useEffect } from "react"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
-import { 
-  LayoutDashboard, 
-  Truck, 
-  ArrowRightLeft, 
-  KeyRound, 
-  Menu, 
-  X, 
-  ChevronLeft, 
+import {
+  IndianRupee,
+  Truck,
+  ArrowRightLeft,
+  KeyRound,
+  Menu,
+  X,
+  ChevronLeft,
   ChevronRight,
   User,
   Activity,
@@ -33,11 +33,11 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
   const pathname = usePathname()
   const router = useRouter()
 
-  
+
   // Navigation Collapse State
   const [collapsed, setCollapsed] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
-  
+
   // User profile information loaded from current pathname / context
   const [userRole, setUserRole] = useState<"ADMIN" | "SUPERVISOR" | "DELIVERY_MAN">("ADMIN")
   const [userName, setUserName] = useState("User Profile")
@@ -102,6 +102,11 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
             href: "/dashboard/admin/attendance",
             icon: ScanFace,
           },
+          {
+            name: "Banking",
+            href: "/dashboard/admin/banking",
+            icon: IndianRupee,
+          },
         ]
       case "SUPERVISOR":
         return [
@@ -147,7 +152,7 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
 
   const AddUserButton = ({ isMobile = false }: { isMobile?: boolean }) => {
     const triggerContent = (
-      <button 
+      <button
         className="w-full flex items-center gap-3 px-3 py-3 rounded-lg font-bold text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-all duration-200 group relative cursor-pointer"
       >
         <UserPlus className="w-5 h-5 flex-shrink-0 text-slate-400 group-hover:text-slate-600" />
@@ -182,10 +187,9 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
       {/* ========================================================================= */}
       {/* DESKTOP SIDEBAR */}
       {/* ========================================================================= */}
-      <aside 
-        className={`hidden lg:flex flex-col sticky top-0 h-screen transition-all duration-300 bg-white border-r border-slate-100 shadow-sm z-50 ${
-          collapsed ? "w-20" : "w-64"
-        }`}
+      <aside
+        className={`hidden lg:flex flex-col sticky top-0 h-screen transition-all duration-300 bg-white border-r border-slate-100 shadow-sm z-50 ${collapsed ? "w-20" : "w-64"
+          }`}
       >
         {/* Header/Brand */}
         <div className="h-20 flex items-center justify-between px-6 border-b border-slate-50">
@@ -199,8 +203,8 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
               </span>
             )}
           </div>
-          
-          <button 
+
+          <button
             onClick={() => setCollapsed(!collapsed)}
             className="w-7 h-7 flex items-center justify-center rounded-md border border-slate-100 hover:bg-slate-50 text-slate-400 hover:text-slate-600 transition-colors"
           >
@@ -213,24 +217,22 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
           {navItems.map((item) => {
             const isActive = pathname === item.href || pathname.startsWith(item.href + "/")
             const Icon = item.icon
-            
+
             return (
-              <Link 
+              <Link
                 key={item.href}
                 href={item.href}
-                className={`flex items-center gap-3 px-3 py-3 rounded-lg font-bold text-sm transition-all duration-200 group relative ${
-                  isActive 
-                    ? "bg-green-50 text-green-700" 
-                    : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
-                }`}
+                className={`flex items-center gap-3 px-3 py-3 rounded-lg font-bold text-sm transition-all duration-200 group relative ${isActive
+                  ? "bg-green-50 text-green-700"
+                  : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
+                  }`}
               >
-                <Icon className={`w-5 h-5 flex-shrink-0 transition-colors ${
-                  isActive ? "text-green-600" : "text-slate-400 group-hover:text-slate-600"
-                }`} />
+                <Icon className={`w-5 h-5 flex-shrink-0 transition-colors ${isActive ? "text-green-600" : "text-slate-400 group-hover:text-slate-600"
+                  }`} />
                 {!collapsed && (
                   <span className="animate-in fade-in duration-200">{item.name}</span>
                 )}
-                
+
                 {/* Tooltip on Collapsed */}
                 {collapsed && (
                   <div className="absolute left-full ml-3 px-2 py-1 bg-slate-900 text-white text-xs font-medium rounded opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 whitespace-nowrap z-50 shadow-md">
@@ -240,7 +242,7 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
               </Link>
             )
           })}
-          
+
           {(userRole === "ADMIN" || userRole === "SUPERVISOR") && (
             <>
               <div className="border-t border-slate-100 my-2" />
@@ -279,12 +281,12 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
               </div>
             )}
           </div>
-          
+
           {/* Action Row */}
           <div className={`mt-4 flex gap-2 border-t border-slate-100/80 pt-3 ${collapsed ? "flex-col items-center" : "justify-between"}`}>
             {userRole === "ADMIN" && (
               <PinSettingsDialog>
-                <button 
+                <button
                   title="PIN Settings"
                   className="p-2 rounded-lg hover:bg-slate-100 text-slate-500 hover:text-slate-800 transition-colors border border-slate-200/40 bg-white flex items-center justify-center gap-1 cursor-pointer"
                 >
@@ -293,7 +295,7 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
                 </button>
               </PinSettingsDialog>
             )}
-            
+
             <LogoutButton />
           </div>
         </div>
@@ -324,7 +326,7 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
           </div>
 
           <div className="flex items-center gap-2">
-            <button 
+            <button
               onClick={() => setMobileOpen(true)}
               className="w-9 h-9 flex items-center justify-center rounded-lg border border-slate-100 hover:bg-slate-50 text-slate-600 transition-colors"
             >
@@ -337,17 +339,17 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
         {mobileOpen && (
           <div className="fixed inset-0 z-[9999] lg:hidden flex">
             {/* Backdrop */}
-            <div 
+            <div
               className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity duration-300"
               onClick={() => setMobileOpen(false)}
             />
-            
+
             {/* Drawer Body */}
             <div className="relative flex flex-col w-4/5 max-w-sm bg-white h-full shadow-2xl animate-in slide-in-from-left duration-300">
               {/* Close Button Row */}
               <div className="h-16 flex items-center justify-between px-6 border-b border-slate-100">
                 <span className="font-extrabold text-lg text-slate-800 tracking-tight">Navigation</span>
-                <button 
+                <button
                   onClick={() => setMobileOpen(false)}
                   className="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-100 hover:bg-slate-50 text-slate-500"
                 >
@@ -360,17 +362,16 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
                 {navItems.map((item) => {
                   const isActive = pathname === item.href || pathname.startsWith(item.href + "/")
                   const Icon = item.icon
-                  
+
                   return (
-                    <Link 
+                    <Link
                       key={item.href}
                       href={item.href}
                       onClick={() => setMobileOpen(false)}
-                      className={`flex items-center gap-3 px-3 py-3 rounded-lg font-bold text-sm transition-all duration-200 ${
-                        isActive 
-                          ? "bg-green-50 text-green-700" 
-                          : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
-                      }`}
+                      className={`flex items-center gap-3 px-3 py-3 rounded-lg font-bold text-sm transition-all duration-200 ${isActive
+                        ? "bg-green-50 text-green-700"
+                        : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
+                        }`}
                     >
                       <Icon className={`w-5 h-5 ${isActive ? "text-green-600" : "text-slate-400"}`} />
                       <span>{item.name}</span>
@@ -416,10 +417,10 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
                     )}
                   </div>
                 </div>
-                
+
                 <div className="mt-4 flex gap-2 border-t border-slate-100 pt-3 justify-between">
                   <PinSettingsDialog>
-                    <button 
+                    <button
                       onClick={() => setMobileOpen(false)}
                       className="p-2 rounded-lg hover:bg-slate-100 text-slate-500 hover:text-slate-800 transition-colors border border-slate-200 bg-white flex items-center justify-center gap-1 cursor-pointer"
                     >
@@ -427,7 +428,7 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
                       <span className="text-xs font-bold">PIN Settings</span>
                     </button>
                   </PinSettingsDialog>
-                  
+
                   <LogoutButton />
                 </div>
               </div>
