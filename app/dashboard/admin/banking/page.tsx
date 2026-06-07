@@ -42,7 +42,7 @@ const BakingPage = () => {
               </div>
               <div>
                 <h1 className="text-xl font-black text-slate-900 tracking-tight">
-                  Banking Links
+                  Banking Services
                 </h1>
                 <p className="text-sm font-medium text-slate-500 mt-1">
                   View and manage your banking links here.

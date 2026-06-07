@@ -103,7 +103,7 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
             icon: ScanFace,
           },
           {
-            name: "Banking",
+            name: "Banking Services",
             href: "/dashboard/admin/banking",
             icon: IndianRupee,
           },
