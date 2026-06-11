@@ -6,7 +6,7 @@ import {
     CircleX, Loader2, Truck, Phone,
     CheckCircle2, Clock, Printer,
     Search, ClipboardCheck, ShoppingCart, Home,
-    Package
+    Package, MessageSquareQuote, FileImage
 } from "lucide-react"
 import Image from "next/image"
 import { motion, Variants } from "framer-motion"
@@ -247,23 +247,61 @@ const InvoicePage = () => {
                     </motion.div>
                 </div>
 
-                {/* Remark */}
+                {/* Remark & POD */}
                 {(data.deliveryRemark || data.podUrl) && (
-                    <motion.div variants={itemVariants} className="bg-white border border-slate-100 rounded-xl overflow-hidden shadow-sm">
-                        <div className="bg-slate-50/50 px-5 py-3 border-b border-slate-100">
-                            <span className="text-xs font-semibold text-slate-900 flex items-center gap-1.5">
-                                <Package className="w-3.5 h-3.5 text-slate-500" />
-                                Delivery Remark
-                            </span>
-                        </div>
+                    <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {data.deliveryRemark && (
-                            <div className="p-5 text-xs text-slate-600 leading-relaxed">
-                                {data.deliveryRemark}
+                            <div className={cn(
+                                "bg-white border border-slate-200 rounded-2xl p-5 md:p-6 shadow-sm flex flex-col relative overflow-hidden",
+                                !data.podUrl && "md:col-span-2"
+                            )}>
+                                <div className="absolute top-0 right-0 p-6 opacity-5 pointer-events-none">
+                                    <MessageSquareQuote className="w-32 h-32 text-indigo-900" />
+                                </div>
+                                <div className="flex items-center gap-3 mb-5 relative z-10">
+                                    <div className="p-2.5 bg-indigo-50 border border-indigo-100 rounded-xl text-indigo-600 shadow-xs">
+                                        <MessageSquareQuote className="w-5 h-5" />
+                                    </div>
+                                    <div>
+                                        <h3 className="text-sm font-bold uppercase tracking-wide text-slate-900">Delivery Remark</h3>
+                                        <p className="text-[11px] font-medium text-slate-500">Note from executive</p>
+                                    </div>
+                                </div>
+                                <div className="flex-1 bg-linear-to-br from-slate-50 to-slate-100/50 border border-slate-100 rounded-xl p-5 relative z-10">
+                                    <p className="text-sm text-slate-700 leading-relaxed whitespace-pre-wrap font-medium">
+                                        "{data.deliveryRemark}"
+                                    </p>
+                                </div>
                             </div>
                         )}
                         {data.podUrl && (
-                            <div className="px-5 pb-5">
-                                <Image alt='POD' draggable={false} src={data.podUrl} className='max-w-xs w-full h-auto rounded-lg border border-slate-100 shadow-sm' width={300} height={300} unoptimized />
+                            <div className={cn(
+                                "bg-white border border-slate-200 rounded-2xl p-5 md:p-6 shadow-sm flex flex-col",
+                                !data.deliveryRemark && "md:col-span-2"
+                            )}>
+                                <div className="flex items-center gap-3 mb-5">
+                                    <div className="p-2.5 bg-emerald-50 border border-emerald-100 rounded-xl text-emerald-600 shadow-xs">
+                                        <FileImage className="w-5 h-5" />
+                                    </div>
+                                    <div>
+                                        <h3 className="text-sm font-bold uppercase tracking-wide text-slate-900">Proof of Delivery</h3>
+                                        <p className="text-[11px] font-medium text-slate-500">Captured at location</p>
+                                    </div>
+                                </div>
+                                <div className="flex-1 rounded-xl border border-slate-200 bg-slate-50 p-2 flex flex-col">
+                                    <div className="relative w-full h-full min-h-[250px] md:min-h-[300px] rounded-lg overflow-hidden border border-slate-200/60 shadow-xs bg-white/50 flex items-center justify-center group">
+                                        <div className="absolute inset-0 bg-slate-900/0 group-hover:bg-slate-900/5 transition-colors z-10 rounded-lg pointer-events-none" />
+                                        <Image 
+                                            alt='Proof of Delivery' 
+                                            draggable={false} 
+                                            src={data.podUrl} 
+                                            className='max-h-[350px] w-auto object-contain drop-shadow-sm' 
+                                            width={1200} 
+                                            height={1200} 
+                                            unoptimized 
+                                        />
+                                    </div>
+                                </div>
                             </div>
                         )}
                     </motion.div>

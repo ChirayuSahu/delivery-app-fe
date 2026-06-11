@@ -6,7 +6,7 @@ import {
     CircleX, Loader2, Truck, Phone,
     CheckCircle2, Clock, Printer,
     Search, ClipboardCheck, ShoppingCart, Home,
-    Package
+    Package, MessageSquareQuote, FileImage
 } from "lucide-react"
 import Image from "next/image"
 import { motion, Variants } from "framer-motion"
@@ -251,19 +251,40 @@ const InvoicePage = () => {
                 {data.deliveryRemark && (
                     <motion.div variants={itemVariants} className="bg-white border border-slate-100 rounded-xl overflow-hidden shadow-sm">
                         <div className="bg-slate-50/50 px-5 py-3 border-b border-slate-100">
-                            <span className="text-xs font-semibold text-slate-900 flex items-center gap-1.5">
+                            <span className="text-xs font-semibold text-slate-900 flex items-center gap-1.5 uppercase tracking-wider">
                                 <Package className="w-3.5 h-3.5 text-slate-500" />
                                 Delivery Remark
                             </span>
                         </div>
-                        <div className="p-5 text-xs text-slate-600 leading-relaxed">
-                            {data.deliveryRemark}
-                        </div>
-                        {data.podUrl && (
-                            <div className="px-5 pb-5">
-                                <Image alt='POD' draggable={false} src={data.podUrl} className='max-w-xs w-full h-auto rounded-lg border border-slate-100 shadow-sm' width={300} height={300} unoptimized />
+                        <div className="p-5 space-y-4">
+                            <div className="rounded-2xl border border-amber-100 bg-linear-to-br from-amber-50 via-white to-slate-50 p-4 shadow-sm">
+                                <div className="flex items-center justify-between gap-3 mb-3">
+                                    <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-100/80 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-amber-800">
+                                        <MessageSquareQuote className="w-3.5 h-3.5" />
+                                        Remark
+                                    </span>
+                                </div>
+                                <p className="text-sm text-slate-700 leading-7 whitespace-pre-wrap">
+                                    {data.deliveryRemark}
+                                </p>
                             </div>
-                        )}
+                            {data.podUrl && (
+                                <div className="rounded-2xl border border-slate-200 bg-slate-50/70 p-4">
+                                    <div className="flex items-center justify-between gap-3 mb-3">
+                                        <span className="inline-flex items-center gap-1.5 rounded-full bg-slate-900 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-white">
+                                            <FileImage className="w-3.5 h-3.5" />
+                                            Proof of delivery
+                                        </span>
+                                        <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-400">
+                                            POD
+                                        </span>
+                                    </div>
+                                    <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+                                        <Image alt='POD' draggable={false} src={data.podUrl} className='h-auto w-full max-w-md object-contain' width={900} height={900} unoptimized />
+                                    </div>
+                                </div>
+                            )}
+                        </div>
                     </motion.div>
                 )}
 
