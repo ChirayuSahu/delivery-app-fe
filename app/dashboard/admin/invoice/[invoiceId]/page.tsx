@@ -83,7 +83,7 @@ const InvoicePage = () => {
                 setLoading(false);
             }
         };
-        
+
         if (invoiceId) fetchInvoice();
     }, [invoiceId]);
 
@@ -248,7 +248,7 @@ const InvoicePage = () => {
                 </div>
 
                 {/* Remark */}
-                {data.deliveryRemark && (
+                {(data.deliveryRemark || data.podUrl) && (
                     <motion.div variants={itemVariants} className="bg-white border border-slate-100 rounded-xl overflow-hidden shadow-sm">
                         <div className="bg-slate-50/50 px-5 py-3 border-b border-slate-100">
                             <span className="text-xs font-semibold text-slate-900 flex items-center gap-1.5">
@@ -256,9 +256,11 @@ const InvoicePage = () => {
                                 Delivery Remark
                             </span>
                         </div>
-                        <div className="p-5 text-xs text-slate-600 leading-relaxed">
-                            {data.deliveryRemark}
-                        </div>
+                        {data.deliveryRemark && (
+                            <div className="p-5 text-xs text-slate-600 leading-relaxed">
+                                {data.deliveryRemark}
+                            </div>
+                        )}
                         {data.podUrl && (
                             <div className="px-5 pb-5">
                                 <Image alt='POD' draggable={false} src={data.podUrl} className='max-w-xs w-full h-auto rounded-lg border border-slate-100 shadow-sm' width={300} height={300} unoptimized />
@@ -277,7 +279,7 @@ const InvoicePage = () => {
                             </span>
                             <p className="text-xl font-extrabold text-slate-900 leading-none">₹{data.expenseAmount || 0}</p>
                         </div>
-                        <InvoiceExpenseDialog 
+                        <InvoiceExpenseDialog
                             deliveryId={data.deliveryId}
                             invType={String(invoiceId).slice(0, 2)}
                             invNo={String(invoiceId).slice(2)}
