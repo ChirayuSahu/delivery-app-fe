@@ -30,14 +30,12 @@ export function AddExpenseDialog({ className }: { className?: string }) {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    if (!file) {
-      toast.error("Please select a file for proof.")
-      return
-    }
 
     setLoading(true)
     const formData = new FormData(e.currentTarget)
-    formData.set('expense', file)
+    if (file) {
+      formData.set('expense', file)
+    }
 
     try {
       const res = await fetch("/api/expenses", {
@@ -73,7 +71,7 @@ export function AddExpenseDialog({ className }: { className?: string }) {
           <DialogHeader>
             <DialogTitle>Add Expense</DialogTitle>
             <DialogDescription>
-              Create a new expense entry. Please attach a proof image or document.
+              Create a new expense entry. Please attach a proof image or document (Optional).
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
@@ -114,7 +112,7 @@ export function AddExpenseDialog({ className }: { className?: string }) {
               </div>
             </div>
             <div className="grid gap-2">
-              <Label>Proof Document/Image</Label>
+              <Label>Proof Document/Image (Optional)</Label>
               <CameraCapture onCapture={setFile} for="Expense Proof" />
             </div>
           </div>
@@ -122,7 +120,7 @@ export function AddExpenseDialog({ className }: { className?: string }) {
             <Button type="button" variant="outline" onClick={() => setOpen(false)} disabled={loading}>
               Cancel
             </Button>
-            <Button type="submit" disabled={loading || !file} className="bg-slate-900 hover:bg-slate-800">
+            <Button type="submit" disabled={loading} className="bg-slate-900 hover:bg-slate-800">
               {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Submit Expense
             </Button>
