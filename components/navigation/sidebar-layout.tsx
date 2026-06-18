@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useState, useEffect } from "react"
+import { useAuth } from "@/components/providers/auth-provider"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 import {
@@ -38,44 +39,10 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
   const [collapsed, setCollapsed] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
 
-  // User profile information loaded from current pathname / context
-  const [userRole, setUserRole] = useState<"ADMIN" | "SUPERVISOR" | "DELIVERY_MAN">("ADMIN")
-  const [userName, setUserName] = useState("User Profile")
-  const [wallet, setWallet] = useState<number | null>(null)
-  const [profileLoading, setProfileLoading] = useState(true)
-
-  useEffect(() => {
-    if (pathname.includes("/dashboard/admin")) {
-      setUserRole("ADMIN")
-    } else if (pathname.includes("/dashboard/supervisor")) {
-      setUserRole("SUPERVISOR")
-    } else if (pathname.includes("/dashboard/deliveryman")) {
-      setUserRole("DELIVERY_MAN")
-    }
-  }, [pathname])
-
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const res = await fetch("/api/users/me")
-        if (res.ok) {
-          const json = await res.json()
-          if (json.success && json.data) {
-            setUserName(json.data.name)
-            setWallet(json.data.wallet)
-            if (json.data.role) {
-              setUserRole(json.data.role)
-            }
-          }
-        }
-      } catch (err) {
-        console.error("Failed to load user profile in sidebar:", err)
-      } finally {
-        setProfileLoading(false)
-      }
-    }
-    fetchProfile()
-  }, [pathname])
+  const { user, userRole: fetchedRole, profileLoading } = useAuth()
+  const userRole = fetchedRole || "ADMIN"
+  const userName = user?.name || "User Profile"
+  const wallet = user?.wallet ?? null
 
   // Get active menu list
   const getNavItems = () => {

@@ -28,7 +28,7 @@ export async function proxy(request: NextRequest) {
   const refreshToken = request.cookies.get('refreshToken')?.value
 
 
-  if (pathname === '/login') {
+  if (pathname === '/login' || pathname === '/') {
     if (!token) return NextResponse.next()
 
     // verify token only once
@@ -84,8 +84,12 @@ export async function proxy(request: NextRequest) {
     }
   }
 
+  const requestHeaders = new Headers(request.headers)
+  if (newToken) {
+    requestHeaders.set('cookie', `token=${newToken}; refreshToken=${refreshToken || ''}`)
+  }
 
-  let response: NextResponse = NextResponse.next()
+  let response: NextResponse
   
   if (pathname === '/dashboard') {
     response = NextResponse.redirect(
@@ -109,6 +113,12 @@ export async function proxy(request: NextRequest) {
     response = NextResponse.redirect(
       new URL(roleDashboard(payload.role), request.url)
     )
+  } else {
+    response = NextResponse.next({
+      request: {
+        headers: requestHeaders,
+      },
+    })
   }
 
   if (newToken) {
@@ -125,5 +135,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/dashboard/:path*', '/login'],
+  matcher: ['/dashboard/:path*', '/login', '/'],
 }
