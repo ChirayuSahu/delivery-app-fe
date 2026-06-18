@@ -3,14 +3,14 @@
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { toast } from 'sonner';
-import InvoiceCard from '@/components/admin/invoice-card';
-import FailedInvoiceCard from '@/components/admin/failed-invoice-card';
+import InvoiceCard from '@/components/dashboard/invoice-card';
+import FailedInvoiceCard from '@/components/dashboard/failed-invoice-card';
 import Link from 'next/link';
 import { AlertCircle, ArrowLeft, CircleX, Loader2, Package, Timer, CheckCircle2, Home } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import DeliveryMap from '@/components/admin/delivery-map';
-import DeliveryStats from '@/components/admin/delivery-stats';
+import DeliveryMap from '@/components/dashboard/delivery-map';
+import DeliveryStats from '@/components/dashboard/delivery-stats';
 
 
 export type Invoice = {

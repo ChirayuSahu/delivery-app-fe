@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, Home } from 'lucide-react';
-import AllDeliveriesCard from '@/components/supervisor/all-deliveries';
+import AllDeliveriesCard from '@/components/dashboard/all-deliveries';
 
 import { BackButton } from '@/components/navigation/back-button';
 import { HomeButton } from '@/components/navigation/home-button';

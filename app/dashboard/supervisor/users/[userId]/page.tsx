@@ -1,8 +1,8 @@
 'use client'
 
 import React from 'react';
-import UserInfoCard from '@/components/supervisor/user-card';
-import UserDeliveriesCard from '@/components/supervisor/deliveries';
+import UserInfoCard from '@/components/dashboard/user-card';
+import UserDeliveriesCard from '@/components/dashboard/deliveries';
 import { useParams } from 'next/navigation';
 
 export default function CombinedDeliveryDashboard() {

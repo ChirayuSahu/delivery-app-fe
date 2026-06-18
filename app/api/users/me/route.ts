@@ -36,6 +36,7 @@ export async function GET(request: NextRequest) {
             esId: rawUser.esId,
             role: rawUser.role,
             wallet: rawUser.wallet,
+            permissions: rawUser.permissions || [],
             createdAt: rawUser.createdAt,
             updatedAt: rawUser.updatedAt
         };
