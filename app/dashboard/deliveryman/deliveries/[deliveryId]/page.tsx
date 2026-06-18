@@ -118,7 +118,7 @@ export default function ParticularDeliveryPage() {
     return (
         <div className="min-h-screen bg-[#f8fafc]">
             {/* 1. TOP HEADER BAR */}
-            <header className="sticky top-0 z-10 border-b bg-white/80 backdrop-blur-md px-6 py-4">
+            <header className="hidden lg:block sticky top-0 z-10 border-b bg-white/80 backdrop-blur-md px-6 py-4">
                 <div className="max-w-7xl mx-auto flex items-center justify-between">
                     <div className="flex items-center gap-4">
                         <Link href="/dashboard" className="p-2 hover:bg-slate-100 rounded-full transition-colors">
@@ -137,6 +137,12 @@ export default function ParticularDeliveryPage() {
             </header>
 
             <main className="max-w-7xl mx-auto p-6">
+                {/* Mobile Title Block */}
+                <div className="block lg:hidden mb-6 bg-white p-4 rounded-sm border border-slate-100 shadow-sm">
+                    <h1 className="text-xl font-bold text-slate-900">Delivery Details</h1>
+                    <p className="text-xs text-slate-500 font-mono uppercase mt-1">No: {delivery ? delivery.deliveryNo : 'Loading...'}</p>
+                </div>
+
                 <div className="flex flex-col lg:flex-row gap-8">
 
                     {/* 2. LEFT SIDEBAR: Actions (Fixed width on desktop) */}

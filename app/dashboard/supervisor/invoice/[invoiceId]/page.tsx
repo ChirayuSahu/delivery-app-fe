@@ -14,8 +14,8 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import Link from "next/link"
-import ReturnInvoice from "@/components/supervisor/return-invoice"
-import InvoiceExpenseDialog from "@/components/admin/invoice-expense-dialog"
+import ReturnInvoice from "@/components/dashboard/return-invoice"
+import InvoiceExpenseDialog from "@/components/dashboard/invoice-expense-dialog"
 
 type Track = {
     name: string
@@ -149,8 +149,8 @@ const InvoicePage = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="bg-white border border-slate-100 p-4 rounded-xl shadow-sm flex items-center gap-3">
-                        <div className="bg-slate-50 p-2 rounded-lg border border-slate-100">
+                    <div className="bg-white border border-slate-100 p-4 rounded-sm shadow-sm flex items-center gap-3 w-full md:w-auto">
+                        <div className="bg-slate-50 p-2 rounded-sm border border-slate-100">
                             <IndianRupee className="w-4 h-4 text-slate-500" />
                         </div>
                         <div>
@@ -162,7 +162,7 @@ const InvoicePage = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     {/* Customer Info */}
-                    <motion.div variants={itemVariants} className="relative md:col-span-2 bg-white border border-slate-100 rounded-xl p-5 shadow-sm">
+                    <motion.div variants={itemVariants} className="relative md:col-span-2 bg-white border border-slate-100 rounded-sm p-5 shadow-sm">
                         <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-3">Customer Information</span>
                         <div className="space-y-3">
                             <div>
@@ -181,14 +181,14 @@ const InvoicePage = () => {
                     </motion.div>
 
                     {/* Delivery Status Card */}
-                    <motion.div variants={itemVariants} className="bg-white border border-slate-100 rounded-xl p-5 shadow-sm flex flex-col justify-between">
+                    <motion.div variants={itemVariants} className="bg-white border border-slate-100 rounded-sm p-5 shadow-sm flex flex-col justify-between">
                         <div>
                             <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-3">Delivery Status</span>
 
                             {/* Main Status Link */}
                             <Link href={!!data.failedDeliveryId && data.status === 'FAILED' ? `/dashboard/supervisor/deliveries/${data.failedDeliveryId}` : `/dashboard/supervisor/deliveries/${data.deliveryId}`} className="block">
                                 <div className={cn(
-                                    "mb-4 p-3 rounded-lg border flex items-center gap-2",
+                                    "mb-4 p-3 rounded-sm border flex items-center gap-2",
                                     data.status === 'DELIVERED' ? "bg-green-50 border-green-200/40 text-green-700" :
                                         data.status === 'FAILED' ? "bg-red-50 border-red-200/40 text-red-700" : "bg-slate-50 border-slate-200/40 text-slate-700"
                                 )}>
@@ -209,7 +209,7 @@ const InvoicePage = () => {
                                 )}
                                 {data.status !== 'FAILED' && (
                                     <div className="flex items-center gap-3">
-                                        <div className="h-9 w-9 bg-slate-50 border border-slate-100 rounded-lg flex items-center justify-center shrink-0">
+                                        <div className="h-9 w-9 bg-slate-50 border border-slate-100 rounded-sm flex items-center justify-center shrink-0">
                                             <Truck className="w-4 h-4 text-slate-500" />
                                         </div>
                                         <div>
@@ -221,7 +221,7 @@ const InvoicePage = () => {
 
                                 {/* Time Info */}
                                 <div className="flex items-center gap-3">
-                                    <div className="h-9 w-9 bg-slate-50 border border-slate-100 rounded-lg flex items-center justify-center shrink-0">
+                                    <div className="h-9 w-9 bg-slate-50 border border-slate-100 rounded-sm flex items-center justify-center shrink-0">
                                         <Clock className="w-4 h-4 text-slate-500" />
                                     </div>
                                     <div>
@@ -239,7 +239,7 @@ const InvoicePage = () => {
                         </div>
 
                         {data.deliveryMan && data.status !== 'DELIVERED' && (
-                            <Button variant="outline" className="mt-4 w-full py-2 text-xs rounded-lg border-slate-200 text-slate-700 hover:bg-slate-50 font-semibold gap-1.5 h-9">
+                            <Button variant="outline" className="mt-4 w-full py-2 text-xs rounded-sm border-slate-200 text-slate-700 hover:bg-slate-50 font-semibold gap-1.5 h-9">
                                 <Phone className="w-3.5 h-3.5" />
                                 Contact Executive
                             </Button>
@@ -247,43 +247,46 @@ const InvoicePage = () => {
                     </motion.div>
                 </div>
 
-                {/* Remark */}
-                {data.deliveryRemark && (
-                    <motion.div variants={itemVariants} className="bg-white border border-slate-100 rounded-xl overflow-hidden shadow-sm">
-                        <div className="bg-slate-50/50 px-5 py-3 border-b border-slate-100">
-                            <span className="text-xs font-semibold text-slate-900 flex items-center gap-1.5 uppercase tracking-wider">
-                                <Package className="w-3.5 h-3.5 text-slate-500" />
-                                Delivery Remark
-                            </span>
-                        </div>
-                        <div className="p-5 space-y-4">
-                            <div className="rounded-2xl border border-amber-100 bg-linear-to-br from-amber-50 via-white to-slate-50 p-4 shadow-sm">
-                                <div className="flex items-center justify-between gap-3 mb-3">
-                                    <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-100/80 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-amber-800">
+                {/* Remark & POD */}
+                {(data.deliveryRemark || data.podUrl) && (
+                    <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {data.deliveryRemark && (
+                            <div className="bg-white border border-slate-100 rounded-sm p-5 md:p-6 shadow-sm flex flex-col">
+                                <div className="flex items-center gap-3 mb-4">
+                                    <span className="inline-flex items-center gap-1.5 rounded-sm bg-indigo-50 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-indigo-700 border border-indigo-100/50">
                                         <MessageSquareQuote className="w-3.5 h-3.5" />
-                                        Remark
+                                        Delivery Remark
                                     </span>
                                 </div>
                                 <p className="text-sm text-slate-700 leading-7 whitespace-pre-wrap">
                                     {data.deliveryRemark}
                                 </p>
                             </div>
-                            {data.podUrl && (
-                                <div className="rounded-2xl border border-slate-200 bg-slate-50/70 p-4">
-                                    <div className="flex items-center justify-between gap-3 mb-3">
-                                        <span className="inline-flex items-center gap-1.5 rounded-full bg-slate-900 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-white">
-                                            <FileImage className="w-3.5 h-3.5" />
-                                            Proof of delivery
-                                        </span>
-                                        <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-400">
-                                            POD
-                                        </span>
-                                    </div>
-                                    <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
-                                        <Image alt='POD' draggable={false} src={data.podUrl} className='h-auto w-full max-w-md object-contain' width={900} height={900} unoptimized />
-                                    </div>
+                        )}
+                        {data.podUrl && (
+                            <div className="bg-white border border-slate-100 rounded-sm p-5 md:p-6 shadow-sm flex flex-col">
+                                <div className="flex items-center justify-between gap-3 mb-5">
+                                    <span className="inline-flex items-center gap-1.5 rounded-sm bg-emerald-50 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-emerald-700 border border-emerald-100/50">
+                                        <FileImage className="w-3.5 h-3.5" />
+                                        Proof of delivery
+                                    </span>
+                                    <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-400">
+                                        POD
+                                    </span>
                                 </div>
-                            )}
+                                <div className="relative w-full flex items-center justify-center bg-slate-50/30 rounded-sm p-4 min-h-[250px] md:min-h-[300px]">
+                                    <Image 
+                                        alt='Proof of Delivery' 
+                                        draggable={false} 
+                                        src={data.podUrl} 
+                                        className='max-h-[350px] w-auto object-contain rounded-sm shadow-xs' 
+                                        width={1200} 
+                                        height={1200} 
+                                        unoptimized 
+                                    />
+                                </div>
+                            </div>
+                        )}
                         </div>
                     </motion.div>
                 )}

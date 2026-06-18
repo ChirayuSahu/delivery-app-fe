@@ -14,8 +14,8 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import Link from "next/link"
-import ReturnInvoice from "@/components/admin/return-invoice"
-import InvoiceExpenseDialog from "@/components/admin/invoice-expense-dialog"
+import ReturnInvoice from "@/components/dashboard/return-invoice"
+import InvoiceExpenseDialog from "@/components/dashboard/invoice-expense-dialog"
 
 type Track = {
     name: string
@@ -149,8 +149,8 @@ const InvoicePage = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="bg-white border border-slate-100 p-4 rounded-xl shadow-sm flex items-center gap-3">
-                        <div className="bg-slate-50 p-2 rounded-lg border border-slate-100">
+                    <div className="bg-white border border-slate-100 p-4 rounded-sm shadow-sm flex items-center gap-3 w-full md:w-auto">
+                        <div className="bg-slate-50 p-2 rounded-sm border border-slate-100">
                             <IndianRupee className="w-4 h-4 text-slate-500" />
                         </div>
                         <div>
@@ -162,7 +162,7 @@ const InvoicePage = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     {/* Customer Info */}
-                    <motion.div variants={itemVariants} className="relative md:col-span-2 bg-white border border-slate-100 rounded-xl p-5 shadow-sm">
+                    <motion.div variants={itemVariants} className="relative md:col-span-2 bg-white border border-slate-100 rounded-sm p-5 shadow-sm">
                         <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-3">Customer Information</span>
                         <div className="space-y-3">
                             <div>
@@ -181,14 +181,14 @@ const InvoicePage = () => {
                     </motion.div>
 
                     {/* Delivery Status Card */}
-                    <motion.div variants={itemVariants} className="bg-white border border-slate-100 rounded-xl p-5 shadow-sm flex flex-col justify-between">
+                    <motion.div variants={itemVariants} className="bg-white border border-slate-100 rounded-sm p-5 shadow-sm flex flex-col justify-between">
                         <div>
                             <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-3">Delivery Status</span>
 
                             {/* Main Status Link */}
                             <Link href={!!data.failedDeliveryId && data.status === 'FAILED' ? `/dashboard/admin/deliveries/${data.failedDeliveryId}` : `/dashboard/admin/deliveries/${data.deliveryId}`} className="block">
                                 <div className={cn(
-                                    "mb-4 p-3 rounded-lg border flex items-center gap-2",
+                                    "mb-4 p-3 rounded-sm border flex items-center gap-2",
                                     data.status === 'DELIVERED' ? "bg-green-50 border-green-200/40 text-green-700" :
                                         data.status === 'FAILED' ? "bg-red-50 border-red-200/40 text-red-700" : "bg-slate-50 border-slate-200/40 text-slate-700"
                                 )}>
@@ -209,7 +209,7 @@ const InvoicePage = () => {
                                 )}
                                 {data.status !== 'FAILED' && (
                                     <div className="flex items-center gap-3">
-                                        <div className="h-9 w-9 bg-slate-50 border border-slate-100 rounded-lg flex items-center justify-center shrink-0">
+                                        <div className="h-9 w-9 bg-slate-50 border border-slate-100 rounded-sm flex items-center justify-center shrink-0">
                                             <Truck className="w-4 h-4 text-slate-500" />
                                         </div>
                                         <div>
@@ -221,7 +221,7 @@ const InvoicePage = () => {
 
                                 {/* Time Info */}
                                 <div className="flex items-center gap-3">
-                                    <div className="h-9 w-9 bg-slate-50 border border-slate-100 rounded-lg flex items-center justify-center shrink-0">
+                                    <div className="h-9 w-9 bg-slate-50 border border-slate-100 rounded-sm flex items-center justify-center shrink-0">
                                         <Clock className="w-4 h-4 text-slate-500" />
                                     </div>
                                     <div>
@@ -239,7 +239,7 @@ const InvoicePage = () => {
                         </div>
 
                         {data.deliveryMan && data.status !== 'DELIVERED' && (
-                            <Button variant="outline" className="mt-4 w-full py-2 text-xs rounded-lg border-slate-200 text-slate-700 hover:bg-slate-50 font-semibold gap-1.5 h-9">
+                            <Button variant="outline" className="mt-4 w-full py-2 text-xs rounded-sm border-slate-200 text-slate-700 hover:bg-slate-50 font-semibold gap-1.5 h-9">
                                 <Phone className="w-3.5 h-3.5" />
                                 Contact Executive
                             </Button>
@@ -252,14 +252,14 @@ const InvoicePage = () => {
                     <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {data.deliveryRemark && (
                             <div className={cn(
-                                "bg-white border border-slate-200 rounded-2xl p-5 md:p-6 shadow-sm flex flex-col relative overflow-hidden",
+                                "bg-white border border-slate-200 rounded-sm p-5 md:p-6 shadow-sm flex flex-col relative overflow-hidden",
                                 !data.podUrl && "md:col-span-2"
                             )}>
                                 <div className="absolute top-0 right-0 p-6 opacity-5 pointer-events-none">
                                     <MessageSquareQuote className="w-32 h-32 text-indigo-900" />
                                 </div>
                                 <div className="flex items-center gap-3 mb-5 relative z-10">
-                                    <div className="p-2.5 bg-indigo-50 border border-indigo-100 rounded-xl text-indigo-600 shadow-xs">
+                                    <div className="p-2.5 bg-indigo-50 border border-indigo-100 rounded-sm text-indigo-600 shadow-xs">
                                         <MessageSquareQuote className="w-5 h-5" />
                                     </div>
                                     <div>
@@ -267,7 +267,7 @@ const InvoicePage = () => {
                                         <p className="text-[11px] font-medium text-slate-500">Note from executive</p>
                                     </div>
                                 </div>
-                                <div className="flex-1 bg-linear-to-br from-slate-50 to-slate-100/50 border border-slate-100 rounded-xl p-5 relative z-10">
+                                <div className="flex-1 bg-gradient-to-br from-slate-50 to-slate-100/50 border border-slate-100 rounded-sm p-5 relative z-10">
                                     <p className="text-sm text-slate-700 leading-relaxed whitespace-pre-wrap font-medium">
                                         "{data.deliveryRemark}"
                                     </p>
@@ -276,11 +276,11 @@ const InvoicePage = () => {
                         )}
                         {data.podUrl && (
                             <div className={cn(
-                                "bg-white border border-slate-200 rounded-2xl p-5 md:p-6 shadow-sm flex flex-col",
+                                "bg-white border border-slate-200 rounded-sm p-5 md:p-6 shadow-sm flex flex-col",
                                 !data.deliveryRemark && "md:col-span-2"
                             )}>
                                 <div className="flex items-center gap-3 mb-5">
-                                    <div className="p-2.5 bg-emerald-50 border border-emerald-100 rounded-xl text-emerald-600 shadow-xs">
+                                    <div className="p-2.5 bg-emerald-50 border border-emerald-100 rounded-sm text-emerald-600 shadow-xs">
                                         <FileImage className="w-5 h-5" />
                                     </div>
                                     <div>
@@ -288,19 +288,16 @@ const InvoicePage = () => {
                                         <p className="text-[11px] font-medium text-slate-500">Captured at location</p>
                                     </div>
                                 </div>
-                                <div className="flex-1 rounded-xl border border-slate-200 bg-slate-50 p-2 flex flex-col">
-                                    <div className="relative w-full h-full min-h-[250px] md:min-h-[300px] rounded-lg overflow-hidden border border-slate-200/60 shadow-xs bg-white/50 flex items-center justify-center group">
-                                        <div className="absolute inset-0 bg-slate-900/0 group-hover:bg-slate-900/5 transition-colors z-10 rounded-lg pointer-events-none" />
-                                        <Image 
-                                            alt='Proof of Delivery' 
-                                            draggable={false} 
-                                            src={data.podUrl} 
-                                            className='max-h-[350px] w-auto object-contain drop-shadow-sm' 
-                                            width={1200} 
-                                            height={1200} 
-                                            unoptimized 
-                                        />
-                                    </div>
+                                <div className="relative w-full flex items-center justify-center bg-slate-50/30 rounded-sm p-4 min-h-[250px] md:min-h-[300px]">
+                                    <Image 
+                                        alt='Proof of Delivery' 
+                                        draggable={false} 
+                                        src={data.podUrl} 
+                                        className='max-h-[350px] w-auto object-contain rounded-sm shadow-xs' 
+                                        width={1200} 
+                                        height={1200} 
+                                        unoptimized 
+                                    />
                                 </div>
                             </div>
                         )}
