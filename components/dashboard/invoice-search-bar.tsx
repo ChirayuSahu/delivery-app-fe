@@ -6,14 +6,18 @@ import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
 import { Search, Info } from 'lucide-react';
 
+import { useAuth } from '@/components/providers/auth-provider';
+
 const InvoiceStatusSearch = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const router = useRouter();
+    const { userRole } = useAuth();
+    const rolePrefix = userRole?.toLowerCase() || 'admin';
 
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
         if (isValidSearchTerm(searchTerm)) {
-            router.push(`/dashboard/supervisor/invoice/${encodeURIComponent(searchTerm)}`);
+            router.push(`/dashboard/${rolePrefix}/invoice/${encodeURIComponent(searchTerm)}`);
         }
     };
 

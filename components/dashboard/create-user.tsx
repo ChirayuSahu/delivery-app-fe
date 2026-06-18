@@ -24,12 +24,14 @@ import { Label } from "@/components/ui/label";
 import { UserPlus, Loader2, Fingerprint, Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/components/providers/auth-provider';
 
 interface CreateUserButtonProps {
     children?: React.ReactNode;
 }
 
 export default function CreateUserButton({ children }: CreateUserButtonProps) {
+    const { userRole } = useAuth();
     const [open, setOpen] = useState(false);
     const [isCreating, setIsCreating] = useState(false);
     const [viewPassword, setViewPassword] = useState(false);
@@ -40,13 +42,30 @@ export default function CreateUserButton({ children }: CreateUserButtonProps) {
         return () => window.removeEventListener('trigger-create-user', handleTrigger);
     }, []);
 
-    const [formData, setFormData] = useState({
+    const AVAILABLE_PERMISSIONS = [
+        { id: "read:delivery", label: "Read Deliveries" },
+        { id: "write:delivery", label: "Write Deliveries" },
+        { id: "read:finance", label: "Read Finance" },
+        { id: "write:finance", label: "Write Finance" },
+        { id: "read:report", label: "Read Reports & Attendance" },
+    ];
+
+    const [formData, setFormData] = useState<{
+        name: string;
+        email: string;
+        password: string;
+        phone: string;
+        esId: string;
+        type: string;
+        permissions: string[];
+    }>({
         name: '',
         email: '',
         password: '',
         phone: '',
         esId: '',
-        type: 'DELIVERY_MAN'
+        type: 'DELIVERY_MAN',
+        permissions: []
     });
 
     const router = useRouter();
@@ -78,7 +97,7 @@ export default function CreateUserButton({ children }: CreateUserButtonProps) {
 
             toast.success(json.message || 'User created successfully');
             setOpen(false);
-            setFormData({ name: '', email: '', password: '', phone: '', esId: '', type: 'DELIVERY_MAN' });
+            setFormData({ name: '', email: '', password: '', phone: '', esId: '', type: 'DELIVERY_MAN', permissions: [] });
             router.refresh();
         } catch (error) {
             toast.error("Error creating user");
@@ -181,23 +200,57 @@ export default function CreateUserButton({ children }: CreateUserButtonProps) {
                                 />
                             </div>
                         </div>
-                        {/* Type Field */}
-                        <div className="grid gap-2">
-                            <Label className="text-xs font-bold uppercase text-slate-500 ml-1">
-                                Type
-                            </Label>
+                        {/* Type Field - only visible to ADMIN */}
+                        {userRole === "ADMIN" && (
+                            <div className="grid gap-2">
+                                <Label className="text-xs font-bold uppercase text-slate-500 ml-1">
+                                    Type
+                                </Label>
 
-                            <Select value={formData.type} onValueChange={handleTypeChange}>
-                                <SelectTrigger className="rounded-lg border-slate-200 w-full">
-                                    <SelectValue placeholder="Select user type" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="DELIVERY_MAN">Delivery Man</SelectItem>
-                                    <SelectItem value="ADMIN">Admin</SelectItem>
-                                    <SelectItem value="SUPERVISOR">Supervisor</SelectItem>
-                                </SelectContent>
-                            </Select>
-                        </div>
+                                <Select value={formData.type} onValueChange={handleTypeChange}>
+                                    <SelectTrigger className="rounded-lg border-slate-200 w-full">
+                                        <SelectValue placeholder="Select user type" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="DELIVERY_MAN">Delivery Man</SelectItem>
+                                        <SelectItem value="ADMIN">Admin</SelectItem>
+                                        <SelectItem value="SUPERVISOR">Supervisor</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                        )}
+
+                        {/* Permissions Field - only visible to ADMIN */}
+                        {userRole === "ADMIN" && (
+                            <div className="grid gap-2">
+                                <Label className="text-xs font-bold uppercase text-slate-500 ml-1">
+                                    Permissions
+                                </Label>
+                                <div className="grid grid-cols-2 gap-2 p-3 bg-slate-50 rounded-lg border border-slate-100 max-h-36 overflow-y-auto">
+                                    {AVAILABLE_PERMISSIONS.map((permission) => {
+                                        const isChecked = formData.permissions.includes(permission.id);
+                                        return (
+                                            <label key={permission.id} className="flex items-center gap-2 text-xs font-medium text-slate-700 cursor-pointer select-none">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={isChecked}
+                                                    onChange={() => {
+                                                        setFormData(prev => {
+                                                            const permissions = isChecked
+                                                                ? prev.permissions.filter(p => p !== permission.id)
+                                                                : [...prev.permissions, permission.id];
+                                                            return { ...prev, permissions };
+                                                        });
+                                                    }}
+                                                    className="rounded border-slate-300 text-green-600 focus:ring-green-500 h-4 w-4"
+                                                />
+                                                <span>{permission.label}</span>
+                                            </label>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+                        )}
 
                     </div>
 

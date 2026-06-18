@@ -1,10 +1,10 @@
 'use client';
 
 import { useState } from "react";
-import DeliveryPersonnelChart from "@/components/supervisor/pie-chart";
-import FailedDeliveriesSection from "@/components/supervisor/failed-deliveries";
-import UsersCard from "@/components/supervisor/users";
-import InvoiceSearchBar from "@/components/supervisor/invoice-search-bar";
+import DeliveryPersonnelChart from "@/components/dashboard/pie-chart";
+import FailedDeliveriesSection from "@/components/dashboard/failed-deliveries";
+import UsersCard from "@/components/dashboard/users";
+import InvoiceSearchBar from "@/components/dashboard/invoice-search-bar";
 import { Loader2 } from "lucide-react";
 
 export default function DashboardPage() {

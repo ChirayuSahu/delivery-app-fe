@@ -87,13 +87,6 @@ export default function LoginPage() {
 
                 {/* Light Card container using standard shadcn Card components for perfect uniformity */}
                 <Card className="w-full shadow-lg border-slate-100 bg-white">
-                    <CardHeader className="space-y-1 pb-4">
-                        <CardTitle className="text-xl font-bold text-center text-slate-900">Agent Sign In</CardTitle>
-                        <CardDescription className="text-center text-slate-500 text-xs">
-                            Please log in with your credentials to access your session.
-                        </CardDescription>
-                    </CardHeader>
-                    
                     <CardContent className="space-y-4" onKeyDown={handleKeyDown}>
                         {/* Email Address */}
                         <div className="space-y-1.5">

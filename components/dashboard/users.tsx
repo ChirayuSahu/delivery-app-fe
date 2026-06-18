@@ -13,6 +13,7 @@ import {
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion, Variants } from "framer-motion";
+import { useAuth } from '@/components/providers/auth-provider';
 
 type User = {
   id: string;
@@ -45,6 +46,8 @@ export function UsersCard({ onInitialLoad }: Props) {
   const [searchQuery, setSearchQuery] = useState("");
 
   const pathname = usePathname();
+  const { userRole } = useAuth();
+  const rolePrefix = userRole?.toLowerCase() || 'admin';
 
   useEffect(() => {
     async function fetchUsers() {
@@ -106,7 +109,7 @@ export function UsersCard({ onInitialLoad }: Props) {
             animate="visible"
           >
             {filteredUsers.map((user) => (
-              <Link key={user.id} href={`${pathname}/users/${user.id}`} className="block">
+              <Link key={user.id} href={`/dashboard/${rolePrefix}/users/${user.id}`} className="block">
                 <motion.div
                   variants={itemVariants}
                   className="group flex items-center justify-between py-3.5 px-5 hover:bg-slate-50/50 transition-colors cursor-pointer"

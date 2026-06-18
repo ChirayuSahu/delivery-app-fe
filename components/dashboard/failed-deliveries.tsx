@@ -4,6 +4,7 @@ import { AlertCircle, CheckCircle2, Loader2, ArrowRight, ShieldAlert, Clock } fr
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { motion, Variants } from "framer-motion";
+import { useAuth } from "@/components/providers/auth-provider";
 
 interface FailedDelivery {
     id: string;
@@ -23,11 +24,9 @@ const itemVariants: Variants = {
     visible: { opacity: 1, y: 0, transition: { duration: 0.2, ease: "easeOut" } }
 };
 
-interface Props {
-    onInitialLoad?: () => void;
-}
-
-function FailedDeliveriesSection({ onInitialLoad }: Props) {
+export default function FailedDeliveriesSection({ onInitialLoad }: { onInitialLoad?: () => void }) {
+    const { userRole } = useAuth();
+    const rolePrefix = userRole?.toLowerCase() || 'admin';
     const [deliveries, setDeliveries] = useState<FailedDelivery[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
 
@@ -92,7 +91,7 @@ function FailedDeliveriesSection({ onInitialLoad }: Props) {
                 >
                     {deliveries.map((delivery) => (
                         <Link 
-                            href={`/dashboard/supervisor/invoice/${delivery.invType}${delivery.invNo}`} 
+                            href={`/dashboard/${rolePrefix}/invoice/${delivery.invType}${delivery.invNo}`} 
                             key={delivery.id}
                             className="block"
                         >
@@ -146,5 +145,3 @@ function FailedDeliveriesSection({ onInitialLoad }: Props) {
         </section>
     );
 }
-
-export default FailedDeliveriesSection;

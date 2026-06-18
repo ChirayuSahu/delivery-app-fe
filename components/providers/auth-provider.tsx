@@ -12,6 +12,7 @@ export interface UserProfile {
   esId?: string
   role: UserRole
   wallet: number | null
+  permissions?: string[]
   createdAt?: string
   updatedAt?: string
 }
@@ -22,6 +23,7 @@ interface AuthContextType {
   profileLoading: boolean
   refreshProfile: () => Promise<void>
   clearAuth: () => void
+  hasPermission: (permission: string) => boolean
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -59,6 +61,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser(null)
   }, [])
 
+  const hasPermission = useCallback((permission: string) => {
+    if (!user || !user.permissions) return false
+    return user.permissions.includes(permission)
+  }, [user])
+
   return (
     <AuthContext.Provider
       value={{
@@ -67,6 +74,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         profileLoading,
         refreshProfile: fetchProfile,
         clearAuth,
+        hasPermission,
       }}
     >
       {children}

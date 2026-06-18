@@ -20,8 +20,7 @@ import {
 
 import { PinSettingsDialog } from "@/components/auth/pin-settings-dialog"
 import { LogoutButton } from "@/components/auth/logout-button"
-import AdminCreateUserButton from "@/components/admin/create-user"
-import SupervisorCreateUserButton from "@/components/supervisor/create-user"
+import CreateUserButton from "@/components/dashboard/create-user"
 import { UserPlus, Home, ScanFace } from "lucide-react"
 import { AddExpenseDialog } from "@/components/finance/add-expense-dialog"
 
@@ -51,7 +50,7 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
         return [
           {
             name: "Home",
-            href: "/dashboard/admin",
+            href: "/dashboard",
             icon: Home,
           },
           {
@@ -79,7 +78,7 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
         return [
           {
             name: "Home",
-            href: "/dashboard/supervisor",
+            href: "/dashboard",
             icon: Home,
           },
           {
@@ -97,7 +96,7 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
         return [
           {
             name: "My Session",
-            href: "/dashboard/deliveryman",
+            href: "/dashboard",
             icon: Truck,
           },
           {
@@ -132,18 +131,11 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
       </button>
     )
 
-    if (userRole === "ADMIN") {
+    if (userRole === "ADMIN" || userRole === "SUPERVISOR") {
       return (
-        <AdminCreateUserButton>
+        <CreateUserButton>
           {triggerContent}
-        </AdminCreateUserButton>
-      )
-    }
-    if (userRole === "SUPERVISOR") {
-      return (
-        <SupervisorCreateUserButton>
-          {triggerContent}
-        </SupervisorCreateUserButton>
+        </CreateUserButton>
       )
     }
     return null

@@ -1,7 +1,9 @@
+import { SidebarLayout } from "@/components/navigation/sidebar-layout"
+
 export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  return <>{children}</>
+  return <SidebarLayout>{children}</SidebarLayout>
 }

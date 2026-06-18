@@ -136,7 +136,7 @@ export default function DashboardPage() {
             {deliveries.map((delivery) => (
               <Link
                 key={delivery.id}
-                href={`${pathname}/deliveries/${delivery.id}`}
+                href={`/dashboard/deliveryman/deliveries/${delivery.id}`}
                 className="group block p-5 bg-white border border-slate-200 rounded-xl shadow-sm hover:border-green-500 hover:shadow-md transition-all active:scale-[0.98]"
               >
                 <div className="flex justify-between items-start">

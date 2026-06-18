@@ -91,11 +91,7 @@ export async function proxy(request: NextRequest) {
 
   let response: NextResponse
   
-  if (pathname === '/dashboard') {
-    response = NextResponse.redirect(
-      new URL(roleDashboard(payload.role), request.url)
-    )
-  } else if (pathname.startsWith('/dashboard/admin') && payload.role !== 'ADMIN') {
+  if (pathname.startsWith('/dashboard/admin') && payload.role !== 'ADMIN') {
     response = NextResponse.redirect(
       new URL(roleDashboard(payload.role), request.url)
     )

@@ -12,6 +12,7 @@ import { cn } from '@/lib/utils';
 import { useGetSuccessDeliveries } from '@/hooks/useGetSuccessDeliveries';
 import Link from 'next/link';
 import { toast } from 'sonner';
+import { useAuth } from '@/components/providers/auth-provider';
 
 interface Delivery {
   id: string;
@@ -35,6 +36,8 @@ interface Props {
 }
 
 function DeliveryPersonnelChart({ onInitialLoad }: Props) {
+  const { userRole } = useAuth();
+  const rolePrefix = userRole?.toLowerCase() || 'admin';
   const [deliveries, setDeliveries] = useState<Delivery[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [date, setDate] = useState<Date | undefined>(new Date());
@@ -201,7 +204,7 @@ function DeliveryPersonnelChart({ onInitialLoad }: Props) {
             {chartData.length} active {chartData.length === 1 ? 'member' : 'members'}
           </span>
         </div>
-        <Link href="/dashboard/admin/reports" className="inline-flex items-center gap-0.5 text-slate-500 hover:text-slate-900 font-semibold transition-colors">
+        <Link href={`/dashboard/${rolePrefix}/reports`} className="inline-flex items-center gap-0.5 text-slate-500 hover:text-slate-900 font-semibold transition-colors">
           <span>Reports</span>
           <ArrowRight className="w-3.5 h-3.5" />
         </Link>
