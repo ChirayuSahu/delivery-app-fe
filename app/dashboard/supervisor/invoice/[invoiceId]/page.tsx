@@ -287,7 +287,6 @@ const InvoicePage = () => {
                                 </div>
                             </div>
                         )}
-                        </div>
                     </motion.div>
                 )}
 
