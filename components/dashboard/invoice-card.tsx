@@ -29,6 +29,7 @@ function InvoiceCard({
   ended?: boolean;
 }) {
   const pathname = usePathname();
+  const basePath = pathname.includes('/dashboard/supervisor') ? '/dashboard/supervisor' : '/dashboard/admin';
 
   // Simple Color Logic
   const getStatusConfig = (status: string) => {
@@ -50,7 +51,7 @@ function InvoiceCard({
         "bg-white border border-gray-200 rounded-2xl p-4 transition-all group relative",
         invoice.status === 'DELIVERED' && !ended ? 'opacity-60' : 'opacity-100'
       )}>
-        <Link href={`/dashboard/admin/invoice/${invoice.invType}${invoice.invNo}`} className="block">
+        <Link href={`${basePath}/invoice/${invoice.invType}${invoice.invNo}`} className="block">
           <div className="flex justify-between items-start mb-3">
             <div className="flex items-center gap-2">
               <FileText className="h-4 w-4 text-blue-600" />
@@ -92,7 +93,7 @@ function InvoiceCard({
           </div>
           
           <Link 
-            href={`/dashboard/admin/invoice/${invoice.invType}${invoice.invNo}`}
+            href={`${basePath}/invoice/${invoice.invType}${invoice.invNo}`}
             className="flex items-center gap-1 text-[10px] font-black text-blue-600 uppercase group-hover:underline"
           >
             View Details

@@ -27,7 +27,7 @@ import {
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 
 interface Delivery {
     id: string;
@@ -129,6 +129,7 @@ function AllDeliveriesCardInner() {
 
     const searchParams = useSearchParams();
     const router = useRouter();
+    const pathname = usePathname();
 
     const dateParam = searchParams.get('date');
 
@@ -299,12 +300,12 @@ function AllDeliveriesCardInner() {
                                             className="hover:bg-slate-50/50 transition-colors group cursor-pointer"
                                         >
                                             <td className="py-3.5 px-5 font-semibold text-slate-900">
-                                                <Link href={`/dashboard/admin/deliveries/${delivery.id}`} className="block">
+                                                <Link href={`${pathname}/${delivery.id}`} className="block">
                                                     #{delivery.deliveryNo}
                                                 </Link>
                                             </td>
                                             <td className="py-3.5 px-5 text-slate-600 font-medium">
-                                                <Link href={`/dashboard/admin/deliveries/${delivery.id}`} className="block">
+                                                <Link href={`${pathname}/${delivery.id}`} className="block">
                                                     <div className="flex items-center gap-2">
                                                         <div className="h-6 w-6 rounded bg-slate-100 flex items-center justify-center text-[10px] font-bold text-slate-600">
                                                             {delivery.deliveryMan.charAt(0)}
@@ -314,7 +315,7 @@ function AllDeliveriesCardInner() {
                                                 </Link>
                                             </td>
                                             <td className="py-3.5 px-5 text-slate-500 font-medium">
-                                                <Link href={`/dashboard/admin/deliveries/${delivery.id}`} className="block">
+                                                <Link href={`${pathname}/${delivery.id}`} className="block">
                                                     <div className="flex items-center gap-1">
                                                         <Clock className="w-3.5 h-3.5 text-slate-400" />
                                                         {delivery.startedAt
@@ -324,7 +325,7 @@ function AllDeliveriesCardInner() {
                                                 </Link>
                                             </td>
                                             <td className="py-3.5 px-5 text-slate-500 font-medium">
-                                                <Link href={`/dashboard/admin/deliveries/${delivery.id}`} className="block">
+                                                <Link href={`${pathname}/${delivery.id}`} className="block">
                                                     <div className="flex items-center gap-1">
                                                         <FileText className="w-3.5 h-3.5 text-slate-400" />
                                                         {delivery.invoiceCount} {delivery.invoiceCount === 1 ? 'invoice' : 'invoices'}
@@ -332,7 +333,7 @@ function AllDeliveriesCardInner() {
                                                 </Link>
                                             </td>
                                             <td className="py-3.5 px-5">
-                                                <Link href={`/dashboard/admin/deliveries/${delivery.id}`} className="block">
+                                                <Link href={`${pathname}/${delivery.id}`} className="block">
                                                     {isCompleted ? (
                                                         <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-semibold bg-green-50 text-green-700 border border-green-100">
                                                             <span className="h-1 w-1 bg-green-500 rounded-full" />
@@ -352,7 +353,7 @@ function AllDeliveriesCardInner() {
                                                 </Link>
                                             </td>
                                             <td className="py-3.5 px-5 text-right">
-                                                <Link href={`/dashboard/admin/deliveries/${delivery.id}`} className="inline-flex items-center gap-1 text-slate-400 group-hover:text-slate-900 font-semibold transition-colors">
+                                                <Link href={`${pathname}/${delivery.id}`} className="inline-flex items-center gap-1 text-slate-400 group-hover:text-slate-900 font-semibold transition-colors">
                                                     <span>View</span>
                                                     <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
                                                 </Link>

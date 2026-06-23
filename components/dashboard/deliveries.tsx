@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { format } from "date-fns";
 
 // Shadcn UI Components
@@ -52,6 +53,9 @@ type SortField = 'deliveryNo' | 'startedAt' | 'isPaid' | 'status';
 type SortOrder = 'asc' | 'desc';
 
 export function UserDeliveriesCard({ userId }: { userId: string }) {
+  const pathname = usePathname();
+  const basePath = pathname.includes('/dashboard/supervisor') ? '/dashboard/supervisor' : '/dashboard/admin';
+
   const [deliveries, setDeliveries] = useState<Delivery[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [date, setDate] = useState<Date | undefined>(new Date());
@@ -262,12 +266,12 @@ export function UserDeliveriesCard({ userId }: { userId: string }) {
                       className="hover:bg-slate-50/50 transition-colors group cursor-pointer"
                     >
                       <td className="py-3.5 px-5 font-semibold text-slate-900">
-                        <Link href={`/dashboard/admin/deliveries/${delivery.id}`} className="block">
+                        <Link href={`${basePath}/deliveries/${delivery.id}`} className="block">
                           #{delivery.deliveryNo}
                         </Link>
                       </td>
                       <td className="py-3.5 px-5 text-slate-500 font-medium">
-                        <Link href={`/dashboard/admin/deliveries/${delivery.id}`} className="block">
+                        <Link href={`${basePath}/deliveries/${delivery.id}`} className="block">
                           <div className="flex items-center gap-1">
                             <Clock className="w-3.5 h-3.5 text-slate-400" />
                             {delivery.startedAt
@@ -277,7 +281,7 @@ export function UserDeliveriesCard({ userId }: { userId: string }) {
                         </Link>
                       </td>
                       <td className="py-3.5 px-5 text-slate-500 font-medium">
-                        <Link href={`/dashboard/admin/deliveries/${delivery.id}`} className="block">
+                        <Link href={`${basePath}/deliveries/${delivery.id}`} className="block">
                           {delivery.isPaid ? (
                             <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-bold bg-green-50 text-green-700 border border-green-100 uppercase">
                               <CircleDollarSign className="w-3 h-3 text-green-600" /> Paid
@@ -290,7 +294,7 @@ export function UserDeliveriesCard({ userId }: { userId: string }) {
                         </Link>
                       </td>
                       <td className="py-3.5 px-5">
-                        <Link href={`/dashboard/admin/deliveries/${delivery.id}`} className="block">
+                        <Link href={`${basePath}/deliveries/${delivery.id}`} className="block">
                           {isActive && (
                             <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-semibold bg-amber-50 text-amber-700 border border-amber-100">
                               <span className="h-1.5 w-1.5 bg-amber-500 rounded-full animate-pulse" />
@@ -312,7 +316,7 @@ export function UserDeliveriesCard({ userId }: { userId: string }) {
                         </Link>
                       </td>
                       <td className="py-3.5 px-5 text-right">
-                        <Link href={`/dashboard/admin/deliveries/${delivery.id}`} className="inline-flex items-center gap-1 text-slate-400 group-hover:text-slate-900 font-semibold transition-colors">
+                        <Link href={`${basePath}/deliveries/${delivery.id}`} className="inline-flex items-center gap-1 text-slate-400 group-hover:text-slate-900 font-semibold transition-colors">
                           <span>View</span>
                           <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
                         </Link>
