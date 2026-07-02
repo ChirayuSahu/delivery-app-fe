@@ -15,6 +15,7 @@ import {
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { Mail, Lock, Eye, EyeOff, Loader2, Package, ArrowRight } from "lucide-react";
+import { useAuth } from "@/components/providers/auth-provider";
 
 export default function LoginPage() {
     const [email, setEmail] = useState("");
@@ -23,6 +24,7 @@ export default function LoginPage() {
     const [loading, setLoading] = useState(false);
 
     const router = useRouter();
+    const { refreshProfile } = useAuth();
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -46,6 +48,7 @@ export default function LoginPage() {
             if (response.ok) {
                 localStorage.setItem("token", data.token);
                 toast.success("Welcome back! Login successful.");
+                await refreshProfile();
                 router.push("/dashboard");
             } else {
                 toast.error(data.message || "Invalid credentials. Please try again.");
