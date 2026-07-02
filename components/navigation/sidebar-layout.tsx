@@ -38,8 +38,7 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
   const [collapsed, setCollapsed] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
 
-  const { user, userRole: fetchedRole, profileLoading } = useAuth()
-  const userRole = fetchedRole || "ADMIN"
+  const { user, userRole, profileLoading } = useAuth()
   const userName = user?.name || "User Profile"
   const wallet = user?.wallet ?? null
 
@@ -105,6 +104,8 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
             icon: ArrowRightLeft,
           },
         ]
+      default:
+        return []
     }
   }
 
@@ -173,39 +174,52 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
 
         {/* Navigation Items */}
         <nav className="flex-1 px-4 py-6 space-y-1.5 overflow-y-auto">
-          {navItems.map((item) => {
-            const isActive = pathname === item.href || pathname.startsWith(item.href + "/")
-            const Icon = item.icon
-
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`flex items-center gap-3 px-3 py-3 rounded-lg font-bold text-sm transition-all duration-200 group relative ${isActive
-                  ? "bg-green-50 text-green-700"
-                  : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
-                  }`}
-              >
-                <Icon className={`w-5 h-5 flex-shrink-0 transition-colors ${isActive ? "text-green-600" : "text-slate-400 group-hover:text-slate-600"
-                  }`} />
+          {profileLoading ? (
+            Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="flex items-center gap-3 px-3 py-3 rounded-lg">
+                <div className="w-5 h-5 rounded bg-slate-200 animate-pulse flex-shrink-0" />
                 {!collapsed && (
-                  <span className="animate-in fade-in duration-200">{item.name}</span>
+                  <div className="h-4 bg-slate-200 rounded animate-pulse flex-1" />
                 )}
-
-                {/* Tooltip on Collapsed */}
-                {collapsed && (
-                  <div className="absolute left-full ml-3 px-2 py-1 bg-slate-900 text-white text-xs font-medium rounded opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 whitespace-nowrap z-50 shadow-md">
-                    {item.name}
-                  </div>
-                )}
-              </Link>
-            )
-          })}
-
-          {(userRole === "ADMIN" || userRole === "SUPERVISOR") && (
+              </div>
+            ))
+          ) : (
             <>
-              <div className="border-t border-slate-100 my-2" />
-              <AddUserButton />
+              {navItems.map((item) => {
+                const isActive = pathname === item.href || pathname.startsWith(item.href + "/")
+                const Icon = item.icon
+
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={`flex items-center gap-3 px-3 py-3 rounded-lg font-bold text-sm transition-all duration-200 group relative ${isActive
+                      ? "bg-green-50 text-green-700"
+                      : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
+                      }`}
+                  >
+                    <Icon className={`w-5 h-5 flex-shrink-0 transition-colors ${isActive ? "text-green-600" : "text-slate-400 group-hover:text-slate-600"
+                      }`} />
+                    {!collapsed && (
+                      <span className="animate-in fade-in duration-200">{item.name}</span>
+                    )}
+
+                    {/* Tooltip on Collapsed */}
+                    {collapsed && (
+                      <div className="absolute left-full ml-3 px-2 py-1 bg-slate-900 text-white text-xs font-medium rounded opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 whitespace-nowrap z-50 shadow-md">
+                        {item.name}
+                      </div>
+                    )}
+                  </Link>
+                )
+              })}
+
+              {(userRole === "ADMIN" || userRole === "SUPERVISOR") && (
+                <>
+                  <div className="border-t border-slate-100 my-2" />
+                  <AddUserButton />
+                </>
+              )}
             </>
           )}
         </nav>
@@ -318,32 +332,43 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
 
               {/* Navigation list */}
               <nav className="flex-1 px-4 py-6 space-y-1.5 overflow-y-auto">
-                {navItems.map((item) => {
-                  const isActive = pathname === item.href || pathname.startsWith(item.href + "/")
-                  const Icon = item.icon
-
-                  return (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      onClick={() => setMobileOpen(false)}
-                      className={`flex items-center gap-3 px-3 py-3 rounded-lg font-bold text-sm transition-all duration-200 ${isActive
-                        ? "bg-green-50 text-green-700"
-                        : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
-                        }`}
-                    >
-                      <Icon className={`w-5 h-5 ${isActive ? "text-green-600" : "text-slate-400"}`} />
-                      <span>{item.name}</span>
-                    </Link>
-                  )
-                })}
-
-                {(userRole === "ADMIN" || userRole === "SUPERVISOR") && (
-                  <>
-                    <div className="border-t border-slate-100 my-2" />
-                    <div onClick={() => setMobileOpen(false)}>
-                      <AddUserButton isMobile={true} />
+                {profileLoading ? (
+                  Array.from({ length: 4 }).map((_, i) => (
+                    <div key={i} className="flex items-center gap-3 px-3 py-3 rounded-lg">
+                      <div className="w-5 h-5 rounded bg-slate-200 animate-pulse flex-shrink-0" />
+                      <div className="h-4 bg-slate-200 rounded animate-pulse flex-1" />
                     </div>
+                  ))
+                ) : (
+                  <>
+                    {navItems.map((item) => {
+                      const isActive = pathname === item.href || pathname.startsWith(item.href + "/")
+                      const Icon = item.icon
+
+                      return (
+                        <Link
+                          key={item.href}
+                          href={item.href}
+                          onClick={() => setMobileOpen(false)}
+                          className={`flex items-center gap-3 px-3 py-3 rounded-lg font-bold text-sm transition-all duration-200 ${isActive
+                            ? "bg-green-50 text-green-700"
+                            : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
+                            }`}
+                        >
+                          <Icon className={`w-5 h-5 ${isActive ? "text-green-600" : "text-slate-400"}`} />
+                          <span>{item.name}</span>
+                        </Link>
+                      )
+                    })}
+
+                    {(userRole === "ADMIN" || userRole === "SUPERVISOR") && (
+                      <>
+                        <div className="border-t border-slate-100 my-2" />
+                        <div onClick={() => setMobileOpen(false)}>
+                          <AddUserButton isMobile={true} />
+                        </div>
+                      </>
+                    )}
                   </>
                 )}
               </nav>
