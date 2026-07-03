@@ -25,6 +25,7 @@ export function AddExpenseDialog({ className }: { className?: string }) {
   const [loading, setLoading] = useState(false)
   const [file, setFile] = useState<File | null>(null)
   const [notes, setNotes] = useState("")
+  const [showCamera, setShowCamera] = useState(false)
 
   const PRESET_NOTES = ["Fuel", "Stationary", "Food", "Maintenance"]
 
@@ -113,7 +114,32 @@ export function AddExpenseDialog({ className }: { className?: string }) {
             </div>
             <div className="grid gap-2">
               <Label>Proof Document/Image (Optional)</Label>
-              <CameraCapture onCapture={setFile} for="Expense Proof" />
+              {showCamera ? (
+                <div className="space-y-2">
+                  <CameraCapture onCapture={setFile} for="Expense Proof" />
+                  <Button 
+                    type="button" 
+                    variant="ghost" 
+                    onClick={() => {
+                      setShowCamera(false)
+                      setFile(null)
+                    }} 
+                    className="w-full text-red-500 hover:text-red-600 hover:bg-red-50"
+                  >
+                    Remove Proof
+                  </Button>
+                </div>
+              ) : (
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  onClick={() => setShowCamera(true)}
+                  className="w-full flex items-center justify-center gap-2 h-24 border-dashed bg-slate-50 hover:bg-slate-100"
+                >
+                  <Upload className="h-5 w-5 text-slate-500" />
+                  <span className="text-slate-500 font-medium">Add Proof</span>
+                </Button>
+              )}
             </div>
           </div>
           <DialogFooter>
