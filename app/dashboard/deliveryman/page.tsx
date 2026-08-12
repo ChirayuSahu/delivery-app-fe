@@ -9,6 +9,7 @@ import { usePathname } from "next/navigation";
 import CreateDeliveryButton from "@/components/deliveryman/create-delivery";
 import { AddExpenseDialog } from "@/components/finance/add-expense-dialog";
 import { LogoutButton } from "@/components/auth/logout-button";
+import { Badge } from "@/components/ui/badge";
 
 
 
@@ -93,20 +94,23 @@ export default function DashboardPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <Loader2 className="h-8 w-8 text-green-600 animate-spin" />
+        <Loader2 className="h-8 w-8 text-dispatch-ink animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#f8fafc]">
+    <div className="min-h-screen bg-background">
         {/* 1. Header Section */}
-        <header className="bg-white border-b px-8 py-6">
+        <header className="bg-card border-b border-border px-8 py-6">
           <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
-              <h1 className="text-2xl font-bold text-slate-900">Deliveries</h1>
-              <p className="text-slate-500 text-sm">
-                {profile?.name || "Delivery Executive"} • Balance ₹{(profile?.wallet ?? 0).toFixed(2)}
+              <h1 className="text-2xl font-semibold text-foreground">Deliveries</h1>
+              <p className="text-muted-foreground text-sm">
+                {profile?.name || "Delivery Executive"} • Balance{" "}
+                <span className="font-mono text-foreground">
+                  ₹{(profile?.wallet ?? 0).toFixed(2)}
+                </span>
               </p>
             </div>
             <div className="flex items-center gap-2 md:gap-3 flex-wrap">
@@ -117,7 +121,7 @@ export default function DashboardPage() {
                 </Button>
               </Link>
               <CreateDeliveryButton />
-              <div className="w-px h-8 bg-slate-200 mx-1 hidden md:block"></div>
+              <div className="w-px h-8 bg-border mx-1 hidden md:block"></div>
               <LogoutButton />
             </div>
           </div>
@@ -126,46 +130,44 @@ export default function DashboardPage() {
         <main className="max-w-7xl mx-auto p-8 space-y-6">
           {/* 2. Filters & Stats Bar */}
           <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
-            <div className="flex items-center gap-2 text-sm text-slate-500 font-medium">
+            <div className="flex items-center gap-2 text-sm text-muted-foreground font-medium">
               <span>Showing {deliveries.length} active {deliveries.length === 1 ? 'delivery' : 'deliveries'}</span>
             </div>
           </div>
 
-          {/* 3. Refined Table */}
+          {/* 3. Manifest ticket grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {deliveries.map((delivery) => (
               <Link
                 key={delivery.id}
                 href={`/dashboard/deliveryman/deliveries/${delivery.id}`}
-                className="group block p-5 bg-white border border-slate-200 rounded-xl shadow-sm hover:border-green-500 hover:shadow-md transition-all active:scale-[0.98]"
+                className="group block bg-card border border-border rounded-lg shadow-sm hover:border-dispatch-ink hover:shadow-md transition-all active:scale-[0.98] overflow-hidden"
               >
-                <div className="flex justify-between items-start">
+                <div className="flex justify-between items-start p-5">
                   <div className="flex gap-4 items-center">
                     {delivery.endedAt && (
-                      <PackageCheck className="w-6 h-6 text-green-500" />
+                      <PackageCheck className="w-6 h-6 text-dispatch-ink" />
                     )}
                     <div className="space-y-1">
-                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Delivery No</p>
-                      <p className="text-lg font-mono font-bold text-slate-900 group-hover:text-green-600 transition-colors">
+                      <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest">Delivery No</p>
+                      <p className="text-lg font-mono font-bold text-foreground group-hover:text-dispatch-ink transition-colors">
                         {delivery.deliveryNo}
                       </p>
                     </div>
                   </div>
-                  <div className="p-2 bg-slate-50 rounded-lg group-hover:bg-green-50 transition-colors">
-                    <ExternalLink className="w-4 h-4 text-slate-400 group-hover:text-green-600" />
+                  <div className="p-2 bg-muted rounded-md group-hover:bg-success transition-colors">
+                    <ExternalLink className="w-4 h-4 text-muted-foreground group-hover:text-dispatch-ink" />
                   </div>
                 </div>
 
-                <div className="mt-4 pt-4 border-t border-slate-50 flex items-center justify-between text-xs text-slate-500">
-                  <div className="flex items-center gap-1.5">
-                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                    {delivery.invoiceCount} Invoices
-                  </div>
-                  {delivery.startedAt && !delivery.endedAt && (
-                    <span>Started {new Date(delivery.startedAt).toLocaleString('en-GB')}</span>
-                  )}
-                  {delivery.endedAt && (
-                    <span>Ended {new Date(delivery.endedAt).toLocaleString('en-GB')}</span>
+                <div className="px-5 py-3 border-t border-dashed border-rule flex items-center justify-between text-xs text-muted-foreground">
+                  <span>{delivery.invoiceCount} Invoices</span>
+                  {delivery.endedAt ? (
+                    <Badge variant="stamp-success">Delivered</Badge>
+                  ) : delivery.startedAt ? (
+                    <Badge variant="stamp-warning">In Transit</Badge>
+                  ) : (
+                    <Badge variant="stamp-neutral">Pending</Badge>
                   )}
                 </div>
               </Link>

@@ -17,6 +17,17 @@ const badgeVariants = cva(
           "border-transparent bg-destructive text-white [a&]:hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
         outline:
           "text-foreground [a&]:hover:bg-accent [a&]:hover:text-accent-foreground",
+        // "Ink stamp" treatment for delivery/invoice status — a rotated,
+        // double-ruled mark rather than a filled pill, echoing a stamped
+        // packing slip. Pair with a status tone below.
+        "stamp-success":
+          "rounded-sm border-2 border-dispatch-ink text-dispatch-ink bg-success -rotate-2 px-2.5 py-0.5 font-mono uppercase tracking-wider text-[10px] font-semibold shadow-[inset_0_0_0_1px_currentColor]",
+        "stamp-warning":
+          "rounded-sm border-2 border-route-amber text-warning-foreground bg-warning -rotate-2 px-2.5 py-0.5 font-mono uppercase tracking-wider text-[10px] font-semibold shadow-[inset_0_0_0_1px_currentColor]",
+        "stamp-destructive":
+          "rounded-sm border-2 border-destructive text-destructive bg-destructive/10 -rotate-2 px-2.5 py-0.5 font-mono uppercase tracking-wider text-[10px] font-semibold shadow-[inset_0_0_0_1px_currentColor]",
+        "stamp-neutral":
+          "rounded-sm border-2 border-foreground/60 text-foreground/80 bg-transparent -rotate-2 px-2.5 py-0.5 font-mono uppercase tracking-wider text-[10px] font-semibold shadow-[inset_0_0_0_1px_currentColor]",
       },
     },
     defaultVariants: {
