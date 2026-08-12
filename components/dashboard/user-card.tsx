@@ -270,11 +270,11 @@ export function UserInfoCard({ userId }: { userId: string }) {
               })}
             </div>
 
-            <DialogFooter className="gap-2 sm:gap-0">
-              <Button variant="ghost" size="sm" onClick={() => setPermsOpen(false)} disabled={isUpdatingPerms} className="rounded-sm">
+            <DialogFooter className="gap-2">
+              <Button variant="ghost" size="sm" onClick={() => setPermsOpen(false)} disabled={isUpdatingPerms} className="rounded-lg">
                 Cancel
               </Button>
-              <Button onClick={handleUpdatePermissions} disabled={isUpdatingPerms} className="bg-green-600 hover:bg-green-700 rounded-sm text-white font-bold size-sm gap-2">
+              <Button onClick={handleUpdatePermissions} disabled={isUpdatingPerms} className="bg-primary hover:bg-primary-hover rounded-lg text-primary-foreground font-bold size-sm gap-2">
                 {isUpdatingPerms ? <Loader2 className="w-4 h-4 animate-spin" /> : "Save Changes"}
               </Button>
             </DialogFooter>

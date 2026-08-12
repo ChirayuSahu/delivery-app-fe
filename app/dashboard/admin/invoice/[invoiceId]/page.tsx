@@ -13,6 +13,7 @@ import { motion, Variants } from "framer-motion"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import { StatusPill } from "@/components/ui/status-pill"
 import Link from "next/link"
 import ReturnInvoice from "@/components/dashboard/return-invoice"
 import InvoiceExpenseDialog from "@/components/dashboard/invoice-expense-dialog"
@@ -30,6 +31,8 @@ type Item = {
     batch: string
 }
 
+type InvoiceStatus = 'PENDING' | 'OUT_FOR_DELIVERY' | 'DELIVERED' | 'FAILED' | 'ASSIGNED' | 'RETURNED'
+
 type InvoiceData = {
     name: string
     email: string
@@ -37,7 +40,7 @@ type InvoiceData = {
     invoice: string
     date: string
     trackingDetails: Track[]
-    status: 'PENDING' | 'OUT_FOR_DELIVERY' | 'DELIVERED' | 'FAILED' | 'ASSIGNED' | 'RETURNED'
+    status: InvoiceStatus
     deliveryMan?: string
     deliveredAt?: string
     items?: Item[]
@@ -61,6 +64,27 @@ const containerVariants: Variants = {
 const itemVariants: Variants = {
     hidden: { opacity: 0, y: 6 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.2, ease: "easeOut" } }
+};
+
+const STATUS_TONE: Record<InvoiceStatus, { tone: "success" | "warning" | "danger"; pulse: boolean }> = {
+    DELIVERED: { tone: "success", pulse: false },
+    FAILED: { tone: "danger", pulse: false },
+    RETURNED: { tone: "danger", pulse: false },
+    PENDING: { tone: "warning", pulse: true },
+    ASSIGNED: { tone: "warning", pulse: true },
+    OUT_FOR_DELIVERY: { tone: "warning", pulse: true },
+};
+
+const STATUS_BUTTON_CLASSES: Record<"success" | "warning" | "danger", string> = {
+    success: "bg-primary-tint text-primary-tint-foreground border-primary/20 hover:bg-primary-tint/80",
+    warning: "bg-amber-50 text-amber-700 border-amber-100 hover:bg-amber-100/60",
+    danger: "bg-red-50 text-red-700 border-red-100 hover:bg-red-100/60",
+};
+
+const STATUS_DOT_CLASSES: Record<"success" | "warning" | "danger", string> = {
+    success: "bg-primary",
+    warning: "bg-amber-500",
+    danger: "bg-red-500",
 };
 
 const InvoicePage = () => {
@@ -112,6 +136,8 @@ const InvoicePage = () => {
         </div>
     );
 
+    const statusInfo = STATUS_TONE[data.status] ?? { tone: "warning" as const, pulse: true };
+
     return (
         <div className="min-h-screen bg-slate-50/50 pb-12">
             <motion.div
@@ -127,12 +153,9 @@ const InvoicePage = () => {
                             Invoice #{data.invoice}
                         </span>
                     </div>
-                    <Badge className={cn(
-                        "rounded px-2 py-0.5 text-[9px] font-semibold uppercase shadow-none border",
-                        data.status === 'DELIVERED' ? "bg-green-50 text-green-700 border-green-200/40" : "bg-amber-50 text-amber-700 border-amber-200/40"
-                    )}>
+                    <StatusPill tone={statusInfo.tone} pulse={statusInfo.pulse} className="uppercase">
                         {data.status.replace(/_/g, ' ')}
-                    </Badge>
+                    </StatusPill>
                 </div>
 
                 {/* Hero Section */}
@@ -149,9 +172,9 @@ const InvoicePage = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="bg-white border border-slate-100 p-4 rounded-sm shadow-sm flex items-center gap-3 w-full md:w-auto">
-                        <div className="bg-slate-50 p-2 rounded-sm border border-slate-100">
-                            <IndianRupee className="w-4 h-4 text-slate-500" />
+                    <div className="bg-white border border-slate-100 p-4 rounded-xl shadow-sm flex items-center gap-3 w-full md:w-auto">
+                        <div className="bg-primary-tint p-2 rounded-lg">
+                            <IndianRupee className="w-4 h-4 text-primary-tint-foreground" />
                         </div>
                         <div>
                             <p className="text-[9px] font-bold text-slate-400 uppercase leading-none mb-1">Invoice Amount</p>
@@ -162,7 +185,7 @@ const InvoicePage = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     {/* Customer Info */}
-                    <motion.div variants={itemVariants} className="relative md:col-span-2 bg-white border border-slate-100 rounded-sm p-5 shadow-sm">
+                    <motion.div variants={itemVariants} className="relative md:col-span-2 bg-white border border-slate-100 rounded-xl p-5 shadow-sm">
                         <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-3">Customer Information</span>
                         <div className="space-y-3">
                             <div>
@@ -181,35 +204,30 @@ const InvoicePage = () => {
                     </motion.div>
 
                     {/* Delivery Status Card */}
-                    <motion.div variants={itemVariants} className="bg-white border border-slate-100 rounded-sm p-5 shadow-sm flex flex-col justify-between">
+                    <motion.div variants={itemVariants} className="bg-white border border-slate-100 rounded-xl p-5 shadow-sm flex flex-col justify-between">
                         <div>
                             <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-3">Delivery Status</span>
 
                             {/* Main Status Link */}
-                            <Link href={!!data.failedDeliveryId && data.status === 'FAILED' ? `/dashboard/admin/deliveries/${data.failedDeliveryId}` : `/dashboard/admin/deliveries/${data.deliveryId}`} className="block">
-                                <div className={cn(
-                                    "mb-4 p-3 rounded-sm border flex items-center gap-2",
-                                    data.status === 'DELIVERED' ? "bg-green-50 border-green-200/40 text-green-700" :
-                                        data.status === 'FAILED' ? "bg-red-50 border-red-200/40 text-red-700" : "bg-slate-50 border-slate-200/40 text-slate-700"
-                                )}>
+                            <div className={cn("flex gap-2 mb-4", data.status === 'FAILED' && "grid grid-cols-2")}>
+                                <Link href={!!data.failedDeliveryId && data.status === 'FAILED' ? `/dashboard/admin/deliveries/${data.failedDeliveryId}` : `/dashboard/admin/deliveries/${data.deliveryId}`} className={cn(data.status !== 'FAILED' && "flex-1")}>
                                     <div className={cn(
-                                        "h-1.5 w-1.5 rounded-full animate-pulse",
-                                        data.status === 'DELIVERED' ? "bg-green-600" :
-                                            data.status === 'FAILED' ? "bg-red-600" : "bg-slate-600"
-                                    )} />
-                                    <span className="text-xs font-bold uppercase">
-                                        {data.status.replace(/_/g, ' ')}
-                                    </span>
-                                </div>
-                            </Link>
-
-                            <div className="space-y-4">
+                                        "h-9 w-full flex items-center justify-center gap-1.5 rounded-lg border text-xs font-semibold transition-colors",
+                                        STATUS_BUTTON_CLASSES[statusInfo.tone]
+                                    )}>
+                                        <span className={cn("h-1.5 w-1.5 rounded-full", STATUS_DOT_CLASSES[statusInfo.tone], statusInfo.pulse && "animate-pulse")} />
+                                        View Delivery
+                                    </div>
+                                </Link>
                                 {data.status === 'FAILED' && (
                                     <ReturnInvoice invoiceId={String(invoiceId)} />
                                 )}
+                            </div>
+
+                            <div className="space-y-4">
                                 {data.status !== 'FAILED' && (
                                     <div className="flex items-center gap-3">
-                                        <div className="h-9 w-9 bg-slate-50 border border-slate-100 rounded-sm flex items-center justify-center shrink-0">
+                                        <div className="h-9 w-9 bg-slate-50 border border-slate-100 rounded-lg flex items-center justify-center shrink-0">
                                             <Truck className="w-4 h-4 text-slate-500" />
                                         </div>
                                         <div>
@@ -221,7 +239,7 @@ const InvoicePage = () => {
 
                                 {/* Time Info */}
                                 <div className="flex items-center gap-3">
-                                    <div className="h-9 w-9 bg-slate-50 border border-slate-100 rounded-sm flex items-center justify-center shrink-0">
+                                    <div className="h-9 w-9 bg-slate-50 border border-slate-100 rounded-lg flex items-center justify-center shrink-0">
                                         <Clock className="w-4 h-4 text-slate-500" />
                                     </div>
                                     <div>
@@ -239,7 +257,7 @@ const InvoicePage = () => {
                         </div>
 
                         {data.deliveryMan && data.status !== 'DELIVERED' && (
-                            <Button variant="outline" className="mt-4 w-full py-2 text-xs rounded-sm border-slate-200 text-slate-700 hover:bg-slate-50 font-semibold gap-1.5 h-9">
+                            <Button variant="outline" className="mt-4 w-full py-2 text-xs rounded-lg border-slate-200 text-slate-700 hover:bg-slate-50 font-semibold gap-1.5 h-9">
                                 <Phone className="w-3.5 h-3.5" />
                                 Contact Executive
                             </Button>
@@ -252,14 +270,14 @@ const InvoicePage = () => {
                     <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {data.deliveryRemark && (
                             <div className={cn(
-                                "bg-white border border-slate-200 rounded-sm p-5 md:p-6 shadow-sm flex flex-col relative overflow-hidden",
+                                "bg-white border border-slate-200 rounded-xl p-5 md:p-6 shadow-sm flex flex-col relative overflow-hidden",
                                 !data.podUrl && "md:col-span-2"
                             )}>
                                 <div className="absolute top-0 right-0 p-6 opacity-5 pointer-events-none">
                                     <MessageSquareQuote className="w-32 h-32 text-indigo-900" />
                                 </div>
                                 <div className="flex items-center gap-3 mb-5 relative z-10">
-                                    <div className="p-2.5 bg-indigo-50 border border-indigo-100 rounded-sm text-indigo-600 shadow-xs">
+                                    <div className="p-2.5 bg-indigo-50 border border-indigo-100 rounded-lg text-indigo-600 shadow-xs">
                                         <MessageSquareQuote className="w-5 h-5" />
                                     </div>
                                     <div>
@@ -267,7 +285,7 @@ const InvoicePage = () => {
                                         <p className="text-[11px] font-medium text-slate-500">Note from executive</p>
                                     </div>
                                 </div>
-                                <div className="flex-1 bg-gradient-to-br from-slate-50 to-slate-100/50 border border-slate-100 rounded-sm p-5 relative z-10">
+                                <div className="flex-1 bg-gradient-to-br from-slate-50 to-slate-100/50 border border-slate-100 rounded-lg p-5 relative z-10">
                                     <p className="text-sm text-slate-700 leading-relaxed whitespace-pre-wrap font-medium">
                                         "{data.deliveryRemark}"
                                     </p>
@@ -276,11 +294,11 @@ const InvoicePage = () => {
                         )}
                         {data.podUrl && (
                             <div className={cn(
-                                "bg-white border border-slate-200 rounded-sm p-5 md:p-6 shadow-sm flex flex-col",
+                                "bg-white border border-slate-200 rounded-xl p-5 md:p-6 shadow-sm flex flex-col",
                                 !data.deliveryRemark && "md:col-span-2"
                             )}>
                                 <div className="flex items-center gap-3 mb-5">
-                                    <div className="p-2.5 bg-emerald-50 border border-emerald-100 rounded-sm text-emerald-600 shadow-xs">
+                                    <div className="p-2.5 bg-emerald-50 border border-emerald-100 rounded-lg text-emerald-600 shadow-xs">
                                         <FileImage className="w-5 h-5" />
                                     </div>
                                     <div>
@@ -288,15 +306,15 @@ const InvoicePage = () => {
                                         <p className="text-[11px] font-medium text-slate-500">Captured at location</p>
                                     </div>
                                 </div>
-                                <div className="relative w-full flex items-center justify-center bg-slate-50/30 rounded-sm p-4 min-h-[250px] md:min-h-[300px]">
-                                    <Image 
-                                        alt='Proof of Delivery' 
-                                        draggable={false} 
-                                        src={data.podUrl} 
-                                        className='max-h-[350px] w-auto object-contain rounded-sm shadow-xs' 
-                                        width={1200} 
-                                        height={1200} 
-                                        unoptimized 
+                                <div className="relative w-full flex items-center justify-center bg-slate-50/30 rounded-lg p-4 min-h-[250px] md:min-h-[300px]">
+                                    <Image
+                                        alt='Proof of Delivery'
+                                        draggable={false}
+                                        src={data.podUrl}
+                                        className='max-h-[350px] w-auto object-contain rounded-lg shadow-xs'
+                                        width={1200}
+                                        height={1200}
+                                        unoptimized
                                     />
                                 </div>
                             </div>
@@ -353,7 +371,7 @@ const InvoicePage = () => {
                                     title="Delivered Successfully"
                                     time={data.deliveredAt ? new Date(data.deliveredAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : "Completed"}
                                     date={data.deliveredAt}
-                                    desc="Handed over to customer"
+                                    desc={data.deliveryMan || "Delivery Executive"}
                                     isDone={true}
                                     isLast
                                     icon={<CheckCircle2 className="w-4 h-4" />}

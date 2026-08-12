@@ -14,7 +14,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 
-export function LogoutButton() {
+export function LogoutButton({ collapsed = false }: { collapsed?: boolean }) {
   const [loading, setLoading] = useState(false)
   const [open, setOpen] = useState(false)
   const router = useRouter()
@@ -37,15 +37,15 @@ export function LogoutButton() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button 
-          variant="ghost" 
-          size="sm" 
+        <button
+          type="button"
+          title="Logout"
           disabled={loading}
-          className="text-red-600 hover:text-red-700 hover:bg-red-50 gap-2"
+          className="p-2 rounded-lg hover:bg-red-50 text-red-500 hover:text-red-600 transition-colors border border-slate-200/40 bg-white flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
         >
-          {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <LogOut className="h-4 w-4" />}
-          <span className="text-xs font-bold uppercase tracking-wider">Logout</span>
-        </Button>
+          {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <LogOut className="w-4 h-4" />}
+          {!collapsed && <span className="text-xs font-bold">Logout</span>}
+        </button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
@@ -54,7 +54,7 @@ export function LogoutButton() {
             Are you sure you want to log out of your account?
           </DialogDescription>
         </DialogHeader>
-        <DialogFooter className="mt-4 gap-2 sm:gap-0">
+        <DialogFooter className="mt-4 gap-2">
           <Button variant="outline" onClick={() => setOpen(false)} disabled={loading}>
             Cancel
           </Button>

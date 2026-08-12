@@ -48,7 +48,8 @@ export default function ReturnInvoice({ invoiceId }: { invoiceId: string }) {
         <Dialog open={open} onOpenChange={setOpen}>
             {/* The Main Trigger Button */}
             <DialogTrigger asChild>
-                <Button className="gap-2 text-red-700 bg-red-50 border border-red-100 hover:bg-red-50 w-full cursor-pointer rounded-xl">
+                <Button className="gap-2 h-9 text-xs font-semibold text-red-700 bg-red-50 border border-red-100 hover:bg-red-100/60 w-full cursor-pointer rounded-lg">
+                    <PackageMinus className="w-3.5 h-3.5" />
                     Return Invoice
                 </Button>
             </DialogTrigger>

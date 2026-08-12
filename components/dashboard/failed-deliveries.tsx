@@ -5,6 +5,7 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { motion, Variants } from "framer-motion";
 import { useAuth } from "@/components/providers/auth-provider";
+import { StatusPill } from "@/components/ui/status-pill";
 
 interface FailedDelivery {
     id: string;
@@ -76,9 +77,7 @@ export default function FailedDeliveriesSection({ onInitialLoad }: { onInitialLo
                     <h2 className="text-xs font-semibold text-slate-900">Delivery Exceptions</h2>
                 </div>
                 {deliveries.length > 0 && (
-                    <div className="bg-red-50 px-2 py-0.5 rounded text-[10px] font-semibold text-red-700 border border-red-200/40">
-                        {deliveries.length} Critical
-                    </div>
+                    <StatusPill tone="danger">{deliveries.length} Critical</StatusPill>
                 )}
             </div>
 
@@ -104,9 +103,7 @@ export default function FailedDeliveriesSection({ onInitialLoad }: { onInitialLo
                                         <span className="text-xs font-semibold text-slate-900">
                                             {delivery.invType} / {delivery.invNo}
                                         </span>
-                                        <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[9px] font-semibold bg-red-50 text-red-700 border border-red-100">
-                                            Failed
-                                        </span>
+                                        <StatusPill tone="danger" className="text-[9px]">Failed</StatusPill>
                                     </div>
                                     <p className="text-xs text-slate-500 font-medium line-clamp-2">
                                         {delivery.customerName}
@@ -132,7 +129,7 @@ export default function FailedDeliveriesSection({ onInitialLoad }: { onInitialLo
             ) : (
                 <div className="flex flex-col items-center justify-center py-12 bg-white border border-slate-100 rounded-xl text-center shadow-sm">
                     <div className="h-12 w-12 bg-slate-50 rounded-xl flex items-center justify-center text-slate-400 mb-3 border border-slate-100">
-                        <CheckCircle2 className="h-6 w-6 text-green-500" />
+                        <CheckCircle2 className="h-6 w-6 text-primary" />
                     </div>
                     <h4 className="text-slate-900 font-semibold text-sm">
                         No Exceptions

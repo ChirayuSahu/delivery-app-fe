@@ -13,6 +13,7 @@ import { useGetSuccessDeliveries } from '@/hooks/useGetSuccessDeliveries';
 import Link from 'next/link';
 import { toast } from 'sonner';
 import { useAuth } from '@/components/providers/auth-provider';
+import { StatusPill } from '@/components/ui/status-pill';
 
 interface Delivery {
   id: string;
@@ -101,10 +102,7 @@ function DeliveryPersonnelChart({ onInitialLoad }: Props) {
           <PieIcon className="h-4 w-4 text-slate-500" />
           <span className="text-xs font-semibold text-slate-900">Distribution</span>
         </div>
-        <div className="flex items-center gap-1 bg-green-50 px-2 py-0.5 rounded text-[10px] font-semibold text-green-700 border border-green-200/40">
-          <span className="h-1 w-1 bg-green-500 rounded-full animate-pulse" />
-          Live Insights
-        </div>
+        <StatusPill tone="success" pulse>Live Insights</StatusPill>
       </div>
 
       {/* Date Picker Row */}

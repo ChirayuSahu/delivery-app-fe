@@ -14,6 +14,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion, Variants } from "framer-motion";
 import { useAuth } from '@/components/providers/auth-provider';
+import { StatusPill } from '@/components/ui/status-pill';
 
 type User = {
   id: string;
@@ -142,10 +143,7 @@ export function UsersCard({ onInitialLoad }: Props) {
                         {user.time.map((deltime, index) => {
                           const mins = Math.ceil((new Date().getTime() - new Date(deltime).getTime()) / 60000);
                           return (
-                            <span key={index} className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-semibold bg-green-50 text-green-700 border border-green-100">
-                              <span className="h-1 w-1 bg-green-500 rounded-full animate-pulse" />
-                              {mins}m ago
-                            </span>
+                            <StatusPill key={index} tone="success" pulse>{mins}m ago</StatusPill>
                           );
                         })}
                       </div>

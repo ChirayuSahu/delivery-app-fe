@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react"
 import { useAuth } from "@/components/providers/auth-provider"
 import Link from "next/link"
+import Image from "next/image"
 import { usePathname, useRouter } from "next/navigation"
 import {
   IndianRupee,
@@ -14,7 +15,6 @@ import {
   ChevronLeft,
   ChevronRight,
   User,
-  Activity,
   ArrowLeft
 } from "lucide-react"
 
@@ -148,14 +148,22 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
       {/* DESKTOP SIDEBAR */}
       {/* ========================================================================= */}
       <aside
-        className={`hidden lg:flex flex-col sticky top-0 h-screen transition-all duration-300 bg-white border-r border-slate-100 shadow-sm z-50 ${collapsed ? "w-20" : "w-64"
+        className={`hidden lg:flex flex-col sticky top-0 h-screen transition-all duration-300 bg-white border-r border-slate-100 shadow-sm z-50 relative ${collapsed ? "w-20" : "w-64"
           }`}
       >
+        {/* Floating collapse toggle, anchored to the sidebar edge so it never crowds the logo */}
+        <button
+          onClick={() => setCollapsed(!collapsed)}
+          className="absolute -right-3 top-8 z-10 w-6 h-6 flex items-center justify-center rounded-full border border-slate-200 bg-white shadow-sm hover:bg-slate-50 text-slate-400 hover:text-slate-600 transition-colors"
+        >
+          {collapsed ? <ChevronRight className="w-3.5 h-3.5" /> : <ChevronLeft className="w-3.5 h-3.5" />}
+        </button>
+
         {/* Header/Brand */}
-        <div className="h-20 flex items-center justify-between px-6 border-b border-slate-50">
+        <div className={`h-20 flex items-center border-b border-slate-50 ${collapsed ? "justify-center px-2" : "justify-between px-6"}`}>
           <div className="flex items-center gap-3 overflow-hidden">
-            <div className="w-9 h-9 bg-green-600 rounded-lg flex items-center justify-center text-white font-black flex-shrink-0">
-              <Activity className="w-5 h-5" />
+            <div className="w-9 h-9 bg-white border border-slate-100 rounded-lg flex items-center justify-center p-1.5 shadow-sm flex-shrink-0">
+              <Image src="https://rajeshpharma.com/img/rp.svg" alt="Rajesh Pharma" width={28} height={28} unoptimized className="w-full h-full object-contain" />
             </div>
             {!collapsed && (
               <span className="font-extrabold text-lg text-slate-800 tracking-tight whitespace-nowrap animate-in fade-in duration-200">
@@ -163,13 +171,6 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
               </span>
             )}
           </div>
-
-          <button
-            onClick={() => setCollapsed(!collapsed)}
-            className="w-7 h-7 flex items-center justify-center rounded-md border border-slate-100 hover:bg-slate-50 text-slate-400 hover:text-slate-600 transition-colors"
-          >
-            {collapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
-          </button>
         </div>
 
         {/* Navigation Items */}
@@ -188,17 +189,21 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
               {navItems.map((item) => {
                 const isActive = pathname === item.href || pathname.startsWith(item.href + "/")
                 const Icon = item.icon
+                const linkClassName = `flex items-center gap-3 py-3 rounded-lg font-bold text-sm transition-all duration-200 group relative ${collapsed
+                  ? "justify-center px-3"
+                  : `px-3 border-l-2 ${isActive ? "border-l-primary" : "border-l-transparent"}`
+                  } ${isActive
+                    ? "bg-primary-tint text-primary-tint-foreground"
+                    : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
+                  }`
 
                 return (
                   <Link
                     key={item.href}
                     href={item.href}
-                    className={`flex items-center gap-3 px-3 py-3 rounded-lg font-bold text-sm transition-all duration-200 group relative ${isActive
-                      ? "bg-green-50 text-green-700"
-                      : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
-                      }`}
+                    className={linkClassName}
                   >
-                    <Icon className={`w-5 h-5 flex-shrink-0 transition-colors ${isActive ? "text-green-600" : "text-slate-400 group-hover:text-slate-600"
+                    <Icon className={`w-5 h-5 flex-shrink-0 transition-colors ${isActive ? "text-primary" : "text-slate-400 group-hover:text-slate-600"
                       }`} />
                     {!collapsed && (
                       <span className="animate-in fade-in duration-200">{item.name}</span>
@@ -227,7 +232,7 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
         {/* Footer Area with Profile, PIN Settings & Logout */}
         <div className="p-4 border-t border-slate-50 bg-slate-50/50">
           <div className={`flex items-center gap-3 ${collapsed ? "justify-center" : ""}`}>
-            <div className="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center text-green-700 font-extrabold flex-shrink-0">
+            <div className="w-10 h-10 rounded-lg bg-primary-tint flex items-center justify-center text-primary-tint-foreground font-extrabold flex-shrink-0">
               <User className="w-5 h-5" />
             </div>
             {!collapsed && (
@@ -245,7 +250,7 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
                       {wallet !== null && (
                         <>
                           <span className="text-slate-300 text-[10px]">•</span>
-                          <span className="text-[10px] font-extrabold text-green-600 bg-green-50 px-1.5 py-0.5 rounded">₹{wallet.toFixed(2)}</span>
+                          <span className="text-[10px] font-extrabold text-primary bg-primary-tint px-1.5 py-0.5 rounded font-mono">₹{wallet.toFixed(2)}</span>
                         </>
                       )}
                     </div>
@@ -269,7 +274,7 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
               </PinSettingsDialog>
             )}
 
-            <LogoutButton />
+            <LogoutButton collapsed={collapsed} />
           </div>
         </div>
       </aside>
@@ -290,8 +295,8 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
                 <ArrowLeft className="w-4 h-4" />
               </button>
             )}
-            <div className="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center text-white font-black">
-              <Activity className="w-4 h-4" />
+            <div className="w-8 h-8 bg-white border border-slate-100 rounded-lg flex items-center justify-center p-1.5 shadow-sm">
+              <Image src="https://rajeshpharma.com/img/rp.svg" alt="Rajesh Pharma" width={24} height={24} unoptimized className="w-full h-full object-contain" />
             </div>
             <span className="font-extrabold text-md text-slate-800 tracking-tight mr-auto pl-2">
               {getPageTitle()}
@@ -350,12 +355,12 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
                           key={item.href}
                           href={item.href}
                           onClick={() => setMobileOpen(false)}
-                          className={`flex items-center gap-3 px-3 py-3 rounded-lg font-bold text-sm transition-all duration-200 ${isActive
-                            ? "bg-green-50 text-green-700"
-                            : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
+                          className={`flex items-center gap-3 px-3 py-3 rounded-lg font-bold text-sm transition-all duration-200 border-l-2 ${isActive
+                            ? "bg-primary-tint text-primary-tint-foreground border-l-primary"
+                            : "text-slate-600 hover:text-slate-900 hover:bg-slate-50 border-l-transparent"
                             }`}
                         >
-                          <Icon className={`w-5 h-5 ${isActive ? "text-green-600" : "text-slate-400"}`} />
+                          <Icon className={`w-5 h-5 ${isActive ? "text-primary" : "text-slate-400"}`} />
                           <span>{item.name}</span>
                         </Link>
                       )
@@ -376,7 +381,7 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
               {/* Drawer Footer */}
               <div className="p-4 border-t border-slate-100 bg-slate-50/50">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center text-green-700 font-extrabold">
+                  <div className="w-10 h-10 rounded-lg bg-primary-tint flex items-center justify-center text-primary-tint-foreground font-extrabold">
                     <User className="w-5 h-5" />
                   </div>
                   <div className="flex-1 min-w-0">
@@ -393,7 +398,7 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
                           {wallet !== null && (
                             <>
                               <span className="text-slate-300 text-[10px]">•</span>
-                              <span className="text-[10px] font-extrabold text-green-600 bg-green-50 px-1.5 py-0.5 rounded">₹{wallet.toFixed(2)}</span>
+                              <span className="text-[10px] font-extrabold text-primary bg-primary-tint px-1.5 py-0.5 rounded font-mono">₹{wallet.toFixed(2)}</span>
                             </>
                           )}
                         </div>

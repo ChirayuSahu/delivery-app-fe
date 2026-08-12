@@ -17,10 +17,10 @@ export default function DashboardPage() {
     const isFullyLoaded = loadedComponents.chart && loadedComponents.users && loadedComponents.failed;
 
     return (
-        <div className="min-h-screen bg-gray-50 relative">
+        <div className="min-h-screen bg-slate-50 relative">
             {!isFullyLoaded && (
-                <div className="absolute inset-0 z-50 flex flex-col items-center pt-32 bg-gray-50/80 backdrop-blur-sm">
-                    <Loader2 className="h-8 w-8 animate-spin text-green-600 mb-4" />
+                <div className="absolute inset-0 z-50 flex flex-col items-center pt-32 bg-slate-50/80 backdrop-blur-sm">
+                    <Loader2 className="h-8 w-8 animate-spin text-primary mb-4" />
                     <p className="text-sm font-semibold text-slate-600 animate-pulse">Loading dashboard modules...</p>
                 </div>
             )}
