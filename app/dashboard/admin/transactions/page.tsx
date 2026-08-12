@@ -105,20 +105,20 @@ function FinanceContent() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gray-50">
       <main className="max-w-7xl mx-auto p-6 lg:p-10 space-y-6">
-        <div className="flex flex-row items-center justify-between gap-3 bg-card p-4 rounded-lg border border-border shadow-sm overflow-x-auto">
+        <div className="flex flex-row items-center justify-between gap-3 bg-white p-4 rounded-lg border border-slate-100 shadow-sm overflow-x-auto">
           <div className="flex items-center gap-2 shrink-0">
             <DatePickerWithRange date={date} setDate={setDate} />
           </div>
           <div className="flex items-center gap-2 shrink-0">
             <Popover>
                 <PopoverTrigger asChild>
-                    <Button disabled={loadingReport} variant="outline" className="gap-2 border-border">
+                    <Button disabled={loadingReport} variant="outline" className="gap-2 border-slate-200">
                         {loadingReport ? (
-                            <Loader2 className="h-4 w-4 animate-spin text-dispatch-ink" />
+                            <Loader2 className="h-4 w-4 animate-spin text-green-600" />
                         ) : (
-                            <FileText className="h-4 w-4 text-dispatch-ink" />
+                            <FileText className="h-4 w-4 text-green-600" />
                         )}
                         <span>Reports</span>
                     </Button>
@@ -127,23 +127,23 @@ function FinanceContent() {
                     <div className="flex flex-col gap-1">
                         <button
                             onClick={() => downloadReport('pdf')}
-                            className="w-full text-left px-3 py-2 text-sm hover:bg-muted rounded-md transition-colors flex items-center gap-2 text-foreground font-medium"
+                            className="w-full text-left px-3 py-2 text-sm hover:bg-slate-100 rounded-md transition-colors flex items-center gap-2 text-slate-700 font-medium"
                         >
-                            <FileText className="w-4 h-4 text-destructive" />
+                            <FileText className="w-4 h-4 text-red-500" />
                             Download PDF
                         </button>
                         <button
                             onClick={() => downloadReport('excel')}
-                            className="w-full text-left px-3 py-2 text-sm hover:bg-muted rounded-md transition-colors flex items-center gap-2 text-foreground font-medium"
+                            className="w-full text-left px-3 py-2 text-sm hover:bg-slate-100 rounded-md transition-colors flex items-center gap-2 text-slate-700 font-medium"
                         >
-                            <Download className="w-4 h-4 text-dispatch-ink" />
+                            <Download className="w-4 h-4 text-green-600" />
                             Download Excel
                         </button>
                     </div>
                 </PopoverContent>
             </Popover>
             <TransferFundsDialog>
-               <Button className="hidden md:flex gap-2 bg-primary hover:bg-primary/90 text-white font-bold rounded-lg shadow-sm">
+               <Button className="hidden md:flex gap-2 bg-green-600 hover:bg-green-700 text-white font-bold rounded-lg shadow-sm">
                 <ArrowRightLeft className="h-4 w-4" />
                 Transfer
               </Button>
@@ -152,16 +152,16 @@ function FinanceContent() {
         </div>
         <Tabs value={currentTab} onValueChange={handleTabChange} className="space-y-6">
           <div className="flex">
-            <TabsList className="bg-muted/70 p-1 rounded-lg inline-flex gap-1 border border-border/30 h-auto">
+            <TabsList className="bg-slate-100/70 p-1 rounded-lg inline-flex gap-1 border border-slate-200/30 h-auto">
               <TabsTrigger 
                 value="transactions" 
-                className="px-4 py-1.5 text-xs font-semibold rounded-md text-muted-foreground transition-all data-[state=active]:bg-card data-[state=active]:text-foreground data-[state=active]:shadow-sm cursor-pointer"
+                className="px-4 py-1.5 text-xs font-semibold rounded-md text-slate-500 transition-all data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-sm cursor-pointer"
               >
                 Transactions
               </TabsTrigger>
               <TabsTrigger 
                 value="expenses" 
-                className="px-4 py-1.5 text-xs font-semibold rounded-md text-muted-foreground transition-all data-[state=active]:bg-card data-[state=active]:text-foreground data-[state=active]:shadow-sm cursor-pointer"
+                className="px-4 py-1.5 text-xs font-semibold rounded-md text-slate-500 transition-all data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-sm cursor-pointer"
               >
                 Expenses
               </TabsTrigger>
@@ -180,9 +180,9 @@ function FinanceContent() {
 
         {/* Sticky Full-Width Mobile Transfer Button */}
         <div className="h-20 md:hidden" />
-        <div className="fixed bottom-0 left-0 right-0 p-4 bg-card/80 backdrop-blur-md border-t border-border z-50 md:hidden">
+        <div className="fixed bottom-0 left-0 right-0 p-4 bg-white/80 backdrop-blur-md border-t border-slate-100 z-50 md:hidden">
           <TransferFundsDialog>
-            <Button className="w-full h-12 rounded-lg bg-primary hover:bg-primary/90 text-white font-bold flex items-center justify-center gap-2 shadow-md">
+            <Button className="w-full h-12 rounded-lg bg-green-600 hover:bg-green-700 text-white font-bold flex items-center justify-center gap-2 shadow-md">
               <ArrowRightLeft className="h-4 w-4" />
               <span>Transfer Funds</span>
             </Button>
@@ -197,7 +197,7 @@ export default function AdminFinancePage() {
   return (
     <Suspense fallback={
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-foreground"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-slate-900"></div>
       </div>
     }>
       <FinanceContent />
