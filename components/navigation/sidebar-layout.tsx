@@ -120,12 +120,12 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
   const AddUserButton = ({ isMobile = false }: { isMobile?: boolean }) => {
     const triggerContent = (
       <button
-        className="w-full flex items-center gap-3 px-3 py-3 rounded-lg font-bold text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-all duration-200 group relative cursor-pointer"
+        className="w-full flex items-center gap-3 px-3 py-3 rounded-lg font-bold text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-all duration-200 group relative cursor-pointer"
       >
-        <UserPlus className="w-5 h-5 flex-shrink-0 text-slate-400 group-hover:text-slate-600" />
+        <UserPlus className="w-5 h-5 flex-shrink-0 text-muted-foreground group-hover:text-foreground" />
         {(!collapsed || isMobile) && <span className="animate-in fade-in duration-200">Add User</span>}
         {collapsed && !isMobile && (
-          <div className="absolute left-full ml-3 px-2 py-1 bg-slate-900 text-white text-xs font-medium rounded opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 whitespace-nowrap z-50 shadow-md">
+          <div className="absolute left-full ml-3 px-2 py-1 bg-foreground text-white text-xs font-medium rounded opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 whitespace-nowrap z-50 shadow-md">
             Add User
           </div>
         )}
@@ -143,22 +143,22 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
   }
 
   return (
-    <div className="min-h-screen flex bg-slate-50 text-slate-800">
+    <div className="min-h-screen flex bg-background text-foreground">
       {/* ========================================================================= */}
       {/* DESKTOP SIDEBAR */}
       {/* ========================================================================= */}
       <aside
-        className={`hidden lg:flex flex-col sticky top-0 h-screen transition-all duration-300 bg-white border-r border-slate-100 shadow-sm z-50 ${collapsed ? "w-20" : "w-64"
+        className={`hidden lg:flex flex-col sticky top-0 h-screen transition-all duration-300 bg-card border-r border-border shadow-sm z-50 ${collapsed ? "w-20" : "w-64"
           }`}
       >
         {/* Header/Brand */}
-        <div className="h-20 flex items-center justify-between px-6 border-b border-slate-50">
+        <div className="h-20 flex items-center justify-between px-6 border-b border-border">
           <div className="flex items-center gap-3 overflow-hidden">
-            <div className="w-9 h-9 bg-green-600 rounded-lg flex items-center justify-center text-white font-black flex-shrink-0">
+            <div className="w-9 h-9 bg-primary rounded-lg flex items-center justify-center text-white font-black flex-shrink-0">
               <Activity className="w-5 h-5" />
             </div>
             {!collapsed && (
-              <span className="font-extrabold text-lg text-slate-800 tracking-tight whitespace-nowrap animate-in fade-in duration-200">
+              <span className="font-extrabold text-lg text-foreground tracking-tight whitespace-nowrap animate-in fade-in duration-200">
                 {getPageTitle()}
               </span>
             )}
@@ -166,7 +166,7 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
 
           <button
             onClick={() => setCollapsed(!collapsed)}
-            className="w-7 h-7 flex items-center justify-center rounded-md border border-slate-100 hover:bg-slate-50 text-slate-400 hover:text-slate-600 transition-colors"
+            className="w-7 h-7 flex items-center justify-center rounded-md border border-border hover:bg-muted text-muted-foreground hover:text-muted-foreground transition-colors"
           >
             {collapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
           </button>
@@ -177,9 +177,9 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
           {profileLoading ? (
             Array.from({ length: 4 }).map((_, i) => (
               <div key={i} className="flex items-center gap-3 px-3 py-3 rounded-lg">
-                <div className="w-5 h-5 rounded bg-slate-200 animate-pulse flex-shrink-0" />
+                <div className="w-5 h-5 rounded bg-muted animate-pulse flex-shrink-0" />
                 {!collapsed && (
-                  <div className="h-4 bg-slate-200 rounded animate-pulse flex-1" />
+                  <div className="h-4 bg-muted rounded animate-pulse flex-1" />
                 )}
               </div>
             ))
@@ -194,11 +194,11 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
                     key={item.href}
                     href={item.href}
                     className={`flex items-center gap-3 px-3 py-3 rounded-lg font-bold text-sm transition-all duration-200 group relative ${isActive
-                      ? "bg-green-50 text-green-700"
-                      : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
+                      ? "bg-success text-dispatch-ink"
+                      : "text-muted-foreground hover:text-foreground hover:bg-muted"
                       }`}
                   >
-                    <Icon className={`w-5 h-5 flex-shrink-0 transition-colors ${isActive ? "text-green-600" : "text-slate-400 group-hover:text-slate-600"
+                    <Icon className={`w-5 h-5 flex-shrink-0 transition-colors ${isActive ? "text-dispatch-ink" : "text-muted-foreground group-hover:text-foreground"
                       }`} />
                     {!collapsed && (
                       <span className="animate-in fade-in duration-200">{item.name}</span>
@@ -206,7 +206,7 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
 
                     {/* Tooltip on Collapsed */}
                     {collapsed && (
-                      <div className="absolute left-full ml-3 px-2 py-1 bg-slate-900 text-white text-xs font-medium rounded opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 whitespace-nowrap z-50 shadow-md">
+                      <div className="absolute left-full ml-3 px-2 py-1 bg-foreground text-white text-xs font-medium rounded opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 whitespace-nowrap z-50 shadow-md">
                         {item.name}
                       </div>
                     )}
@@ -216,7 +216,7 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
 
               {(userRole === "ADMIN" || userRole === "SUPERVISOR") && (
                 <>
-                  <div className="border-t border-slate-100 my-2" />
+                  <div className="border-t border-border my-2" />
                   <AddUserButton />
                 </>
               )}
@@ -225,27 +225,27 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
         </nav>
 
         {/* Footer Area with Profile, PIN Settings & Logout */}
-        <div className="p-4 border-t border-slate-50 bg-slate-50/50">
+        <div className="p-4 border-t border-border bg-muted/50">
           <div className={`flex items-center gap-3 ${collapsed ? "justify-center" : ""}`}>
-            <div className="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center text-green-700 font-extrabold flex-shrink-0">
+            <div className="w-10 h-10 rounded-lg bg-success flex items-center justify-center text-dispatch-ink font-extrabold flex-shrink-0">
               <User className="w-5 h-5" />
             </div>
             {!collapsed && (
               <div className="flex-1 min-w-0">
                 {profileLoading ? (
                   <div className="space-y-2 py-0.5">
-                    <div className="h-3 w-28 bg-slate-200 rounded animate-pulse" />
-                    <div className="h-2 w-20 bg-slate-150 rounded animate-pulse" />
+                    <div className="h-3 w-28 bg-muted rounded animate-pulse" />
+                    <div className="h-2 w-20 bg-muted rounded animate-pulse" />
                   </div>
                 ) : (
                   <>
-                    <p className="text-xs font-bold text-slate-800 truncate">{userName}</p>
+                    <p className="text-xs font-bold text-foreground truncate">{userName}</p>
                     <div className="flex items-center gap-1.5 mt-0.5">
-                      <span className="text-[10px] font-bold text-slate-400 tracking-wider uppercase">{userRole}</span>
+                      <span className="text-[10px] font-bold text-muted-foreground tracking-wider uppercase">{userRole}</span>
                       {wallet !== null && (
                         <>
-                          <span className="text-slate-300 text-[10px]">•</span>
-                          <span className="text-[10px] font-extrabold text-green-600 bg-green-50 px-1.5 py-0.5 rounded">₹{wallet.toFixed(2)}</span>
+                          <span className="text-muted-foreground text-[10px]">•</span>
+                          <span className="text-[10px] font-extrabold text-dispatch-ink bg-success px-1.5 py-0.5 rounded">₹{wallet.toFixed(2)}</span>
                         </>
                       )}
                     </div>
@@ -256,12 +256,12 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
           </div>
 
           {/* Action Row */}
-          <div className={`mt-4 flex gap-2 border-t border-slate-100/80 pt-3 ${collapsed ? "flex-col items-center" : "justify-between"}`}>
+          <div className={`mt-4 flex gap-2 border-t border-border/80 pt-3 ${collapsed ? "flex-col items-center" : "justify-between"}`}>
             {userRole === "ADMIN" && (
               <PinSettingsDialog>
                 <button
                   title="PIN Settings"
-                  className="p-2 rounded-lg hover:bg-slate-100 text-slate-500 hover:text-slate-800 transition-colors border border-slate-200/40 bg-white flex items-center justify-center gap-1 cursor-pointer"
+                  className="p-2 rounded-lg hover:bg-muted text-muted-foreground hover:text-foreground transition-colors border border-border/40 bg-card flex items-center justify-center gap-1 cursor-pointer"
                 >
                   <KeyRound className="w-4 h-4" />
                   {!collapsed && <span className="text-xs font-bold">PIN</span>}
@@ -279,21 +279,21 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
       {/* ========================================================================= */}
       <div className="flex-1 flex flex-col min-w-0 min-h-screen">
         {/* Mobile Header Bar */}
-        <header className="lg:hidden h-16 bg-white border-b border-slate-100 flex items-center justify-between px-6 sticky top-0 z-40">
+        <header className="lg:hidden h-16 bg-card border-b border-border flex items-center justify-between px-6 sticky top-0 z-40">
           <div className="flex items-center gap-2">
             {pathname.split("/").length > 4 && (
               <button
                 onClick={() => router.back()}
-                className="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-500 hover:text-slate-850 active:scale-95 transition-all shadow-sm mr-1 cursor-pointer"
+                className="w-8 h-8 flex items-center justify-center rounded-lg border border-border bg-card text-muted-foreground hover:text-foreground active:scale-95 transition-all shadow-sm mr-1 cursor-pointer"
                 title="Back"
               >
                 <ArrowLeft className="w-4 h-4" />
               </button>
             )}
-            <div className="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center text-white font-black">
+            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white font-black">
               <Activity className="w-4 h-4" />
             </div>
-            <span className="font-extrabold text-md text-slate-800 tracking-tight mr-auto pl-2">
+            <span className="font-extrabold text-md text-foreground tracking-tight mr-auto pl-2">
               {getPageTitle()}
             </span>
           </div>
@@ -301,7 +301,7 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
           <div className="flex items-center gap-2">
             <button
               onClick={() => setMobileOpen(true)}
-              className="w-9 h-9 flex items-center justify-center rounded-lg border border-slate-100 hover:bg-slate-50 text-slate-600 transition-colors"
+              className="w-9 h-9 flex items-center justify-center rounded-lg border border-border hover:bg-muted text-muted-foreground transition-colors"
             >
               <Menu className="w-5 h-5" />
             </button>
@@ -313,18 +313,18 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
           <div className="fixed inset-0 z-[9999] lg:hidden flex">
             {/* Backdrop */}
             <div
-              className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity duration-300"
+              className="fixed inset-0 bg-foreground/40 backdrop-blur-sm transition-opacity duration-300"
               onClick={() => setMobileOpen(false)}
             />
 
             {/* Drawer Body */}
-            <div className="relative flex flex-col w-4/5 max-w-sm bg-white h-full shadow-2xl animate-in slide-in-from-left duration-300">
+            <div className="relative flex flex-col w-4/5 max-w-sm bg-card h-full shadow-2xl animate-in slide-in-from-left duration-300">
               {/* Close Button Row */}
-              <div className="h-16 flex items-center justify-between px-6 border-b border-slate-100">
-                <span className="font-extrabold text-lg text-slate-800 tracking-tight">Navigation</span>
+              <div className="h-16 flex items-center justify-between px-6 border-b border-border">
+                <span className="font-extrabold text-lg text-foreground tracking-tight">Navigation</span>
                 <button
                   onClick={() => setMobileOpen(false)}
-                  className="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-100 hover:bg-slate-50 text-slate-500"
+                  className="w-8 h-8 flex items-center justify-center rounded-lg border border-border hover:bg-muted text-muted-foreground"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -335,8 +335,8 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
                 {profileLoading ? (
                   Array.from({ length: 4 }).map((_, i) => (
                     <div key={i} className="flex items-center gap-3 px-3 py-3 rounded-lg">
-                      <div className="w-5 h-5 rounded bg-slate-200 animate-pulse flex-shrink-0" />
-                      <div className="h-4 bg-slate-200 rounded animate-pulse flex-1" />
+                      <div className="w-5 h-5 rounded bg-muted animate-pulse flex-shrink-0" />
+                      <div className="h-4 bg-muted rounded animate-pulse flex-1" />
                     </div>
                   ))
                 ) : (
@@ -351,11 +351,11 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
                           href={item.href}
                           onClick={() => setMobileOpen(false)}
                           className={`flex items-center gap-3 px-3 py-3 rounded-lg font-bold text-sm transition-all duration-200 ${isActive
-                            ? "bg-green-50 text-green-700"
-                            : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
+                            ? "bg-success text-dispatch-ink"
+                            : "text-muted-foreground hover:text-foreground hover:bg-muted"
                             }`}
                         >
-                          <Icon className={`w-5 h-5 ${isActive ? "text-green-600" : "text-slate-400"}`} />
+                          <Icon className={`w-5 h-5 ${isActive ? "text-dispatch-ink" : "text-muted-foreground"}`} />
                           <span>{item.name}</span>
                         </Link>
                       )
@@ -363,7 +363,7 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
 
                     {(userRole === "ADMIN" || userRole === "SUPERVISOR") && (
                       <>
-                        <div className="border-t border-slate-100 my-2" />
+                        <div className="border-t border-border my-2" />
                         <div onClick={() => setMobileOpen(false)}>
                           <AddUserButton isMobile={true} />
                         </div>
@@ -374,26 +374,26 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
               </nav>
 
               {/* Drawer Footer */}
-              <div className="p-4 border-t border-slate-100 bg-slate-50/50">
+              <div className="p-4 border-t border-border bg-muted/50">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center text-green-700 font-extrabold">
+                  <div className="w-10 h-10 rounded-lg bg-success flex items-center justify-center text-dispatch-ink font-extrabold">
                     <User className="w-5 h-5" />
                   </div>
                   <div className="flex-1 min-w-0">
                     {profileLoading ? (
                       <div className="space-y-2 py-0.5">
-                        <div className="h-3 w-28 bg-slate-200 rounded animate-pulse" />
-                        <div className="h-2 w-20 bg-slate-150 rounded animate-pulse" />
+                        <div className="h-3 w-28 bg-muted rounded animate-pulse" />
+                        <div className="h-2 w-20 bg-muted rounded animate-pulse" />
                       </div>
                     ) : (
                       <>
-                        <p className="text-xs font-bold text-slate-800 truncate">{userName}</p>
+                        <p className="text-xs font-bold text-foreground truncate">{userName}</p>
                         <div className="flex items-center gap-1.5 mt-0.5">
-                          <span className="text-[10px] font-bold text-slate-400 tracking-wider uppercase">{userRole}</span>
+                          <span className="text-[10px] font-bold text-muted-foreground tracking-wider uppercase">{userRole}</span>
                           {wallet !== null && (
                             <>
-                              <span className="text-slate-300 text-[10px]">•</span>
-                              <span className="text-[10px] font-extrabold text-green-600 bg-green-50 px-1.5 py-0.5 rounded">₹{wallet.toFixed(2)}</span>
+                              <span className="text-muted-foreground text-[10px]">•</span>
+                              <span className="text-[10px] font-extrabold text-dispatch-ink bg-success px-1.5 py-0.5 rounded">₹{wallet.toFixed(2)}</span>
                             </>
                           )}
                         </div>
@@ -402,11 +402,11 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
                   </div>
                 </div>
 
-                <div className="mt-4 flex gap-2 border-t border-slate-100 pt-3 justify-between">
+                <div className="mt-4 flex gap-2 border-t border-border pt-3 justify-between">
                   <PinSettingsDialog>
                     <button
                       onClick={() => setMobileOpen(false)}
-                      className="p-2 rounded-lg hover:bg-slate-100 text-slate-500 hover:text-slate-800 transition-colors border border-slate-200 bg-white flex items-center justify-center gap-1 cursor-pointer"
+                      className="p-2 rounded-lg hover:bg-muted text-muted-foreground hover:text-foreground transition-colors border border-border bg-card flex items-center justify-center gap-1 cursor-pointer"
                     >
                       <KeyRound className="w-4 h-4" />
                       <span className="text-xs font-bold">PIN Settings</span>
